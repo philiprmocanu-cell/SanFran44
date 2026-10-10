@@ -290,19 +290,25 @@ const RULES = [
 const MNPI = /\b(merger|acquisition|takeover|tender offer|not yet (?:public|announced)|before (?:the )?announcement|earnings (?:before|ahead of)|unannounced|insider|material non-public|MNPI|layoffs|restructuring plan)\b/gi;
 
 // ---------- Local AI model ----------
-env.allowRemoteModels = false;
-env.allowLocalModels = true;
-env.localModelPath = new URL('./models/', location.href).href;
-env.backends.onnx.wasm.wasmPaths = new URL('./lib/', location.href).href;
+// On a laptop install, the model and runtime are served from this machine. On the shared web demo,
+// they download once from Hugging Face / jsDelivr; after that, detection still runs entirely in the browser.
+const ON_DEVICE_INSTALL = ['localhost', '127.0.0.1'].includes(location.hostname);
+env.allowRemoteModels = !ON_DEVICE_INSTALL;
+env.allowLocalModels = ON_DEVICE_INSTALL;
+if (ON_DEVICE_INSTALL) {
+  env.localModelPath = new URL('./models/', location.href).href;
+  env.backends.onnx.wasm.wasmPaths = new URL('./lib/', location.href).href;
+}
 env.backends.onnx.wasm.numThreads = 1;
+if (!ON_DEVICE_INSTALL) document.querySelector('.nav a[href="/analyst"]')?.remove();
 let ner = null;
 const mstatus = document.getElementById('mstatus'), mbar = document.getElementById('mbar'), mdot = document.getElementById('mdot');
 pipeline('token-classification', 'Xenova/bert-base-NER', {
   dtype: 'q8',
-  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) mbar.style.width = (p.progress || 0) + '%'; },
+  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) { mbar.style.width = (p.progress || 0) + '%'; mstatus.textContent = `Downloading local AI model… ${Math.round(p.progress || 0)}%`; } },
 }).then(p => {
   ner = p; mbar.parentElement.style.display = 'none'; mdot.classList.add('ok');
-  mstatus.textContent = 'Local AI model ready · runs on this Mac';
+  mstatus.textContent = 'Local AI model ready · runs in this browser';
   startEgressWatch(); scheduleScan();
 }).catch(e => { mstatus.textContent = 'Local model failed: rules only'; console.error(e); startEgressWatch(); });
 
