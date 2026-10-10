@@ -10,6 +10,10 @@
 
 ![Bank policy](docs/policy.jpg)
 
+### Auto-clean clipboard (Mac app)
+
+Copy anything anywhere on the Mac (Mail, Excel, Slack, a browser) and Shield cleans it before you paste: client names, account numbers and IDs become placeholders, passwords are removed, and the copy is logged for compliance. Text copied from inside Shield and password-manager copies are left alone. Toggle it in the app or from the shield icon in the menu bar; closing the window keeps it running.
+
 ### Easy, private setup
 
 ![Setup](docs/setup.jpg)

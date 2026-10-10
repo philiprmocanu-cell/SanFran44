@@ -42,6 +42,43 @@
 [data-theme="light"] .opt.on { border-color: var(--accent); background: #fff3ea; box-shadow: 0 0 0 2px var(--accent); }
 [data-theme="light"] .presets button.on, [data-theme="light"] select.act.encrypt { color: var(--accent); border-color: var(--accent); }
 [data-theme="light"] .feed span { color: var(--accent); }
+/* ---------- Smooth light look: fewer boxes, soft surfaces ---------- */
+[data-theme="light"] { --soft: 0 1px 2px rgba(38,35,31,.05), 0 18px 40px -24px rgba(38,35,31,.22); --tint: #faf6ee; }
+[data-theme="light"] .card { border: 0; border-radius: 22px; box-shadow: var(--soft); }
+[data-theme="light"] .card.glow { border: 0; box-shadow: 0 0 0 2px #ffd9c2, var(--soft); }
+[data-theme="light"] .stats { gap: 0; background: #fff; border-radius: 22px; box-shadow: var(--soft); padding: 6px 0; }
+[data-theme="light"] .stat { border: 0; background: transparent; border-radius: 0; padding: 12px 24px; }
+[data-theme="light"] .stat + .stat { border-left: 1px solid rgba(38,35,31,.08); }
+[data-theme="light"] .step { border: 0; background: transparent; padding: 4px 6px; }
+[data-theme="light"] .destbar { border: 0; background: transparent; padding: 0; }
+[data-theme="light"] .dest { border: 0; background: #fff; box-shadow: var(--soft); border-radius: 14px; }
+[data-theme="light"] .dest.on { background: var(--ink); box-shadow: none; }
+[data-theme="light"] .dest.on b, [data-theme="light"] .dest.on span { color: #fff; }
+[data-theme="light"] .editor, [data-theme="light"] .field, [data-theme="light"] .scroll, [data-theme="light"] .matrix, [data-theme="light"] .restore-out, [data-theme="light"] .llm-out { border: 0; background: var(--tint); }
+[data-theme="light"] .safe { border: 0; background: #fff6ef; }
+[data-theme="light"] .field:focus { box-shadow: 0 0 0 2px #ffd9c2; }
+[data-theme="light"] .tag { border: 0; background: var(--tint); }
+[data-theme="light"] .tag.red { background: #fdeceb; } [data-theme="light"] .tag.green { background: #e8f5ee; }
+[data-theme="light"] .nav, [data-theme="light"] .pill, [data-theme="light"] select.user, [data-theme="light"] .iconbtn { border: 0; background: #fff; box-shadow: var(--soft); }
+[data-theme="light"] .btn { border: 0; background: #fff; box-shadow: 0 0 0 1px rgba(38,35,31,.14); }
+[data-theme="light"] .btn:hover { box-shadow: 0 0 0 1.5px var(--ink); }
+[data-theme="light"] .btn.primary { box-shadow: 0 8px 20px -10px var(--accent); }
+[data-theme="light"] .chip { border: 0; }
+[data-theme="light"] .alert { border: 0; }
+[data-theme="light"] .mbox { border: 0; box-shadow: 0 40px 100px -30px rgba(38,35,31,.45); border-radius: 22px; }
+[data-theme="light"] .opt { border: 0; background: var(--tint); }
+[data-theme="light"] .opt.on { background: #fff3ea; box-shadow: 0 0 0 2px var(--accent); }
+[data-theme="light"] th { background: var(--tint); }
+[data-theme="light"] td, [data-theme="light"] th, [data-theme="light"] .rule, [data-theme="light"] .toggle { border-color: rgba(38,35,31,.07); }
+[data-theme="light"] .matrix tr.grp td { background: #f3ede2; }
+[data-theme="light"] select.act { border: 0; background: #fff; box-shadow: 0 0 0 1px rgba(38,35,31,.12); }
+[data-theme="light"] .notice { background: var(--tint); }
+.clipsw { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 99px; padding: 8px 14px 8px 8px; background: var(--panel); box-shadow: 0 0 0 1px var(--line); font-size: 13.5px; font-weight: 700; cursor: pointer; }
+.clipsw .knob2 { width: 34px; height: 20px; border-radius: 99px; background: var(--line2); position: relative; transition: .2s; flex: none; opacity: .5; }
+.clipsw .knob2::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: .2s; }
+.clipsw.on .knob2 { background: var(--good); opacity: 1; } .clipsw.on .knob2::after { left: 17px; }
+.clipsw.na { opacity: .6; cursor: default; }
+[data-theme="light"] .clipsw { background: #fff; box-shadow: 0 1px 2px rgba(38,35,31,.05), 0 10px 24px -16px rgba(38,35,31,.25); }
 .pixels { position: fixed; top: 0; right: 0; z-index: 0; pointer-events: none; }
 [data-theme="dark"] .pixels { opacity: .5; }
 * { box-sizing: border-box; }
@@ -304,6 +341,7 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
       <span class="lbl">Sharing with</span>
       <div class="dests" id="dests"></div>
       <span class="destsum" id="destsum"></span>
+      <button class="clipsw" id="clipsw" title="Clean everything you copy on this Mac"><span class="knob2"></span><span id="cliptxt">Auto-clean clipboard</span></button>
     </div>
 
     <div class="grid2">
@@ -594,8 +632,8 @@ function runWarns(text) {
   return out;
 }
 const PRIO = { secret: 5, policy: 4, rule: 3, ai: 1 };
-function merge(spans) {
-  spans = spans.map(s => ({ ...s, act: s.action || actionOf(s.cat) })).filter(s => s.act !== 'share')
+function merge(spans, d = dest) {
+  spans = spans.map(s => ({ ...s, act: s.action || actionOf(s.cat, d) })).filter(s => s.act !== 'share')
     .sort((a, b) => a.start - b.start || PRIO[b.src] - PRIO[a.src] || (b.end - b.start) - (a.end - a.start));
   const out = [];
   for (const s of spans) {
@@ -1045,6 +1083,38 @@ $('export').onclick = () => {
 renderCompliance();
 renderLock();
 if (!policy.setupDone) setTimeout(runSetup, 400);
+
+// ---------- Clipboard auto-clean (installed Mac app) ----------
+const NATIVE = !!window.webkit?.messageHandlers?.shield;
+let autoClean = store.get('ls_autoclean', true);
+function renderClip() {
+  const b = $('clipsw');
+  b.classList.toggle('on', NATIVE && autoClean); b.classList.toggle('na', !NATIVE);
+  $('cliptxt').textContent = !NATIVE ? 'Clipboard auto-clean: in the Mac app' : autoClean ? 'Auto-clean clipboard: On' : 'Auto-clean clipboard: Off';
+}
+window.setAutoClean = on => { autoClean = !!on; store.set('ls_autoclean', autoClean); renderClip(); };
+$('clipsw').onclick = () => {
+  if (!NATIVE) return toast('Available in the Mac app', 'Install Ledger Shield on a Mac and everything you copy is cleaned automatically.', true);
+  window.setAutoClean(!autoClean);
+  window.webkit.messageHandlers.shield.postMessage({ autoClean });
+  logEvent('Clipboard auto-clean ' + (autoClean ? 'turned on' : 'turned off'), 'Mac clipboard', autoClean ? 'info' : 'warn', null, 'clip');
+};
+// Called by the Mac app whenever something new is copied anywhere on the computer.
+// Uses the strictest destination (outside AI), because we can't know where it will be pasted.
+window.shieldClean = async (text, appName) => {
+  if (!autoClean || !text || !text.trim()) return null;
+  const spans = merge([...runRules(text), ...(await runNER(text))], 'outside');
+  if (!spans.length) return null;
+  const { plain, entries } = await buildSafe(text, spans);
+  const n = spans.length, removed = spans.filter(s => s.act === 'block').length;
+  logEvent('Clipboard cleaned', `${n} item${n > 1 ? 's' : ''} hidden${removed ? `, ${removed} removed` : ''}${appName ? ' · copied from ' + appName : ''}`, removed ? 'high' : 'info', null, 'clip');
+  entries.forEach(e => { if (e && !e.logged) { e.logged = true; logEvent('Encrypted', CATS[e.cat].label, 'info', e.cat, 'enc'); } });
+  input.value = text; scheduleScan();
+  toast('Clipboard cleaned', `${n} private detail${n > 1 ? 's were' : ' was'} hidden before you could paste${appName ? ' from ' + appName : ''}.`, true);
+  return plain;
+};
+renderClip();
+if (NATIVE) window.webkit.messageHandlers.shield.postMessage({ autoClean, ready: true });
 
 // ---------- Egress watch: counts requests to any outside server after load ----------
 function startEgressWatch() {

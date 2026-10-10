@@ -91,10 +91,17 @@ final class LocalServer {
 
 // MARK: - App
 
-final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, WKScriptMessageHandler {
     var window: NSWindow!
     var web: WKWebView!
     var server: LocalServer!
+    // Clipboard auto-clean: watch the Mac clipboard and replace sensitive text with the cleaned version.
+    var autoClean = true
+    var pageReady = false
+    var lastChange = NSPasteboard.general.changeCount
+    var clipTimer: Timer?
+    var statusItem: NSStatusItem!
+    var cleanedCount = 0
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
@@ -106,10 +113,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         window.backgroundColor = NSColor(red: 0.03, green: 0.043, blue: 0.08, alpha: 1)
         window.minSize = NSSize(width: 980, height: 640)
         window.setFrameAutosaveName("LedgerShieldMain")
+        window.delegate = self
         window.center()
 
         let config = WKWebViewConfiguration()
         config.websiteDataStore = .default()
+        config.userContentController.add(self, name: "shield")
         web = WKWebView(frame: .zero, configuration: config)
         web.navigationDelegate = self
         web.uiDelegate = self
@@ -118,6 +127,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         window.contentView = web
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+
+        setupStatusItem()
+        clipTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { [weak self] _ in self?.checkClipboard() }
 
         let root = Bundle.main.resourceURL!.appendingPathComponent("web")
         server = LocalServer(root: root)
@@ -131,7 +143,80 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         }
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+    // Closing the window keeps Shield cleaning the clipboard in the background (menu bar icon stays).
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+    func windowShouldClose(_ sender: NSWindow) -> Bool { window.orderOut(nil); return false }
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { showWindow(); return true }
+    @objc func showWindow() { window.makeKeyAndOrderFront(nil); NSApp.activate(ignoringOtherApps: true) }
+
+    // MARK: - Clipboard auto-clean
+
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let body = message.body as? [String: Any] else { return }
+        if let on = body["autoClean"] as? Bool { autoClean = on; updateStatusItem() }
+        if body["ready"] as? Bool == true { pageReady = true; lastChange = NSPasteboard.general.changeCount }
+    }
+
+    func checkClipboard() {
+        let pb = NSPasteboard.general
+        guard pb.changeCount != lastChange else { return }
+        lastChange = pb.changeCount
+        guard autoClean, pageReady else { return }
+        // Leave Shield's own copies alone (e.g. restored answers), and respect password managers.
+        let front = NSWorkspace.shared.frontmostApplication
+        if front?.bundleIdentifier == Bundle.main.bundleIdentifier { return }
+        let types = pb.types ?? []
+        if types.contains(NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")) || types.contains(NSPasteboard.PasteboardType("org.nspasteboard.TransientType")) { return }
+        guard let text = pb.string(forType: .string), !text.isEmpty, text.count < 200_000 else { return }
+        let seen = pb.changeCount
+        web.callAsyncJavaScript("return await window.shieldClean(text, app);", arguments: ["text": text, "app": front?.localizedName ?? ""], in: nil, in: .page) { [weak self] result in
+            guard let self, case .success(let value) = result, let clean = value as? String, clean != text else { return }
+            guard NSPasteboard.general.changeCount == seen else { return }   // user copied something newer meanwhile
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(clean, forType: .string)
+            self.lastChange = NSPasteboard.general.changeCount
+            self.cleanedCount += 1
+            self.flashStatusItem()
+        }
+    }
+
+    func setupStatusItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        updateStatusItem()
+    }
+
+    func updateStatusItem() {
+        let menu = NSMenu()
+        let toggle = NSMenuItem(title: "Auto-clean clipboard", action: #selector(toggleAutoClean), keyEquivalent: "")
+        toggle.state = autoClean ? .on : .off
+        toggle.target = self
+        menu.addItem(toggle)
+        let info = NSMenuItem(title: cleanedCount == 0 ? "Nothing cleaned yet" : "Cleaned \(cleanedCount) copied item\(cleanedCount == 1 ? "" : "s")", action: nil, keyEquivalent: "")
+        info.isEnabled = false
+        menu.addItem(info)
+        menu.addItem(.separator())
+        let open = NSMenuItem(title: "Open Ledger Shield", action: #selector(showWindow), keyEquivalent: "o"); open.target = self
+        menu.addItem(open)
+        menu.addItem(withTitle: "Quit Ledger Shield", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        statusItem.menu = menu
+        if let b = statusItem.button {
+            b.image = NSImage(systemSymbolName: autoClean ? "checkmark.shield.fill" : "shield.slash", accessibilityDescription: "Ledger Shield")
+            b.title = ""
+        }
+    }
+
+    func flashStatusItem() {
+        updateStatusItem()
+        guard let b = statusItem.button else { return }
+        b.title = " Cleaned"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.statusItem.button?.title = "" }
+    }
+
+    @objc func toggleAutoClean() {
+        autoClean.toggle()
+        updateStatusItem()
+        web.evaluateJavaScript("window.setAutoClean && window.setAutoClean(\(autoClean))")
+    }
 
     // Keep the app on its own local pages; open anything else in the default browser.
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
