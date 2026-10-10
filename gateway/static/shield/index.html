@@ -79,6 +79,29 @@
 .clipsw.on .knob2 { background: var(--good); opacity: 1; } .clipsw.on .knob2::after { left: 17px; }
 .clipsw.na { opacity: .6; cursor: default; }
 [data-theme="light"] .clipsw { background: #fff; box-shadow: 0 1px 2px rgba(38,35,31,.05), 0 10px 24px -16px rgba(38,35,31,.25); }
+/* ---------- Live view ---------- */
+.livegrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
+.lvpane { min-height: 360px; padding: 22px 24px; font-size: 17px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: break-word; }
+.lvlabel { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--quiet); padding: 18px 24px 0; }
+.lvlabel .dot { width: 9px; height: 9px; }
+.chatwin { display: flex; flex-direction: column; }
+.chatbar { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(38,35,31,.08); font-weight: 750; font-size: 15px; }
+.chatbar i { width: 11px; height: 11px; border-radius: 50%; background: #e7e1d6; display: inline-block; }
+.chatbar .ai { margin-left: 8px; display: inline-flex; align-items: center; gap: 8px; }
+.chatbar .ai b { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; font-size: 13px; }
+.bubble { margin: 20px 20px 10px auto; max-width: 92%; background: #f4f4f4; border-radius: 20px 20px 6px 20px; padding: 16px 20px; font-size: 16.5px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: break-word; color: #111; }
+.chatfoot { margin: auto 20px 18px; padding: 12px 16px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.08); color: #9a9a9a; font-size: 14.5px; }
+.lvarrow { display: none; }
+.lvpane mark { color: inherit; border-radius: 5px; padding: 1px 3px; background: color-mix(in srgb, var(--c) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); }
+.lvpane mark.w { background: transparent; box-shadow: none; border-bottom: 2px dashed var(--warn); border-radius: 0; padding: 0; }
+.feedlist { display: flex; flex-direction: column; gap: 8px; padding: 0 18px 18px; max-height: 260px; overflow-y: auto; }
+.feeditem { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--panel2); cursor: pointer; font-size: 14px; }
+.feeditem b { font-weight: 750; } .feeditem span { color: var(--quiet); } .feeditem em { margin-left: auto; font-style: normal; color: var(--faint); font-size: 12.5px; }
+.feeditem.on { box-shadow: 0 0 0 2px var(--accent); }
+.livehint { padding: 40px 24px; color: var(--faint); font-size: 16px; }
+.present .top, .present #p-live .hero p { display: none; }
+.present #p-live .hero h1 { font-size: 46px; }
+@media (max-width: 1100px) { .livegrid { grid-template-columns: 1fr; } }
 .pixels { position: fixed; top: 0; right: 0; z-index: 0; pointer-events: none; }
 [data-theme="dark"] .pixels { opacity: .5; }
 * { box-sizing: border-box; }
@@ -299,6 +322,7 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
     </div>
     <nav class="nav">
       <a data-page="shield" class="on">Shield</a>
+      <a data-page="live">Live view</a>
       <a data-page="policy">Bank policy</a>
       <a data-page="compliance">Compliance <span class="badge" id="vbadge" style="display:none">0</span></a>
     </nav>
@@ -379,6 +403,36 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
         <div class="sub" id="llmSub">Checking for a local AI model…</div></div>
       <div class="pad" style="padding-bottom:12px"><input class="field" id="llmPrompt" value="Summarize this and list the next steps for the bank. Keep every bracketed token exactly as written."></div>
       <div class="llm-out" id="llmOut"><span class="empty">The local AI's answer appears here, then is restored automatically above.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= LIVE VIEW ================= -->
+  <section class="page" id="p-live">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">For demos and compliance</div>
+        <h1>What the outside world <span class="grad">actually sees</span></h1>
+        <p>Copy something anywhere on this Mac, or use “Copy safe version” on the Shield tab. The left side is what stayed inside the bank. The right side is exactly what an outside AI receives. Originals appear only on this screen and are never saved.</p>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="liveSample">Run a demo copy</button>
+        <button class="btn primary" id="present">Presenter mode</button>
+      </div>
+    </div>
+    <div class="livegrid">
+      <div class="card">
+        <div class="lvlabel"><span class="dot ok"></span>Inside the bank · stays on this computer</div>
+        <div class="lvpane" id="lvIn"><span class="empty">Waiting for something to be copied…</span></div>
+      </div>
+      <div class="card chatwin">
+        <div class="chatbar"><i></i><i></i><i></i><span class="ai"><b>AI</b>Outside AI (ChatGPT, Claude, Gemini)</span></div>
+        <div class="bubble" id="lvOut"><span style="color:#9a9a9a">What the AI receives appears here.</span></div>
+        <div class="chatfoot">Message the AI…</div>
+      </div>
+    </div>
+    <div class="card mt">
+      <div class="ch"><h2>Recent copies</h2><span class="tag" id="lvCount">0 protected</span><div class="sub">Every copy Shield cleaned this session. Click one to show it again.</div></div>
+      <div class="feedlist" id="lvFeed"><div class="empty" style="font-size:14px">Nothing yet.</div></div>
     </div>
   </section>
 
@@ -814,6 +868,7 @@ function renderAlerts(spans, warns) {
 async function writeClip(text) { try { await navigator.clipboard.writeText(text); } catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } }
 $('copy').onclick = async () => {
   await writeClip(current.safeText);
+  pushLive(current.text, current.spans, current.warns || [], 'Shield');
   logEvent('Safe copy to AI', `${current.entries.filter(Boolean).length} items encrypted`, 'info', null, 'safe');
   toast('Copied the safe version', 'Paste it into any AI. The real values stay encrypted on this device.', true);
 };
@@ -1110,11 +1165,50 @@ window.shieldClean = async (text, appName) => {
   logEvent('Clipboard cleaned', `${n} item${n > 1 ? 's' : ''} hidden${removed ? `, ${removed} removed` : ''}${appName ? ' · copied from ' + appName : ''}`, removed ? 'high' : 'info', null, 'clip');
   entries.forEach(e => { if (e && !e.logged) { e.logged = true; logEvent('Encrypted', CATS[e.cat].label, 'info', e.cat, 'enc'); } });
   input.value = text; scheduleScan();
+  pushLive(text, spans, runWarns(text), appName || 'another app');
   toast('Clipboard cleaned', `${n} private detail${n > 1 ? 's were' : ' was'} hidden before you could paste${appName ? ' from ' + appName : ''}.`, true);
   return plain;
 };
 renderClip();
 if (NATIVE) window.webkit.messageHandlers.shield.postMessage({ autoClean, ready: true });
+
+// ---------- Live view: what the outside world sees ----------
+const liveItems = [];
+function scrambleIn(container) {
+  let n = 0;
+  container.querySelectorAll('.tok').forEach(el => {
+    const final = el.textContent, len = Math.max(6, Math.min(+el.dataset.len || 10, 22)), delay = (n++) * 110; let i = 0;
+    el.textContent = Array.from({ length: len }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join(''); el.classList.add('scramble');
+    setTimeout(() => { const iv = setInterval(() => { i++; el.textContent = Array.from({ length: len }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join(''); if (i > 14) { clearInterval(iv); el.textContent = final; el.classList.remove('scramble'); } }, 45); }, 350 + delay);
+  });
+}
+function showLive(item) {
+  $('lvIn').innerHTML = item.inside;
+  $('lvOut').innerHTML = item.outside;
+  scrambleIn($('lvOut'));
+  document.querySelectorAll('.feeditem').forEach(f => f.classList.toggle('on', +f.dataset.i === item.i));
+}
+async function pushLive(text, spans, warns, source) {
+  const { html } = await buildSafe(text, spans);
+  const item = { i: liveItems.length, t: Date.now(), source: source || 'Shield', n: spans.length, inside: highlight(text, spans, warns || []), outside: html };
+  liveItems.unshift(item);
+  $('lvCount').textContent = `${liveItems.length} protected`;
+  $('lvFeed').innerHTML = liveItems.slice(0, 30).map(x => `<div class="feeditem" data-i="${x.i}"><b>${x.n} detail${x.n === 1 ? '' : 's'} hidden</b><span>copied from ${esc(x.source)}</span><em>${new Date(x.t).toLocaleTimeString()}</em></div>`).join('');
+  showLive(item);
+}
+$('lvFeed').addEventListener('click', e => { const f = e.target.closest('.feeditem'); if (f) showLive(liveItems.find(x => x.i === +f.dataset.i)); });
+$('present').onclick = () => {
+  document.body.classList.toggle('present');
+  const on = document.body.classList.contains('present'); $('present').textContent = on ? 'Exit presenter mode' : 'Presenter mode';
+  try { on ? document.documentElement.requestFullscreen?.() : document.exitFullscreen?.(); } catch {}
+};
+const DEMO_COPY = `Hi Priya, can you ask the AI to summarize this before the credit committee?
+
+Borrower: Daniel Okafor, Meridian Capital (SSN 512-48-3391). Requesting a $4.2M line, wire to account #004417829931, routing 021000021. Harborview LLC is on our watchlist after a covenant breach. RiskView 360 password Harbor2026!`;
+$('liveSample').onclick = async () => {
+  const spans = merge([...runRules(DEMO_COPY), ...(await runNER(DEMO_COPY))], 'outside');
+  await pushLive(DEMO_COPY, spans, runWarns(DEMO_COPY), 'Outlook (demo)');
+};
 
 // ---------- Egress watch: counts requests to any outside server after load ----------
 function startEgressWatch() {

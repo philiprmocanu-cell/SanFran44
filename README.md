@@ -10,6 +10,12 @@
 
 ![Bank policy](docs/policy.jpg)
 
+### Live view: what the outside world sees
+
+![Live view](docs/liveview.jpg)
+
+A presenter-friendly tab for demos and compliance: on the left, what stayed inside the bank; on the right, a ChatGPT-style window showing exactly what the outside AI receives, with each private detail scrambling into its placeholder. Every clipboard clean and every "Copy safe version" appears here live. Originals are shown only on that screen and never saved. "Presenter mode" goes full screen.
+
 ### Auto-clean clipboard (Mac app)
 
 Copy anything anywhere on the Mac (Mail, Excel, Slack, a browser) and Shield cleans it before you paste: client names, account numbers and IDs become placeholders, passwords are removed, and the copy is logged for compliance. Text copied from inside Shield and password-manager copies are left alone. Toggle it in the app or from the shield icon in the menu bar; closing the window keeps it running.
