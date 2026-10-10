@@ -2,13 +2,20 @@
 
 ![Ledger Shield](docs/shield.jpg)
 
+**Install on a Mac:** download [Ledger-Shield.dmg](https://github.com/philiprmocanu-cell/SanFran44/releases/latest/download/Ledger-Shield.dmg), open it, drag Ledger Shield to Applications. First launch: right-click the app → Open (it isn't notarized yet). Everything, including the AI model, runs on the Mac with no internet.
+
+**Try it in a browser:** https://philiprmocanu-cell.github.io/SanFran44/
+
+![Bank policy](docs/policy.jpg)
+
 Banks ban AI tools because staff paste client data into them, and staff use AI anyway on their phones. **Ledger Shield** sits in between:
 
 1. **Paste anything.** A local AI model running on your own computer (bert-base-NER, run in the browser with no internet) plus bank rules find names, companies, SSNs, account, routing and card numbers, emails, phones, addresses, amounts and deal code names.
 2. **Each one is encrypted live** with AES-256-GCM, using a key that never leaves the device, and replaced by a token like `[PERSON_1]`.
 3. **Copy the safe version into any AI** (ChatGPT, Claude, a local model).
 4. **Paste the AI's answer back.** Tokens are decrypted on your device, so the real names and numbers come back only on your screen.
-5. **Compliance view:** every encryption, safe copy, blocked raw copy and inside-information warning is logged by employee. The log records the type of data, never the data itself.
+5. **Bank policy page:** compliance lists clients, deals, employees, internal systems and the bank's own number formats, and picks Encrypt / Remove / Off for each kind of data. Passwords, API keys, CVVs and PINs are removed outright. Warnings flag inside information, confidential credit opinions and regulator exam findings.
+6. **Compliance view:** every encryption, safe copy, blocked raw copy and inside-information warning is logged by employee. The log records the type of data, never the data itself.
 
 The "Sent off device" counter proves nothing leaves: it counts every request to another server after the page loads.
 
