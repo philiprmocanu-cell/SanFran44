@@ -8,6 +8,16 @@
 
 ![Bank policy](docs/policy.jpg)
 
+### Easy, private setup
+
+![Setup](docs/setup.jpg)
+
+- **Two-minute setup wizard** on first launch: bank name, how strict to be with outside AI, client and deal lists, compliance passcode.
+- **What each AI may see:** for every kind of data, the bank chooses Hide (encrypt), Show or Remove, separately for **outside AI** (ChatGPT, Claude), **bank-approved AI** and **AI on this computer**. Employees pick where they're sending; Shield applies that column.
+- **Locked and private:** the policy lives only on the device, only the compliance passcode can change it (failed attempts are logged), and the policy file sent to employees is encrypted (AES-256-GCM, PBKDF2) so a leaked file never reveals the client list.
+
+![Per-AI permissions](docs/permissions.jpg)
+
 Banks ban AI tools because staff paste client data into them, and staff use AI anyway on their phones. **Ledger Shield** sits in between:
 
 1. **Paste anything.** A local AI model running on your own computer (bert-base-NER, run in the browser with no internet) plus bank rules find names, companies, SSNs, account, routing and card numbers, emails, phones, addresses, amounts and deal code names.
