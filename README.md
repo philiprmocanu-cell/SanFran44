@@ -10,6 +10,12 @@
 
 ![Bank policy](docs/policy.jpg)
 
+### People & teams: who inside the bank sees what
+
+![People and teams](docs/people.jpg)
+
+The administrator decides, for each team (credit analysts, relationship managers, underwriters, operations, contractors), which kinds of detail they can see when Shield puts the real details back. Hidden details stay locked (🔒) for that team, even on their own screen.
+
 ### Live view: what the outside world sees
 
 ![Live view](docs/liveview.jpg)

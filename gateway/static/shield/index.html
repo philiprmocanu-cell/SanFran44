@@ -111,6 +111,40 @@
 .bullmark .streaks { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 2; pointer-events: none; }
 .bullmark .burst { position: absolute; width: 12%; left: 92%; top: 12%; transform: translate(-50%,-50%) rotate(12deg); z-index: 1; opacity: .95; }
 .brand .bullmark { width: 150px; margin: -6px 0 -4px -6px; }
+/* ---------- Granola-style shell ---------- */
+.app { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 100vh; position: relative; z-index: 1; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 18px 16px; background: var(--side-bg); border-right: 1px solid var(--side-line); }
+.sbrand { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 4px 0 10px; }
+.sbrand .bullmark { width: 250px; padding: 26% 30% 0 0; margin: 0 -40px 0 0; }
+.sbrand .bullmark .coin { width: 21%; }
+.sbrand .bullmark .face { box-shadow: 0 0 0 1.5px #26231f, 0 4px 10px rgba(38,35,31,.25); }
+.sbrand .bullmark .face svg { width: 66%; height: 66%; }
+.app #p-shield .hero { grid-template-columns: 1.15fr 1fr; }
+.sname { font-weight: 800; font-size: 19px; letter-spacing: -.01em; text-align: center; line-height: 1.15; }
+.sname small { display: block; font-weight: 600; font-size: 12px; color: var(--quiet); margin-top: 3px; border: 0 !important; padding: 0 !important; }
+.snav { display: flex; flex-direction: column; gap: 2px; background: transparent !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; border: 0 !important; }
+.snav a { display: flex; align-items: center; gap: 11px; padding: 9px 12px !important; border-radius: 10px; font-size: 14.5px; font-weight: 600; color: var(--quiet); }
+.snav a svg { width: 18px; height: 18px; flex: none; opacity: .8; }
+.snav a .badge { margin-left: auto; }
+.snav a:hover { background: var(--side-hover); color: var(--ink); }
+.snav a.on { background: var(--side-on) !important; color: var(--ink) !important; box-shadow: 0 1px 2px rgba(38,35,31,.06), 0 0 0 1px var(--side-line) !important; }
+.sgroup { font-size: 11.5px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 16px 12px 6px; }
+.sfoot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.sfoot .pill { justify-content: flex-start; white-space: normal; }
+.srow { display: flex; gap: 8px; } .srow select { flex: 1; min-width: 0; }
+.app .wrap { max-width: 1120px; width: 100%; margin: 0 auto; padding: 26px 40px 60px; }
+.app .hero { grid-template-columns: 1fr auto; margin: 6px 0 22px; gap: 20px; }
+.app .hero h1 { font-size: 30px; line-height: 1.15; text-transform: none !important; letter-spacing: -.02em; font-weight: 750; }
+.app .hero p { font-size: 15.5px; }
+.app #p-shield .hero h1 { font-size: 34px; }
+.app .stat .n { font-size: 24px; }
+.vis { border: 0; border-radius: 99px; padding: 4px 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.vis.see { background: color-mix(in srgb, var(--good) 13%, transparent); color: var(--good); }
+.vis.hidden { background: color-mix(in srgb, var(--bad) 12%, transparent); color: var(--bad); }
+.tok.locked { font-family: inherit; font-size: 13px; color: var(--quiet); }
+:root, [data-theme="dark"] { --side-bg: #0b0f1c; --side-line: rgba(255,255,255,.07); --side-hover: rgba(255,255,255,.05); --side-on: rgba(255,255,255,.08); }
+[data-theme="light"] { --side-bg: #f6f2ea; --side-line: rgba(38,35,31,.08); --side-hover: rgba(38,35,31,.04); --side-on: #ffffff; --bg: #fdfcf9; }
+@media (max-width: 900px) { .app { grid-template-columns: 1fr; } .side { position: static; height: auto; } .app .wrap { padding: 20px; } }
 .pixels { position: fixed; top: 0; right: 0; z-index: 0; pointer-events: none; }
 [data-theme="dark"] .pixels { opacity: .5; }
 * { box-sizing: border-box; }
@@ -323,30 +357,33 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
 </head>
 <body>
 <svg class="pixels" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><g fill="#ff7a2f"><rect x="0" y="0" width="12" height="12"/><rect x="12" y="0" width="12" height="12"/><rect x="24" y="0" width="12" height="12"/><rect x="36" y="0" width="12" height="12"/><rect x="48" y="0" width="12" height="12"/><rect x="60" y="0" width="12" height="12"/><rect x="24" y="12" width="12" height="12"/><rect x="48" y="12" width="12" height="12"/><rect x="60" y="12" width="12" height="12"/><rect x="36" y="24" width="12" height="12"/><rect x="60" y="24" width="12" height="12"/><rect x="48" y="36" width="12" height="12"/><rect x="60" y="48" width="12" height="12"/></g></svg>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">
-      <div class="bullmark" role="img" aria-label="Ledger Shield: the bull knocking OpenAI, Anthropic, Gemini and Grok off its horns"><div class="art"><svg class="burst" viewBox="0 0 100 100"><path d="M50 4l8 24 24-11-11 24 25 9-25 9 11 24-24-11-8 24-8-24-24 11 11-24L4 50l25-9-11-24 24 11z" fill="#ffcf3a"/><path d="M50 24l5 15 15-7-7 15 15 3-15 3 7 15-15-7-5 15-5-15-15 7 7-15-15-3 15-3-7-15 15 7z" fill="#ff7a2f"/></svg><img src="assets/bull.png" alt=""><svg class="streaks" viewBox="0 0 100 100" preserveAspectRatio="none"><g fill="none" stroke="#ff7a2f" stroke-linecap="round"><path d="M88 11 Q92 3 94 -3" stroke-width=".9" opacity=".7"/><path d="M90 13 Q95 6 97 0" stroke-width=".6" opacity=".45"/><path d="M99 17 Q104 9 109 5" stroke-width=".9" opacity=".7"/><path d="M100 19 Q106 13 110 8" stroke-width=".6" opacity=".45"/></g></svg><div class="coin" style="left:88.5%;top:10.5%;transform:translate(-50%,-50%) rotate(-16deg)" title="OpenAI"><div class="face"><svg viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" fill="#111"/></svg></div></div><div class="coin" style="left:100.5%;top:15.5%;transform:translate(-50%,-50%) rotate(14deg)" title="Gemini"><div class="face"><svg viewBox="0 0 24 24"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4285F4"/></svg></div></div><div class="coin" style="left:96.0%;top:-6.0%;transform:translate(-50%,-50%) rotate(30deg)" title="Anthropic"><div class="face"><svg viewBox="0 0 24 24"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" fill="#191919"/></svg></div></div><div class="coin" style="left:112.0%;top:2.5%;transform:translate(-50%,-50%) rotate(-34deg)" title="Grok"><div class="face"><svg viewBox="0 0 24 24"><g fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round"><path d="M14.5 3.9A8.5 8.5 0 1 0 20.1 9.5"/><path d="M4 20 20.5 3.5"/></g></svg></div></div></div></div>
-      Ledger Shield <small id="bankName">Harbor Point Bank</small>
-    </div>
-    <nav class="nav">
-      <a data-page="shield" class="on">Shield</a>
-      <a data-page="live">Live view</a>
-      <a data-page="policy">Bank policy</a>
-      <a data-page="compliance">Compliance <span class="badge" id="vbadge" style="display:none">0</span></a>
-    </nav>
-    <div class="spacer"></div>
+<div class="app">
+<aside class="side">
+  <div class="sbrand"><div class="bullmark" role="img" aria-label="Ledger Shield: the bull knocking OpenAI, Anthropic, Gemini and Grok off its horns"><div class="art"><svg class="burst" viewBox="0 0 100 100"><path d="M50 4l8 24 24-11-11 24 25 9-25 9 11 24-24-11-8 24-8-24-24 11 11-24L4 50l25-9-11-24 24 11z" fill="#ffcf3a"/><path d="M50 24l5 15 15-7-7 15 15 3-15 3 7 15-15-7-5 15-5-15-15 7 7-15-15-3 15-3-7-15 15 7z" fill="#ff7a2f"/></svg><img src="assets/bull.png" alt=""><div class="coin" style="left:79%;top:2%;transform:translate(-50%,-50%) rotate(-16deg)" title="OpenAI"><div class="face"><svg viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" fill="#111"/></svg></div></div><div class="coin" style="left:106%;top:18%;transform:translate(-50%,-50%) rotate(14deg)" title="Gemini"><div class="face"><svg viewBox="0 0 24 24"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4285F4"/></svg></div></div><div class="coin" style="left:96%;top:-26%;transform:translate(-50%,-50%) rotate(30deg)" title="Anthropic"><div class="face"><svg viewBox="0 0 24 24"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" fill="#191919"/></svg></div></div><div class="coin" style="left:124%;top:-6%;transform:translate(-50%,-50%) rotate(-34deg)" title="Grok"><div class="face"><svg viewBox="0 0 24 24"><g fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round"><path d="M14.5 3.9A8.5 8.5 0 1 0 20.1 9.5"/><path d="M4 20 20.5 3.5"/></g></svg></div></div></div></div><div class="sname">Ledger Shield<small id="bankName">Harbor Point Bank</small></div></div>
+  <nav class="nav snav">
+    <a data-page="shield" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6z"/></svg><span>Shield</span></a>
+    <a data-page="live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Live view</span></a>
+    <a data-page="compliance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v4H9zM6 5H5v16h14V5h-1"/><path d="M9 13l2 2 4-4"/></svg><span>Compliance</span> <span class="badge" id="vbadge" style="display:none">0</span></a>
+    <div class="sgroup">Admin</div>
+    <a data-page="policy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg><span>AI permissions</span></a>
+    <a data-page="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span>People &amp; teams</span></a>
+    <a data-page="lists"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg><span>Clients &amp; lists</span></a>
+    <a data-page="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span>Setup &amp; lock</span></a>
+  </nav>
+  <div class="sfoot">
     <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Starting protection…</span><span class="progress" id="mprog"><div id="mbar"></div></span></span>
     <span class="pill" title="Requests to any outside server since the app finished loading">Sent off this computer <b id="egress" style="color:var(--good)">0</b></span>
-    <select class="user" id="user" title="Who is using the tool (for the compliance log)">
+    <div class="srow"><select class="user" id="user" title="Who is using the tool">
       <option>Jordan Lee · Credit Analyst</option>
       <option>Priya Shah · Relationship Manager</option>
       <option>Marcus Webb · Underwriter</option>
+      <option>Sam Ortiz · Operations</option>
+      <option>Alex Kim · Contractor</option>
     </select>
-    <button class="iconbtn" id="theme" title="Switch light / dark">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
-    </button>
+    <button class="iconbtn" id="theme" title="Switch light / dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button></div>
   </div>
+</aside>
+<div class="wrap">
 
   <!-- ================= SHIELD ================= -->
   <section class="page on" id="p-shield">
@@ -445,29 +482,41 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
     </div>
   </section>
 
-  <!-- ================= POLICY ================= -->
+  <!-- ================= ADMIN: AI PERMISSIONS ================= -->
   <section class="page" id="p-policy">
-    <div class="hero">
-      <div>
-        <div class="eyebrow">Set once by compliance</div>
-        <h1>What your bank <span class="grad">keeps private</span></h1>
-        <p>List your clients, deals, people and internal systems, and choose what happens to each kind of data. Shield follows this policy for everyone using it, and it's stored only on this device.</p>
-      </div>
-      <div class="card" style="box-shadow:none">
-        <div class="ch"><h2>Bank</h2><div class="right"><button class="btn" id="pSetup">Run setup</button><button class="btn" id="pImport">Import policy</button><button class="btn" id="pExport">Export policy</button></div></div>
-        <div class="pad"><div class="bankrow"><input id="pBank" placeholder="Bank name"></div><div class="hint" id="pUpdated" style="margin-top:10px"></div>
-          <div class="lockbar"><span class="st" id="lockState"></span><div class="right" id="lockBtns"></div></div></div>
-        <input type="file" id="pFile" accept=".json,.csv,.txt" style="display:none">
-      </div>
-    </div>
-
-    <div id="policyBody">
+    <div class="hero"><div><div class="eyebrow">Admin</div><h1>What each AI may see</h1>
+      <p>For every kind of detail, choose whether outside AI, your bank's approved AI and AI running on the computer can see it.</p></div></div>
+    <div class="lockable">
     <div class="card">
       <div class="ch"><h2>What each AI is allowed to see</h2>
         <div class="sub"><b style="color:var(--accent2)">Hide</b> encrypts it behind a token you can restore. <b>Show</b> lets that AI see it. <b style="color:var(--bad)">Remove</b> deletes it for good. Employees pick the AI they're sending to; Shield applies that column.</div></div>
       <div class="matrix"><table id="matrix"></table></div>
     </div>
 
+    </div>
+  </section>
+
+  <!-- ================= ADMIN: PEOPLE & TEAMS ================= -->
+  <section class="page" id="p-people">
+    <div class="hero"><div><div class="eyebrow">Admin</div><h1>Who inside the bank sees what</h1>
+      <p>Not everyone at the bank needs every detail. Choose what each team can see when Shield puts the real details back. Anything set to Hidden stays locked for that team, even on their own screen.</p></div></div>
+    <div class="card" style="margin-bottom:18px">
+      <div class="ch"><h2>Right now</h2><div class="sub">Switch the person at the bottom of the sidebar, then paste an AI answer on the Shield tab: details hidden for their team stay locked.</div></div>
+      <div class="pad" id="peopleNow"></div>
+    </div>
+    <div class="lockable">
+    <div class="card">
+      <div class="ch"><h2>Teams</h2><div class="sub"><b style="color:var(--good)">See</b> shows the real detail. <b style="color:var(--bad)">Hidden</b> keeps it locked for that team. Click to switch.</div></div>
+      <div class="matrix"><table id="peopleMatrix"></table></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ================= ADMIN: CLIENTS & LISTS ================= -->
+  <section class="page" id="p-lists">
+    <div class="hero"><div><div class="eyebrow">Admin</div><h1>Clients, deals and other lists</h1>
+      <p>Names and formats only your bank knows. Shield always hides these.</p></div></div>
+    <div class="lockable">
     <div class="grid2 mt">
       <div class="card listcard"><div class="ch"><h2>Clients and counterparties</h2><span class="count" id="n-CLIENT">0</span><div class="right"><button class="btn small" data-csv="CLIENT">Upload CSV</button></div>
         <div class="sub">Client names, borrowers, companies you lend to. One per line.</div></div>
@@ -496,12 +545,24 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
     </div>
 
     </div>
-
     <div class="card mt">
       <div class="ch"><h2>Test your policy</h2><span class="tag">Live</span><div class="sub">Type anything, like a client name you just added, and see what Shield would do.</div></div>
       <div class="pad"><textarea class="field" id="ptest" rows="3" spellcheck="false" placeholder="e.g. Call Daniel Okafor about the Project Falcon term sheet. RiskView 360 password Harbor2026!"></textarea></div>
       <div class="restore-out" id="ptestOut" style="border-style:solid"><span class="empty">Results appear here.</span></div>
     </div>
+
+  </section>
+
+  <!-- ================= ADMIN: SETUP & LOCK ================= -->
+  <section class="page" id="p-setup">
+    <div class="hero"><div><div class="eyebrow">Admin</div><h1>Setup and lock</h1>
+      <p>Lock the policy with a compliance passcode, and share it with employees as an encrypted file.</p></div></div>
+    <div class="card" style="box-shadow:none">
+        <div class="ch"><h2>Bank</h2><div class="right"><button class="btn" id="pSetup">Run setup</button><button class="btn" id="pImport">Import policy</button><button class="btn" id="pExport">Export policy</button></div></div>
+        <div class="pad"><div class="bankrow"><input id="pBank" placeholder="Bank name"></div><div class="hint" id="pUpdated" style="margin-top:10px"></div>
+          <div class="lockbar"><span class="st" id="lockState"></span><div class="right" id="lockBtns"></div></div></div>
+        <input type="file" id="pFile" accept=".json,.csv,.txt" style="display:none">
+      </div>
   </section>
 
   <!-- ================= COMPLIANCE ================= -->
@@ -529,6 +590,7 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
       <div class="scroll" style="max-height:480px"><table><thead><tr><th>Time</th><th>Employee</th><th>Event</th><th>Details</th><th>Level</th></tr></thead><tbody id="log"></tbody></table></div>
     </div>
   </section>
+</div>
 </div>
 <div class="modal" id="modal"><div class="mbox"><div class="mhead"><div class="stepline" id="mSteps"></div><h3 id="mTitle"></h3><p id="mText"></p></div><div class="mbody" id="mBody"></div><div class="mfoot"><button class="btn" id="mBack">Back</button><div class="right"><button class="btn" id="mSkip">Skip</button><button class="btn primary" id="mNext">Continue</button></div></div></div></div>
 <div class="toast" id="toast"></div>
@@ -768,6 +830,7 @@ async function protect(value, cat) {
 }
 async function reveal(token) {
   const e = byToken.get(token); if (!e) return null;
+  if (!canSee(e.cat)) return { locked: true, cat: e.cat };
   return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: e.iv }, key, e.ct));
 }
 
@@ -908,8 +971,8 @@ async function restore(text) {
   let h = '', p = 0, n = 0; const rx = /\[([A-Z]+)_(\d+)\]/g; let m;
   while ((m = rx.exec(text))) {
     const v = await reveal(m[0]);
-    h += esc(text.slice(p, m.index)) + (v != null ? `<span class="tok plain" style="--c:${cv(m[1])}">${esc(v)}</span>` : esc(m[0]));
-    p = m.index + m[0].length; if (v != null) n++;
+    h += esc(text.slice(p, m.index)) + (v == null ? esc(m[0]) : v.locked ? `<span class="tok locked" style="--c:var(--faint)" title="Hidden for your team">🔒 ${esc(CATS[v.cat].label)}</span>` : `<span class="tok plain" style="--c:${cv(m[1])}">${esc(v)}</span>`);
+    p = m.index + m[0].length; if (v != null && !v.locked) n++;
   }
   $('rout').innerHTML = text ? h + esc(text.slice(p)) : '<span class="empty">Real names and numbers come back here, only on this screen.</span>';
   clearTimeout(restoreTimer);
@@ -994,7 +1057,7 @@ async function checkPass(pass) { return !!policy.lock && (await passHash(pass, u
 async function setPass(pass) { const salt = crypto.getRandomValues(new Uint8Array(16)); policy.lock = { salt: b64(salt), hash: await passHash(pass, salt) }; }
 function renderLock() {
   const locked = !!policy.lock && !unlocked;
-  $('policyBody').inert = locked; $('pBank').disabled = locked; $('pImport').disabled = locked; $('pSetup').disabled = locked;
+  document.querySelectorAll('.lockable').forEach(el => el.inert = locked); $('pBank').disabled = locked; $('pImport').disabled = locked; $('pSetup').disabled = locked;
   $('lockState').innerHTML = !policy.lock ? '🔓 Anyone on this device can edit the policy' : locked ? '🔒 Locked by compliance' : '🔓 Unlocked for editing';
   $('lockBtns').innerHTML = !policy.lock ? '<button class="btn small" id="lkSet">Set compliance passcode</button>' : locked ? '<button class="btn small" id="lkOpen">Unlock to edit</button>' : '<button class="btn small" id="lkClose">Lock policy</button>';
   $('lkSet') && ($('lkSet').onclick = async () => { const p = await ask('Set a compliance passcode', 'Only people with this passcode can change the policy. It is also used to encrypt the policy file you send to employees.', 'New passcode', true); if (!p) return; await setPass(p); unlocked = false; savePolicy('Compliance passcode set'); renderLock(); toast('Policy locked', 'Employees can use Shield, but only compliance can change what it protects.', true); });
@@ -1120,6 +1183,39 @@ function runSetup() {
 }
 $('pSetup').onclick = runSetup;
 
+// ---------- People & teams: who inside the bank sees what ----------
+const ROLES = {
+  analyst:     { label: 'Credit analysts', hide: ['CREDENTIAL', 'CARDSEC', 'CARD'] },
+  rm:          { label: 'Relationship managers', hide: ['CREDENTIAL', 'CARDSEC'] },
+  underwriter: { label: 'Underwriters', hide: ['CREDENTIAL', 'CARDSEC', 'CARD'] },
+  ops:         { label: 'Operations', hide: ['CREDENTIAL', 'CARDSEC', 'SSN', 'TAXID', 'GOVID', 'CREDIT', 'DEAL', 'INTERNAL'] },
+  contractor:  { label: 'Contractors', hide: Object.keys(CATS).filter(k => !['AMOUNT', 'LOCATION', 'COMPANY'].includes(k)) },
+};
+const ROLE_OF = { 'Credit Analyst': 'analyst', 'Relationship Manager': 'rm', 'Underwriter': 'underwriter', 'Operations': 'ops', 'Contractor': 'contractor' };
+policy.people ||= {};
+const myRole = () => ROLE_OF[$('user').value.split(' · ')[1]] || 'analyst';
+const seeOf = (role, k) => (policy.people[role] || {})[k] || (ROLES[role].hide.includes(k) ? 'hidden' : 'see');
+const canSee = k => seeOf(myRole(), k) === 'see';
+function renderPeople() {
+  let h = '<thead><tr><th>Kind of detail</th>' + Object.values(ROLES).map(r => `<th>${r.label}</th>`).join('') + '</tr></thead><tbody>';
+  let g = '';
+  for (const [k, c] of Object.entries(CATS)) {
+    if (c.group !== g) { g = c.group; h += `<tr class="grp"><td colspan="${Object.keys(ROLES).length + 1}">${g}</td></tr>`; }
+    h += `<tr><td><span style="display:flex;align-items:center;gap:9px"><span class="sw" style="--c:var(${c.c})"></span>${c.label}</span></td>` + Object.keys(ROLES).map(r => { const v = seeOf(r, k); return `<td><button class="vis ${v}" data-r="${r}" data-k="${k}">${v === 'see' ? 'See' : 'Hidden'}</button></td>`; }).join('') + '</tr>';
+  }
+  $('peopleMatrix').innerHTML = h + '</tbody>';
+  const r = myRole(), hidden = Object.keys(CATS).filter(k => seeOf(r, k) === 'hidden');
+  $('peopleNow').innerHTML = `<b>${esc($('user').value.split(' · ')[0])}</b> is in <b>${ROLES[r].label}</b>. Hidden for this team: ${hidden.length ? hidden.map(k => `<span class="chip" style="--c:var(--bad)">${CATS[k].label}</span>`).join(' ') : 'nothing'}`;
+}
+$('peopleMatrix').addEventListener('click', e => {
+  const b = e.target.closest('.vis'); if (!b) return;
+  const { r, k } = b.dataset, next = seeOf(r, k) === 'see' ? 'hidden' : 'see';
+  (policy.people[r] ||= {})[k] = next; renderPeople(); savePolicy(`${ROLES[r].label} · ${CATS[k].label}: ${next === 'see' ? 'can see' : 'hidden'}`);
+  restore($('rin').value);
+});
+$('user').addEventListener('change', () => { renderPeople(); restore($('rin').value); });
+renderPeople();
+
 // ---------- Compliance log ----------
 let events = store.get('ls_events2', []);
 const who = () => $('user').value.split(' · ')[0];
@@ -1233,8 +1329,8 @@ function startEgressWatch() {
 // ---------- Misc ----------
 function download(text, name, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
 let tt; function toast(title, body, ok) { const t = $('toast'); t.className = 'toast show' + (ok ? ' ok' : ''); t.innerHTML = `<b>${esc(title)}</b>${esc(body)}`; clearTimeout(tt); tt = setTimeout(() => t.className = 'toast' + (ok ? ' ok' : ''), 4000); }
-document.querySelectorAll('.nav a[data-page]').forEach(a => a.onclick = () => {
-  document.querySelectorAll('.nav a').forEach(x => x.classList.toggle('on', x === a));
+document.querySelectorAll('.snav a[data-page]').forEach(a => a.onclick = () => {
+  document.querySelectorAll('.snav a').forEach(x => x.classList.toggle('on', x === a));
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'p-' + a.dataset.page));
   window.scrollTo({ top: 0 });
 });
