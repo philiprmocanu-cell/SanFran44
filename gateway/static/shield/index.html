@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,14 +15,35 @@
   --glow1: rgba(132,146,255,.20); --glow2: rgba(62,224,197,.11); --shadow: 0 30px 80px -40px rgba(0,0,0,.8);
 }
 [data-theme="light"] {
-  --bg: #f4f6fb; --bg-soft: #eef1f8; --panel: #ffffff; --panel-solid: #ffffff; --panel2: #f1f3f9;
-  --line: rgba(15,23,42,.09); --line2: rgba(15,23,42,.16); --field: #fafbfe;
-  --ink: #0d1424; --quiet: #4e586c; --faint: #8a93a6;
-  --accent: #4a57e8; --accent2: #0a9e86; --good: #0f9d68; --bad: #d93b3b; --warn: #b7791f; --on-accent: #ffffff;
-  --c-person: #6d4ae0; --c-company: #1f6fc9; --c-location: #0c8a6a; --c-gov: #cc2f2f; --c-bank: #a87200;
-  --c-card: #c25f00; --c-contact: #0b7f92; --c-amount: #c2357a; --c-policy: #9a2fc4; --c-cred: #d1173f; --c-date: #55637a;
-  --glow1: rgba(74,87,232,.10); --glow2: rgba(10,158,134,.07); --shadow: 0 24px 60px -36px rgba(15,23,42,.35);
+  --bg: #f1ebdf; --bg-soft: #ece4d4; --panel: #ffffff; --panel-solid: #ffffff; --panel2: #f7f3ea;
+  --line: #26231f; --line2: #26231f; --field: #fffdf8;
+  --ink: #26231f; --quiet: #5f5a52; --faint: #9a9387;
+  --accent: #ff7a2f; --accent2: #ff7a2f; --good: #1d8a4f; --bad: #d23a2a; --warn: #b8730a; --on-accent: #ffffff;
+  --c-person: #6d4ae0; --c-company: #1f6fc9; --c-location: #0c8a6a; --c-gov: #cc2f2f; --c-bank: #a06a00;
+  --c-card: #d4580d; --c-contact: #0b7f92; --c-amount: #c2357a; --c-policy: #9a2fc4; --c-cred: #d1173f; --c-date: #55637a;
+  --glow1: transparent; --glow2: transparent; --shadow: none;
 }
+[data-theme="light"] .card, [data-theme="light"] .stat, [data-theme="light"] .step, [data-theme="light"] .destbar { border-width: 1.5px; border-radius: 12px; }
+[data-theme="light"] .hero h1, [data-theme="light"] .ch h2 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+[data-theme="light"] .hero h1 { text-transform: uppercase; font-weight: 800; letter-spacing: -.01em; }
+[data-theme="light"] .ch h2 { font-weight: 800; }
+[data-theme="light"] .editor, [data-theme="light"] .field, [data-theme="light"] .scroll, [data-theme="light"] .matrix, [data-theme="light"] .restore-out, [data-theme="light"] .llm-out { border-color: rgba(38,35,31,.25); }
+[data-theme="light"] .safe { border-color: var(--accent); border-width: 1.5px; }
+[data-theme="light"] .nav, [data-theme="light"] .pill, [data-theme="light"] select.user, [data-theme="light"] .iconbtn, [data-theme="light"] .tag, [data-theme="light"] .brand small { border-color: rgba(38,35,31,.25); }
+[data-theme="light"] .nav a.on { background: var(--ink); color: #fff; box-shadow: none; }
+[data-theme="light"] .btn { border-color: var(--ink); background: #fff; }
+[data-theme="light"] .btn.primary { background: var(--accent); box-shadow: none; }
+[data-theme="light"] .card.glow { box-shadow: none; border-color: var(--accent); }
+[data-theme="light"] .top { background: color-mix(in srgb, var(--bg) 90%, transparent); }
+[data-theme="light"] .eyebrow { color: var(--accent); }
+[data-theme="light"] .step .n { background: var(--accent); color: #fff; border-radius: 50%; }
+[data-theme="light"] .dest.on { border-color: var(--accent); background: #fff3ea; box-shadow: 0 0 0 2px var(--accent); }
+[data-theme="light"] .mbox { border: 1.5px solid var(--ink); border-radius: 16px; }
+[data-theme="light"] .opt.on { border-color: var(--accent); background: #fff3ea; box-shadow: 0 0 0 2px var(--accent); }
+[data-theme="light"] .presets button.on, [data-theme="light"] select.act.encrypt { color: var(--accent); border-color: var(--accent); }
+[data-theme="light"] .feed span { color: var(--accent); }
+.pixels { position: fixed; top: 0; right: 0; z-index: 0; pointer-events: none; }
+[data-theme="dark"] .pixels { opacity: .5; }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -232,10 +253,11 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
 </style>
 </head>
 <body>
+<svg class="pixels" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><g fill="#ff7a2f"><rect x="0" y="0" width="12" height="12"/><rect x="12" y="0" width="12" height="12"/><rect x="24" y="0" width="12" height="12"/><rect x="36" y="0" width="12" height="12"/><rect x="48" y="0" width="12" height="12"/><rect x="60" y="0" width="12" height="12"/><rect x="24" y="12" width="12" height="12"/><rect x="48" y="12" width="12" height="12"/><rect x="60" y="12" width="12" height="12"/><rect x="36" y="24" width="12" height="12"/><rect x="60" y="24" width="12" height="12"/><rect x="48" y="36" width="12" height="12"/><rect x="60" y="48" width="12" height="12"/></g></svg>
 <div class="wrap">
   <div class="top">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" fill="url(#g)"/><path d="M8.5 12l2.3 2.3 4.7-4.8" stroke="#06121a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#8492ff"/><stop offset="1" stop-color="#3ee0c5"/></linearGradient></defs></svg>
+      <svg width="70" height="34" viewBox="0 0 134 64" aria-label="Ledger Shield: the bull knocking the crowns off OpenAI, Anthropic, Gemini and Grok"><g fill="currentColor"><path d="M10 32c0-6 4-10 11-10h12c3-4 8-6 12-5 4 1 6 5 6 9l2 3v8c0 3-3 5-7 5H17c-5 0-7-3-7-7z"/><path d="M49 27l12 5 3 7-4 4-10-3z"/><path d="M14 42l-5 10h5l5-9zM24 43l-3 10h5l3-10zM40 43l3 10h5l-2-10zM48 41l7 10h5l-7-11z"/><path d="M11 28c-5-1-7-5-6-10l2 1c0 3 1 6 4 7z"/></g><path d="M55 30c3-7 8-9 13-8M50 28c0-7 4-11 10-12" stroke="#ff7a2f" stroke-width="3.2" stroke-linecap="round" fill="none"/><g><title>OpenAI</title><circle cx="78" cy="47" r="7" fill="#fff" stroke="#26231f" stroke-width="1.2"/><g transform="translate(73.6 42.6) scale(.366)"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" fill="#111"/></g><path transform="translate(70 22) rotate(-38) scale(.62)" d="M0 9V1l4 4 3-5 3 5 4-4v8z" fill="#ff7a2f"/></g><g><title>Anthropic</title><circle cx="93" cy="47" r="7" fill="#fff" stroke="#26231f" stroke-width="1.2"/><g transform="translate(88.6 42.6) scale(.366)"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" fill="#191919"/></g><path transform="translate(92 18) rotate(22) scale(.62)" d="M0 9V1l4 4 3-5 3 5 4-4v8z" fill="#ff7a2f"/></g><g><title>Gemini</title><circle cx="108" cy="47" r="7" fill="#fff" stroke="#26231f" stroke-width="1.2"/><g transform="translate(103.6 42.6) scale(.366)"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4285F4"/></g><path transform="translate(105 27) rotate(-20) scale(.62)" d="M0 9V1l4 4 3-5 3 5 4-4v8z" fill="#ff7a2f"/></g><g><title>Grok</title><circle cx="123" cy="47" r="7" fill="#fff" stroke="#26231f" stroke-width="1.2"/><g transform="translate(118.6 42.6) scale(.366)"><g fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round"><path d="M14.5 3.9A8.5 8.5 0 1 0 20.1 9.5"/><path d="M4 20 20.5 3.5"/></g></g><path transform="translate(125 22) rotate(40) scale(.62)" d="M0 9V1l4 4 3-5 3 5 4-4v8z" fill="#ff7a2f"/></g></svg>
       Ledger Shield <small id="bankName">Harbor Point Bank</small>
     </div>
     <nav class="nav">
@@ -244,8 +266,8 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
       <a data-page="compliance">Compliance <span class="badge" id="vbadge" style="display:none">0</span></a>
     </nav>
     <div class="spacer"></div>
-    <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Loading local AI model…</span><span class="progress" id="mprog"><div id="mbar"></div></span></span>
-    <span class="pill" title="Requests to any outside server since the app finished loading">Sent off device <b id="egress" style="color:var(--good)">0</b></span>
+    <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Starting protection…</span><span class="progress" id="mprog"><div id="mbar"></div></span></span>
+    <span class="pill" title="Requests to any outside server since the app finished loading">Sent off this computer <b id="egress" style="color:var(--good)">0</b></span>
     <select class="user" id="user" title="Who is using the tool (for the compliance log)">
       <option>Jordan Lee · Credit Analyst</option>
       <option>Priya Shah · Relationship Manager</option>
@@ -260,40 +282,40 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
   <section class="page on" id="p-shield">
     <div class="hero">
       <div>
-        <div class="eyebrow">On-device protection</div>
-        <h1>Use any AI.<br><span class="grad">Leak nothing.</span></h1>
-        <p>Paste anything. An AI model running on this computer finds client data, account numbers and deal secrets, and encrypts each one with AES-256 before it can leave your screen.</p>
+        <div class="eyebrow">Private by design</div>
+        <h1>Use any AI.<br><span class="grad">Share nothing private.</span></h1>
+        <p>Paste an email or a memo. Ledger Shield hides client names, account numbers and other private details before you share it with any AI, then puts them back in the answer.</p>
       </div>
       <div class="steps">
-        <div class="step"><div class="n">1</div><b>Paste</b><span>Sensitive data is found and encrypted as you watch</span></div>
-        <div class="step"><div class="n">2</div><b>Copy to any AI</b><span>ChatGPT, Claude, or a local model</span></div>
-        <div class="step"><div class="n">3</div><b>Restore</b><span>Paste the answer back. Real values decrypt only here</span></div>
+        <div class="step"><div class="n">1</div><b>Paste</b><span>Private details are hidden as you watch</span></div>
+        <div class="step"><div class="n">2</div><b>Copy into AI</b><span>ChatGPT, Claude, or your bank's AI</span></div>
+        <div class="step"><div class="n">3</div><b>Paste the answer back</b><span>The real details come back, only here</span></div>
       </div>
     </div>
 
     <div class="stats">
-      <div class="stat good"><div class="n" id="s-items">0</div><div class="l">Items encrypted</div></div>
-      <div class="stat bad"><div class="n" id="s-removed">0</div><div class="l">Secrets removed outright</div></div>
-      <div class="stat warn"><div class="n" id="s-warn">0</div><div class="l">Compliance warnings</div></div>
-      <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Scan time, on this device</div></div>
+      <div class="stat good"><div class="n" id="s-items">0</div><div class="l">Details hidden</div></div>
+      <div class="stat bad"><div class="n" id="s-removed">0</div><div class="l">Passwords removed</div></div>
+      <div class="stat warn"><div class="n" id="s-warn">0</div><div class="l">Warnings</div></div>
+      <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Checked in</div></div>
     </div>
 
     <div class="destbar">
-      <span class="lbl">Sending to</span>
+      <span class="lbl">Sharing with</span>
       <div class="dests" id="dests"></div>
       <span class="destsum" id="destsum"></span>
     </div>
 
     <div class="grid2">
       <div class="card">
-        <div class="ch"><h2>Original</h2><span class="tag red">Never leaves this device</span>
+        <div class="ch"><h2>Original</h2><span class="tag red">Stays on this computer</span>
           <div class="right"><button class="btn" id="sample">Load sample email</button><button class="btn" id="clear">Clear</button></div></div>
         <div class="editor"><div class="hl" id="hl"></div><textarea id="input" spellcheck="false" placeholder="Paste a client email, a loan memo, spreadsheet rows…"></textarea></div>
         <div class="alerts" id="alerts"></div>
         <div class="chips" id="chips"></div>
       </div>
       <div class="card glow">
-        <div class="ch"><h2>Safe to share</h2><span class="tag green">Encrypted</span>
+        <div class="ch"><h2>Safe to share</h2><span class="tag green">Private details hidden</span>
           <div class="right"><button class="btn primary" id="copy" disabled>Copy safe version</button></div></div>
         <div class="safe" id="safe"><span class="empty">The protected version appears here, live, as you type.</span></div>
         <div class="feed" id="feed">Waiting for text…</div>
@@ -303,18 +325,18 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
 
     <div class="grid2 mt">
       <div class="card">
-        <div class="ch"><h2>Encrypted vault</h2><span class="tag">AES-256-GCM · key never leaves this device</span></div>
-        <div class="scroll"><table><thead><tr><th>Token</th><th>Type</th><th>Ciphertext</th></tr></thead><tbody id="vault"><tr><td colspan="3" class="empty">Nothing encrypted yet.</td></tr></tbody></table></div>
+        <div class="ch"><h2>What was hidden</h2><span class="tag">Locked on this computer</span></div>
+        <div class="scroll"><table><thead><tr><th>Placeholder</th><th>Type</th><th>Locked code</th></tr></thead><tbody id="vault"><tr><td colspan="3" class="empty">Nothing hidden yet.</td></tr></tbody></table></div>
       </div>
       <div class="card">
-        <div class="ch"><h2>Restore the AI's answer</h2><span class="tag">Decrypted on this device</span></div>
+        <div class="ch"><h2>Put the real details back</h2><span class="tag">Only on this computer</span></div>
         <div class="pad" style="padding-bottom:12px"><textarea class="field" id="rin" rows="4" placeholder="Paste the AI's reply here, tokens and all…"></textarea></div>
         <div class="restore-out" id="rout"><span class="empty">Real names and numbers come back here, only on this screen.</span></div>
       </div>
     </div>
 
     <div class="card mt">
-      <div class="ch"><h2>Ask a local AI</h2><span class="tag green">Runs on this computer · no internet</span>
+      <div class="ch"><h2>Ask an AI on this computer</h2><span class="tag green">No internet needed</span>
         <div class="right"><select class="user" id="llmModel" style="display:none"></select><button class="btn primary" id="llmGo" disabled>Send safe version</button></div>
         <div class="sub" id="llmSub">Checking for a local AI model…</div></div>
       <div class="pad" style="padding-bottom:12px"><input class="field" id="llmPrompt" value="Summarize this and list the next steps for the bank. Keep every bracketed token exactly as written."></div>
@@ -327,7 +349,7 @@ select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad
     <div class="hero">
       <div>
         <div class="eyebrow">Set once by compliance</div>
-        <h1>What your bank <span class="grad">never lets out</span></h1>
+        <h1>What your bank <span class="grad">keeps private</span></h1>
         <p>List your clients, deals, people and internal systems, and choose what happens to each kind of data. Shield follows this policy for everyone using it, and it's stored only on this device.</p>
       </div>
       <div class="card" style="box-shadow:none">
@@ -422,8 +444,8 @@ const store = {
 const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
 
 // ---------- Theme ----------
-const setTheme = t => { document.documentElement.dataset.theme = t; store.set('ls_theme', t); };
-setTheme(store.get('ls_theme', 'dark'));
+const setTheme = t => { document.documentElement.dataset.theme = t; store.set('ls_theme2', t); };
+setTheme(store.get('ls_theme2', 'light'));
 $('theme').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 
 // ---------- Categories ----------
@@ -595,10 +617,10 @@ env.backends.onnx.wasm.numThreads = 1;
 let ner = null;
 pipeline('token-classification', 'Xenova/bert-base-NER', {
   dtype: 'q8',
-  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) { $('mbar').style.width = (p.progress || 0) + '%'; $('mstatus').textContent = `Loading local AI model… ${Math.round(p.progress || 0)}%`; } },
+  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) { $('mbar').style.width = (p.progress || 0) + '%'; $('mstatus').textContent = `Starting protection… ${Math.round(p.progress || 0)}%`; } },
 }).then(p => {
   ner = p; $('mprog').style.display = 'none'; $('mdot').classList.add('ok');
-  $('mstatus').textContent = IS_LOCAL ? 'AI model running on this computer' : 'AI model running in this browser';
+  $('mstatus').textContent = IS_LOCAL ? 'Protection on · runs on this computer' : 'Protection on · runs in this browser';
   startEgressWatch(); scheduleScan(); scanPolicyTest();
 }).catch(e => { console.error(e); $('mstatus').textContent = 'AI model unavailable · rules only'; $('mprog').style.display = 'none'; startEgressWatch(); });
 
@@ -726,7 +748,7 @@ function animate() {
   });
   const fresh = current.entries.filter(e => e && e.fresh);
   if (fresh.length) {
-    let j = 0; const tick = () => { const e = fresh[j]; if (!e) return; $('feed').innerHTML = `<span>ENCRYPTING</span> ${esc(e.token)} → ${esc(e.cipher.slice(0, 52))}…`; j++; setTimeout(tick, 110); }; tick();
+    let j = 0; const tick = () => { const e = fresh[j]; if (!e) return; $('feed').innerHTML = `<span>LOCKING</span> ${esc(e.token)} → ${esc(e.cipher.slice(0, 52))}…`; j++; setTimeout(tick, 110); }; tick();
   } else if (!current.text.trim()) $('feed').textContent = 'Waiting for text…';
 }
 
@@ -734,19 +756,19 @@ function renderChips(spans) {
   const counts = {}; spans.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
   $('chips').innerHTML = Object.entries(counts).map(([c, n]) => `<span class="chip" style="--c:${cv(c)}">${n} × ${CATS[c].label}</span>`).join('') || '<span class="empty" style="font-size:13px">Nothing sensitive found yet.</span>';
   const enc = spans.filter(s => s.act !== 'block').length, ai = spans.filter(s => s.src === 'ai').length;
-  $('legend').innerHTML = spans.length ? `<span class="chip" style="--c:var(--good)">${enc} encrypted</span>` + (ai ? `<span class="chip" style="--c:var(--accent)">${ai} found by the on-device AI</span>` : '') + (spans.length - enc ? `<span class="chip" style="--c:var(--bad)">${spans.length - enc} removed for good</span>` : '') : '';
+  $('legend').innerHTML = spans.length ? `<span class="chip" style="--c:var(--good)">${enc} hidden</span>` + (ai ? `<span class="chip" style="--c:var(--accent)">${ai} found by the built-in AI</span>` : '') + (spans.length - enc ? `<span class="chip" style="--c:var(--bad)">${spans.length - enc} removed for good</span>` : '') : '';
 }
 function renderVault() {
   const rows = [...new Set(current.entries.filter(Boolean))].reverse();
-  $('vault').innerHTML = rows.length ? rows.map(e => `<tr class="${e.fresh ? 'new' : ''}"><td><span class="tok" style="--c:${cv(e.cat)}">${e.token}</span></td><td>${CATS[e.cat].label}</td><td class="cipher">${e.cipher.slice(0, 40)}…</td></tr>`).join('') : '<tr><td colspan="3" class="empty">Nothing encrypted yet.</td></tr>';
+  $('vault').innerHTML = rows.length ? rows.map(e => `<tr class="${e.fresh ? 'new' : ''}"><td><span class="tok" style="--c:${cv(e.cat)}">${e.token}</span></td><td>${CATS[e.cat].label}</td><td class="cipher">${e.cipher.slice(0, 40)}…</td></tr>`).join('') : '<tr><td colspan="3" class="empty">Nothing hidden yet.</td></tr>';
   rows.forEach(e => e.fresh = false);
 }
 function renderAlerts(spans, warns) {
   const a = [];
   const removed = [...new Set(spans.filter(s => s.act === 'block').map(s => CATS[s.cat].label))];
-  if (removed.length) a.push(`<div class="alert bad"><b>Removed for good: ${esc(removed.join(', '))}</b>These are never sent anywhere, not even encrypted. Nobody should paste them into an AI.</div>`);
+  if (removed.length) a.push(`<div class="alert bad"><b>Removed for good: ${esc(removed.join(', '))}</b>These are never shared with any AI, not even hidden.</div>`);
   const byW = {}; warns.forEach(w => (byW[w.warn] ||= new Set()).add(w.text.toLowerCase()));
-  for (const [k, set] of Object.entries(byW)) a.push(`<div class="alert warn"><b>${WARNS[k].label}</b>Mentions “${esc([...set].slice(0, 4).join('”, “'))}”. ${WARNS[k].why} Encryption hides names, not meaning, so check before sharing.</div>`);
+  for (const [k, set] of Object.entries(byW)) a.push(`<div class="alert warn"><b>${WARNS[k].label}</b>Mentions “${esc([...set].slice(0, 4).join('”, “'))}”. ${WARNS[k].why} Hiding names doesn't hide what this means, so check before sharing.</div>`);
   $('alerts').innerHTML = a.join('');
 }
 
