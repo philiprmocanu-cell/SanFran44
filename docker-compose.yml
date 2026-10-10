@@ -1,0 +1,45 @@
+# Three containers:
+#   gateway  - the app + data guard (the only door in)
+#   sandbox  - the AI analyst, sealed: internal network only, read-only, no mounts, no admin
+#   egress   - the firewall; the sandbox's only way out, allowlisted to public SEC data + the AI API
+networks:
+  sealed:
+    internal: true   # no route to the internet from this network
+  outside: {}
+
+services:
+  egress:
+    build: ./egress
+    networks: [sealed, outside]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  sandbox:
+    build: ./sandbox
+    networks: [sealed]
+    env_file: .env
+    environment:
+      HTTPS_PROXY: http://egress:8888
+      HTTP_PROXY: http://egress:8888
+      NO_PROXY: ""
+    read_only: true
+    tmpfs: ["/tmp:size=64m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 768m
+    depends_on: [egress]
+
+  gateway:
+    build: ./gateway
+    networks: [sealed, outside]
+    ports: ["8080:8080"]
+    environment:
+      SANDBOX_URL: http://sandbox:9000
+      EGRESS_LOG: http://egress:8889/log
+      NO_PROXY: "*"
+      GUARD_TERMS: "Project Falcon,Acme Holdings"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on: [sandbox]

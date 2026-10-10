@@ -1,0 +1,3 @@
+# Only these hosts (and their subdomains) can be reached from the sandbox.
+sec.gov
+api.anthropic.com
