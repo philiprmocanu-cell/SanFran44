@@ -1,195 +1,245 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ledger Shield</title>
 <style>
-:root {
-  --bg: #070a12; --bg2: #0b1020; --panel: rgba(255,255,255,.035); --panel2: rgba(255,255,255,.06);
-  --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.14);
-  --ink: #e9edf5; --quiet: #8f99ad; --faint: #5b6478;
-  --accent: #7c8cff; --accent2: #3ee0c5; --good: #3ddc97; --bad: #ff6b6b; --warn: #ffc65c;
-  --c-person: #b197fc; --c-company: #74c0fc; --c-location: #63e6be; --c-ssn: #ff8787; --c-account: #ffd43b;
-  --c-card: #ffa94d; --c-contact: #66d9e8; --c-amount: #f783ac; --c-codename: #e599f7; --c-date: #a5b4c8;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+:root, [data-theme="dark"] {
+  --bg: #080b14; --bg-soft: #0c1120; --panel: rgba(255,255,255,.035); --panel-solid: #0f1527; --panel2: rgba(255,255,255,.065);
+  --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.15); --field: rgba(0,0,0,.28);
+  --ink: #eef1f8; --quiet: #a4adbf; --faint: #69738a;
+  --accent: #8492ff; --accent2: #3ee0c5; --good: #3ddc97; --bad: #ff6b6b; --warn: #ffc65c; --on-accent: #04130f;
+  --c-person: #b9a2ff; --c-company: #7cc4ff; --c-location: #63e6be; --c-gov: #ff8f8f; --c-bank: #ffd54f;
+  --c-card: #ffab5e; --c-contact: #67dbea; --c-amount: #ff8cba; --c-policy: #e7a0ff; --c-cred: #ff5f7a; --c-date: #b3c0d4;
+  --glow1: rgba(132,146,255,.20); --glow2: rgba(62,224,197,.11); --shadow: 0 30px 80px -40px rgba(0,0,0,.8);
+}
+[data-theme="light"] {
+  --bg: #f4f6fb; --bg-soft: #eef1f8; --panel: #ffffff; --panel-solid: #ffffff; --panel2: #f1f3f9;
+  --line: rgba(15,23,42,.09); --line2: rgba(15,23,42,.16); --field: #fafbfe;
+  --ink: #0d1424; --quiet: #4e586c; --faint: #8a93a6;
+  --accent: #4a57e8; --accent2: #0a9e86; --good: #0f9d68; --bad: #d93b3b; --warn: #b7791f; --on-accent: #ffffff;
+  --c-person: #6d4ae0; --c-company: #1f6fc9; --c-location: #0c8a6a; --c-gov: #cc2f2f; --c-bank: #a87200;
+  --c-card: #c25f00; --c-contact: #0b7f92; --c-amount: #c2357a; --c-policy: #9a2fc4; --c-cred: #d1173f; --c-date: #55637a;
+  --glow1: rgba(74,87,232,.10); --glow2: rgba(10,158,134,.07); --shadow: 0 24px 60px -36px rgba(15,23,42,.35);
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--ink); font: 14.5px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background: radial-gradient(900px 500px at 12% -10%, rgba(124,140,255,.18), transparent 60%),
-              radial-gradient(800px 500px at 100% 0%, rgba(62,224,197,.10), transparent 60%),
-              radial-gradient(700px 600px at 50% 120%, rgba(177,151,252,.08), transparent 60%); }
-.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; padding: 0 24px 40px; }
+  background: radial-gradient(1000px 520px at 8% -12%, var(--glow1), transparent 60%), radial-gradient(800px 520px at 100% 0%, var(--glow2), transparent 60%); }
+.wrap { position: relative; z-index: 1; max-width: 1380px; margin: 0 auto; padding: 0 28px 56px; }
+button, input, select, textarea { font: inherit; color: inherit; }
 
-/* Top bar */
-.top { display: flex; align-items: center; gap: 16px; padding: 18px 0; position: sticky; top: 0; z-index: 5;
-  background: linear-gradient(var(--bg) 70%, transparent); }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
-.brand svg { filter: drop-shadow(0 0 12px rgba(124,140,255,.5)); }
-.nav { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-left: 18px; }
-.nav a { color: var(--quiet); text-decoration: none; padding: 7px 14px; border-radius: 9px; font-size: 13.5px; font-weight: 550; cursor: pointer; }
+/* ---------- Top bar ---------- */
+.top { display: flex; align-items: center; gap: 14px; padding: 16px 0; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: color-mix(in srgb, var(--bg) 82%, transparent); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; font-size: 17px; letter-spacing: -.015em; white-space: nowrap; }
+.brand small { font-weight: 600; color: var(--quiet); font-size: 12px; padding: 2px 8px; border: 1px solid var(--line); border-radius: 99px; }
+.nav { display: flex; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-left: 10px; }
+.nav a { color: var(--quiet); text-decoration: none; padding: 7px 14px; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.nav a:hover { color: var(--ink); }
 .nav a.on { color: var(--ink); background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line2); }
-.nav a .badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 6px; border-radius: 99px; background: var(--bad); color: #fff; font-size: 11px; text-align: center; }
+.badge { display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 6px; border-radius: 99px; background: var(--bad); color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
 .spacer { flex: 1; }
-.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--panel); font-size: 12.5px; color: var(--quiet); white-space: nowrap; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 10px currentColor; color: var(--warn); }
-.dot.ok { background: var(--good); color: var(--good); }
-select.user { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; font: inherit; font-size: 13px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--panel); font-size: 13px; color: var(--quiet); white-space: nowrap; }
+.pill b { color: var(--ink); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 10px var(--warn); flex: none; }
+.dot.ok { background: var(--good); box-shadow: 0 0 10px var(--good); }
+.progress { height: 3px; background: var(--panel2); border-radius: 99px; overflow: hidden; width: 80px; }
+.progress div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .2s; }
+.iconbtn { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; color: var(--quiet); }
+.iconbtn:hover { color: var(--ink); border-color: var(--line2); }
+select.user { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; font-size: 13.5px; }
 
-/* Hero */
-.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: end; margin: 12px 0 22px; }
-.hero h1 { font-size: 34px; line-height: 1.12; letter-spacing: -.025em; margin: 0 0 10px; font-weight: 750; }
-.hero h1 span { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.hero p { color: var(--quiet); margin: 0; max-width: 620px; font-size: 15px; }
+/* ---------- Hero ---------- */
+.hero { display: grid; grid-template-columns: 1.25fr 1fr; gap: 28px; align-items: end; margin: 18px 0 24px; }
+.eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 8px; }
+.hero h1 { font-size: 40px; line-height: 1.08; letter-spacing: -.03em; margin: 0 0 12px; font-weight: 780; }
+.grad { background: linear-gradient(92deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { color: var(--quiet); margin: 0; max-width: 640px; font-size: 16px; }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.step { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 12px 14px; }
-.step b { display: block; font-size: 13px; margin-bottom: 2px; }
-.step span { color: var(--quiet); font-size: 12.5px; }
-.step i { font-style: normal; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; margin-right: 6px; background: rgba(124,140,255,.18); color: var(--accent); font-size: 11.5px; font-weight: 700; }
+.step { border: 1px solid var(--line); background: var(--panel); border-radius: 16px; padding: 14px; }
+.step .n { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); margin-bottom: 8px; }
+.step b { display: block; font-size: 14px; }
+.step span { color: var(--quiet); font-size: 13px; line-height: 1.45; display: block; margin-top: 2px; }
 
-/* Stats */
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-.stat { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 14px 16px; }
-.stat .n { font-size: 26px; font-weight: 750; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.stat .l { color: var(--quiet); font-size: 12.5px; }
-.stat.good .n { color: var(--good); } .stat.bad .n { color: var(--bad); }
+/* ---------- Stats ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+.stat { border: 1px solid var(--line); background: var(--panel); border-radius: 16px; padding: 16px 18px; }
+.stat .n { font-size: 30px; font-weight: 780; letter-spacing: -.025em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat .l { color: var(--quiet); font-size: 13px; }
+.stat.good .n { color: var(--good); } .stat.bad .n { color: var(--bad); } .stat.warn .n { color: var(--warn); }
 
-/* Cards */
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(8px); }
-.card.glow { box-shadow: 0 0 0 1px rgba(62,224,197,.18), 0 20px 60px -30px rgba(62,224,197,.35); }
-.ch { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; }
-.ch h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--quiet); }
-.ch .tag { font-size: 11.5px; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--line); color: var(--quiet); }
-.ch .tag.green { color: var(--good); border-color: rgba(61,220,151,.35); background: rgba(61,220,151,.08); }
-.ch .tag.red { color: var(--bad); border-color: rgba(255,107,107,.35); background: rgba(255,107,107,.08); }
-.ch .right { margin-left: auto; display: flex; gap: 8px; }
-.btn { border: 1px solid var(--line2); background: var(--panel2); color: var(--ink); border-radius: 10px; padding: 7px 12px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+/* ---------- Cards ---------- */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.mt { margin-top: 18px; }
+.card { border: 1px solid var(--line); background: var(--panel); border-radius: 20px; display: flex; flex-direction: column; box-shadow: var(--shadow); min-width: 0; }
+.card.glow { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent2) 28%, transparent), 0 28px 70px -36px color-mix(in srgb, var(--accent2) 55%, transparent); }
+.ch { display: flex; align-items: center; gap: 10px; padding: 16px 18px 12px; flex-wrap: wrap; }
+.ch h2 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.005em; }
+.ch .sub { color: var(--quiet); font-size: 13px; width: 100%; margin-top: -4px; order: 10; }
+.tag { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--quiet); white-space: nowrap; }
+.tag.green { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); background: color-mix(in srgb, var(--good) 9%, transparent); }
+.tag.red { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+.ch .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line2); background: var(--panel2); border-radius: 10px; padding: 8px 13px; font-size: 13.5px; font-weight: 650; cursor: pointer; white-space: nowrap; }
 .btn:hover { border-color: var(--accent); }
-.btn.primary { border: 0; color: #061018; background: linear-gradient(90deg, var(--accent2), #7cf0da); box-shadow: 0 8px 24px -10px rgba(62,224,197,.7); }
+.btn.primary { border: 0; color: var(--on-accent); background: linear-gradient(92deg, var(--accent2), color-mix(in srgb, var(--accent2) 60%, #ffffff)); box-shadow: 0 10px 26px -12px var(--accent2); }
 .btn.primary:disabled { opacity: .45; cursor: default; }
+.btn.small { padding: 5px 10px; font-size: 12.5px; }
 
-/* Editor with highlight backdrop */
-.editor { position: relative; margin: 0 16px 16px; height: 300px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); }
-.editor .hl, .editor textarea { position: absolute; inset: 0; margin: 0; padding: 14px; font: 14px/1.65 var(--sans); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; border: 0; }
+/* ---------- Editor ---------- */
+.editor { position: relative; margin: 0 18px 14px; height: 340px; border-radius: 14px; border: 1px solid var(--line); background: var(--field); }
+.editor .hl, .editor textarea { position: absolute; inset: 0; margin: 0; padding: 16px; font-size: 15px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; border: 0; font-family: inherit; }
 .editor .hl { color: transparent; pointer-events: none; }
-.editor textarea { resize: none; background: transparent; color: var(--ink); outline: none; caret-color: var(--accent2); }
+.editor textarea { resize: none; background: transparent; outline: none; caret-color: var(--accent2); }
 .editor textarea::placeholder { color: var(--faint); }
-.hl mark { color: transparent; border-radius: 4px; padding: 1px 0; background: color-mix(in srgb, var(--c) 26%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent); }
-.safe { margin: 0 16px 16px; height: 300px; overflow-y: auto; border-radius: 12px; border: 1px solid rgba(62,224,197,.22); background: rgba(0,0,0,.25); padding: 14px; white-space: pre-wrap; overflow-wrap: break-word; font: 14px/1.65 var(--sans); }
-.safe .empty { color: var(--faint); }
-.tok { font: 12.5px/1 var(--mono); padding: 3px 6px; border-radius: 6px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); white-space: nowrap; display: inline-block; transition: all .25s; }
-.tok.scramble { color: var(--ink); background: color-mix(in srgb, var(--c) 30%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 60%, transparent), inset 0 0 0 1px var(--c); }
-.tok.restored { font-family: var(--sans); font-size: 13.5px; }
+.hl mark { color: transparent; border-radius: 5px; background: color-mix(in srgb, var(--c) 24%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent); }
+.hl mark.w, .ptw { background: transparent; box-shadow: none; border-bottom: 2px dashed var(--warn); border-radius: 0; }
+.safe { margin: 0 18px 14px; height: 340px; overflow-y: auto; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--accent2) 30%, transparent); background: var(--field); padding: 16px; white-space: pre-wrap; overflow-wrap: break-word; font-size: 15px; line-height: 1.75; }
+.empty { color: var(--faint); }
+.tok { font: 600 13px/1 ui-monospace, "SF Mono", Menlo, monospace; padding: 4px 7px; border-radius: 7px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); white-space: nowrap; display: inline-block; transition: background .25s, box-shadow .25s, color .25s; vertical-align: 1px; }
+.tok.scramble { color: var(--ink); background: color-mix(in srgb, var(--c) 32%, transparent); box-shadow: 0 0 22px color-mix(in srgb, var(--c) 60%, transparent), inset 0 0 0 1px var(--c); }
+.tok.removed { --c: var(--c-cred); }
+.tok.plain { font-family: inherit; font-size: 14.5px; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 18px 16px; min-height: 32px; }
+.chip { font-size: 12.5px; font-weight: 600; padding: 4px 10px; border-radius: 99px; color: var(--c); background: color-mix(in srgb, var(--c) 11%, transparent); border: 1px solid color-mix(in srgb, var(--c) 32%, transparent); }
+.alerts { display: flex; flex-direction: column; gap: 8px; padding: 0 18px 14px; }
+.alerts:empty { display: none; }
+.alert { padding: 11px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; border: 1px solid; }
+.alert b { display: block; margin-bottom: 1px; }
+.alert.warn { border-color: color-mix(in srgb, var(--warn) 45%, transparent); background: color-mix(in srgb, var(--warn) 9%, transparent); }
+.alert.warn b { color: var(--warn); }
+.alert.bad { border-color: color-mix(in srgb, var(--bad) 45%, transparent); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+.alert.bad b { color: var(--bad); }
+.feed { font: 12.5px/1.5 ui-monospace, "SF Mono", Menlo, monospace; color: var(--quiet); padding: 0 18px 14px; height: 33px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.feed span { color: var(--accent2); font-weight: 700; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 14px; min-height: 30px; }
-.chip { font-size: 12px; padding: 3px 9px; border-radius: 99px; color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); }
-.banner { margin: 0 16px 14px; padding: 10px 12px; border-radius: 10px; font-size: 13px; border: 1px solid rgba(255,198,92,.35); background: rgba(255,198,92,.08); color: #ffe2a8; display: none; }
-.banner b { color: var(--warn); }
+/* ---------- Tables ---------- */
+.scroll { margin: 0 18px 18px; max-height: 320px; overflow-y: auto; border-radius: 14px; border: 1px solid var(--line); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 650; color: var(--quiet); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; padding: 11px 14px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel-solid); z-index: 1; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.cipher { font: 12.5px ui-monospace, "SF Mono", Menlo, monospace; color: var(--quiet); word-break: break-all; }
+tr.new td { animation: flash 1.4s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--accent2) 18%, transparent); } to { background: transparent; } }
+.field { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: var(--field); padding: 12px 14px; outline: none; resize: vertical; line-height: 1.6; }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.pad { padding: 0 18px 18px; }
+.restore-out { margin: 0 18px 18px; min-height: 120px; max-height: 260px; overflow-y: auto; border-radius: 14px; border: 1px dashed var(--line2); padding: 14px 16px; white-space: pre-wrap; font-size: 15px; line-height: 1.7; }
 
-/* Vault */
-.vault { margin: 0 16px 16px; max-height: 300px; overflow-y: auto; border-radius: 12px; border: 1px solid var(--line); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; font-weight: 600; color: var(--quiet); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg2); }
-td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-td.cipher { font: 12px var(--mono); color: var(--quiet); }
-tr.new td { animation: flash 1.2s ease-out; }
-@keyframes flash { from { background: rgba(62,224,197,.16); } to { background: transparent; } }
-.restore-in { margin: 0 16px 10px; height: 110px; width: calc(100% - 32px); resize: none; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 12px; font: 13.5px/1.55 var(--sans); outline: none; }
-.restore-out { margin: 0 16px 16px; min-height: 110px; max-height: 190px; overflow-y: auto; border-radius: 12px; border: 1px dashed var(--line2); padding: 12px; white-space: pre-wrap; font: 13.5px/1.6 var(--sans); }
+/* ---------- Policy ---------- */
+.listcard textarea { min-height: 150px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13.5px; }
+.count { font-size: 12px; font-weight: 700; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 2px 9px; border-radius: 99px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel2); flex: none; }
+.seg button { border: 0; background: transparent; padding: 5px 11px; font-size: 12.5px; font-weight: 650; color: var(--quiet); cursor: pointer; }
+.seg button.on[data-a="encrypt"] { background: color-mix(in srgb, var(--accent2) 20%, transparent); color: var(--accent2); }
+.seg button.on[data-a="block"] { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+.seg button.on[data-a="off"] { background: var(--line2); color: var(--ink); }
+.rules { padding: 0 18px 18px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
+.rule { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.rule .nm { display: flex; align-items: center; gap: 9px; }
+.sw { width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex: none; }
+.group { grid-column: 1 / -1; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); padding: 16px 0 2px; }
+.pat { display: grid; grid-template-columns: 1fr 1.2fr auto auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.pat input, .pat select { border-radius: 10px; border: 1px solid var(--line); background: var(--field); padding: 8px 10px; font-size: 13.5px; outline: none; min-width: 0; }
+.pat input.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+.toggle { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.toggle:last-child { border-bottom: 0; }
+.toggle input { display: none; }
+.knob { width: 36px; height: 21px; border-radius: 99px; background: var(--line2); position: relative; transition: .2s; flex: none; margin-top: 2px; }
+.knob::after { content: ""; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.toggle input:checked + .knob { background: var(--warn); }
+.toggle input:checked + .knob::after { left: 18px; }
+.toggle b { display: block; font-size: 14.5px; }
+.toggle span { color: var(--quiet); font-size: 13px; }
+.bankrow { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.bankrow input { border-radius: 12px; border: 1px solid var(--line); background: var(--field); padding: 10px 14px; font-size: 16px; font-weight: 650; outline: none; min-width: 240px; flex: 1; }
+.hint { color: var(--faint); font-size: 12.5px; }
+code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; border-radius: 6px; background: var(--panel2); color: var(--ink); }
 
-/* Policy */
-.policy { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; padding: 0 16px 16px; }
-.toggles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-.tg { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; font-size: 13px; user-select: none; }
-.tg input { display: none; }
-.tg .sw { width: 30px; height: 18px; border-radius: 99px; background: var(--line2); position: relative; transition: .2s; flex: none; }
-.tg .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: .2s; }
-.tg input:checked + .sw { background: var(--c); }
-.tg input:checked + .sw::after { left: 14px; }
-.terms { width: 100%; height: 118px; resize: none; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 10px 12px; font: 13px/1.55 var(--mono); outline: none; }
-.hint { color: var(--faint); font-size: 12px; margin-top: 6px; }
-
-/* Compliance */
-.kv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-.bars { padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 9px; }
-.bar { display: grid; grid-template-columns: 120px 1fr 36px; gap: 10px; align-items: center; font-size: 13px; }
+/* ---------- Compliance ---------- */
+.bars { padding: 4px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+.bar { display: grid; grid-template-columns: 160px 1fr 44px; gap: 12px; align-items: center; font-size: 14px; }
 .bar .track { height: 10px; border-radius: 99px; background: var(--panel2); overflow: hidden; }
-.bar .fill { height: 100%; border-radius: 99px; background: var(--c); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 60%, transparent); transition: width .5s; }
+.bar .fill { height: 100%; border-radius: 99px; background: var(--c); transition: width .5s; }
 .bar .num { text-align: right; color: var(--quiet); font-variant-numeric: tabular-nums; }
-.log { max-height: 460px; overflow-y: auto; margin: 0 16px 16px; border-radius: 12px; border: 1px solid var(--line); }
-.sev { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-.sev.info { color: var(--good); background: rgba(61,220,151,.1); } .sev.warn { color: var(--warn); background: rgba(255,198,92,.1); } .sev.high { color: var(--bad); background: rgba(255,107,107,.12); }
-.notice { margin: 0 16px 16px; font-size: 12.5px; color: var(--quiet); padding: 10px 12px; border-radius: 10px; background: var(--panel2); }
+.lvl { font-size: 11.5px; font-weight: 750; padding: 3px 9px; border-radius: 99px; }
+.lvl.info { color: var(--good); background: color-mix(in srgb, var(--good) 12%, transparent); }
+.lvl.warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
+.lvl.high { color: var(--bad); background: color-mix(in srgb, var(--bad) 13%, transparent); }
+.notice { margin: 0 18px 14px; font-size: 13.5px; color: var(--quiet); padding: 11px 14px; border-radius: 12px; background: var(--panel2); }
 
-.toast { position: fixed; right: 24px; bottom: 24px; z-index: 20; max-width: 380px; padding: 14px 16px; border-radius: 14px; background: #1b1220; border: 1px solid rgba(255,107,107,.5); box-shadow: 0 20px 50px -20px rgba(255,107,107,.6); transform: translateY(20px); opacity: 0; transition: .25s; font-size: 13.5px; }
-.toast.ok { background: #0f1d19; border-color: rgba(61,220,151,.5); box-shadow: 0 20px 50px -20px rgba(61,220,151,.5); }
+.toast { position: fixed; right: 24px; bottom: 24px; z-index: 30; max-width: 400px; padding: 14px 16px; border-radius: 16px; background: var(--panel-solid); border: 1px solid color-mix(in srgb, var(--bad) 55%, transparent); box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--bad) 70%, transparent); transform: translateY(16px); opacity: 0; transition: .25s; font-size: 14px; pointer-events: none; }
+.toast.ok { border-color: color-mix(in srgb, var(--good) 55%, transparent); box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--good) 60%, transparent); }
 .toast.show { transform: none; opacity: 1; }
 .toast b { display: block; margin-bottom: 2px; }
-.progress { height: 3px; background: var(--panel2); border-radius: 99px; overflow: hidden; width: 90px; }
-.progress div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .2s; }
-.page { display: none; } .page.on { display: block; }
-.mt { margin-top: 16px; }
-@media (max-width: 980px) { .hero, .grid2, .policy { grid-template-columns: 1fr; } .stats, .kv { grid-template-columns: repeat(2, 1fr); } .nav { margin-left: 0; } .top { flex-wrap: wrap; } }
+.page { display: none; } .page.on { display: block; animation: fade .25s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.llm-out { margin: 0 18px 18px; min-height: 90px; max-height: 260px; overflow-y: auto; border-radius: 14px; border: 1px solid var(--line); padding: 14px 16px; white-space: pre-wrap; font-size: 14.5px; line-height: 1.65; background: var(--field); }
+@media (max-width: 1100px) { .hero, .grid2 { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } .rules { grid-template-columns: 1fr; } .top { flex-wrap: wrap; } .nav { margin-left: 0; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
     <div class="brand">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" fill="url(#g)"/><path d="M8.5 12l2.3 2.3 4.7-4.8" stroke="#071018" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#7c8cff"/><stop offset="1" stop-color="#3ee0c5"/></linearGradient></defs></svg>
-      Ledger Shield
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" fill="url(#g)"/><path d="M8.5 12l2.3 2.3 4.7-4.8" stroke="#06121a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#8492ff"/><stop offset="1" stop-color="#3ee0c5"/></linearGradient></defs></svg>
+      Ledger Shield <small id="bankName">Harbor Point Bank</small>
     </div>
     <nav class="nav">
       <a data-page="shield" class="on">Shield</a>
+      <a data-page="policy">Bank policy</a>
       <a data-page="compliance">Compliance <span class="badge" id="vbadge" style="display:none">0</span></a>
-      <a href="/analyst">Sealed analyst</a>
     </nav>
     <div class="spacer"></div>
-    <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Loading local AI model…</span><span class="progress"><div id="mbar"></div></span></span>
-    <span class="pill" title="Requests to any other server since the app loaded">Sent off device: <b id="egress" style="color:var(--good)">0</b></span>
-    <select class="user" id="user">
+    <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Loading local AI model…</span><span class="progress" id="mprog"><div id="mbar"></div></span></span>
+    <span class="pill" title="Requests to any outside server since the app finished loading">Sent off device <b id="egress" style="color:var(--good)">0</b></span>
+    <select class="user" id="user" title="Who is using the tool (for the compliance log)">
       <option>Jordan Lee · Credit Analyst</option>
       <option>Priya Shah · Relationship Manager</option>
       <option>Marcus Webb · Underwriter</option>
     </select>
+    <button class="iconbtn" id="theme" title="Switch light / dark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
   </div>
 
-  <!-- SHIELD -->
+  <!-- ================= SHIELD ================= -->
   <section class="page on" id="p-shield">
     <div class="hero">
       <div>
-        <h1>Use any AI. <span>Leak nothing.</span></h1>
-        <p>Paste anything. A local AI model on this computer finds the client data, account numbers and deal secrets your bank can't let out, and encrypts each one with AES-256 before it ever leaves your screen.</p>
+        <div class="eyebrow">On-device protection</div>
+        <h1>Use any AI.<br><span class="grad">Leak nothing.</span></h1>
+        <p>Paste anything. An AI model running on this computer finds client data, account numbers and deal secrets, and encrypts each one with AES-256 before it can leave your screen.</p>
       </div>
       <div class="steps">
-        <div class="step"><b><i>1</i>Paste</b><span>Sensitive data is found and encrypted live</span></div>
-        <div class="step"><b><i>2</i>Copy to any AI</b><span>ChatGPT, Claude, or a local model</span></div>
-        <div class="step"><b><i>3</i>Restore</b><span>Paste the answer back; values decrypt here</span></div>
+        <div class="step"><div class="n">1</div><b>Paste</b><span>Sensitive data is found and encrypted as you watch</span></div>
+        <div class="step"><div class="n">2</div><b>Copy to any AI</b><span>ChatGPT, Claude, or a local model</span></div>
+        <div class="step"><div class="n">3</div><b>Restore</b><span>Paste the answer back. Real values decrypt only here</span></div>
       </div>
     </div>
 
     <div class="stats">
       <div class="stat good"><div class="n" id="s-items">0</div><div class="l">Items encrypted</div></div>
-      <div class="stat"><div class="n" id="s-cats">0</div><div class="l">Kinds of sensitive data</div></div>
-      <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Detection time (on device)</div></div>
-      <div class="stat good"><div class="n" id="s-leak">0</div><div class="l">Bytes of bank data sent out</div></div>
+      <div class="stat bad"><div class="n" id="s-removed">0</div><div class="l">Secrets removed outright</div></div>
+      <div class="stat warn"><div class="n" id="s-warn">0</div><div class="l">Compliance warnings</div></div>
+      <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Scan time, on this device</div></div>
     </div>
 
     <div class="grid2">
       <div class="card">
         <div class="ch"><h2>Original</h2><span class="tag red">Never leaves this device</span>
           <div class="right"><button class="btn" id="sample">Load sample email</button><button class="btn" id="clear">Clear</button></div></div>
-        <div class="editor"><div class="hl" id="hl"></div><textarea id="input" spellcheck="false" placeholder="Paste a client email, loan memo, spreadsheet rows…"></textarea></div>
-        <div class="banner" id="mnpi"></div>
+        <div class="editor"><div class="hl" id="hl"></div><textarea id="input" spellcheck="false" placeholder="Paste a client email, a loan memo, spreadsheet rows…"></textarea></div>
+        <div class="alerts" id="alerts"></div>
         <div class="chips" id="chips"></div>
       </div>
       <div class="card glow">
         <div class="ch"><h2>Safe to share</h2><span class="tag green">Encrypted</span>
           <div class="right"><button class="btn primary" id="copy" disabled>Copy safe version</button></div></div>
-        <div class="safe" id="safe"><span class="empty">The protected version appears here as you type.</span></div>
+        <div class="safe" id="safe"><span class="empty">The protected version appears here, live, as you type.</span></div>
+        <div class="feed" id="feed">Waiting for text…</div>
         <div class="chips" id="legend"></div>
       </div>
     </div>
@@ -197,49 +247,101 @@ tr.new td { animation: flash 1.2s ease-out; }
     <div class="grid2 mt">
       <div class="card">
         <div class="ch"><h2>Encrypted vault</h2><span class="tag">AES-256-GCM · key never leaves this device</span></div>
-        <div class="vault"><table><thead><tr><th>Token</th><th>Type</th><th>Ciphertext</th></tr></thead><tbody id="vault"><tr><td colspan="3" style="color:var(--faint)">Nothing encrypted yet.</td></tr></tbody></table></div>
+        <div class="scroll"><table><thead><tr><th>Token</th><th>Type</th><th>Ciphertext</th></tr></thead><tbody id="vault"><tr><td colspan="3" class="empty">Nothing encrypted yet.</td></tr></tbody></table></div>
       </div>
       <div class="card">
-        <div class="ch"><h2>Restore the AI's answer</h2><span class="tag">Decrypted locally</span></div>
-        <textarea class="restore-in" id="rin" placeholder="Paste the AI's reply here, tokens and all…"></textarea>
-        <div class="restore-out" id="rout"><span style="color:var(--faint)">Real names and numbers come back here, only on this screen.</span></div>
+        <div class="ch"><h2>Restore the AI's answer</h2><span class="tag">Decrypted on this device</span></div>
+        <div class="pad" style="padding-bottom:12px"><textarea class="field" id="rin" rows="4" placeholder="Paste the AI's reply here, tokens and all…"></textarea></div>
+        <div class="restore-out" id="rout"><span class="empty">Real names and numbers come back here, only on this screen.</span></div>
       </div>
     </div>
 
     <div class="card mt">
-      <div class="ch"><h2>Bank policy</h2><span class="tag">What this bank never lets out</span></div>
-      <div class="policy">
-        <div class="toggles" id="toggles"></div>
-        <div>
-          <textarea class="terms" id="terms" spellcheck="false"></textarea>
-          <div class="hint">Client names, deal code names and anything else to always encrypt. One per line.</div>
-        </div>
-      </div>
+      <div class="ch"><h2>Ask a local AI</h2><span class="tag green">Runs on this computer · no internet</span>
+        <div class="right"><select class="user" id="llmModel" style="display:none"></select><button class="btn primary" id="llmGo" disabled>Send safe version</button></div>
+        <div class="sub" id="llmSub">Checking for a local AI model…</div></div>
+      <div class="pad" style="padding-bottom:12px"><input class="field" id="llmPrompt" value="Summarize this and list the next steps for the bank. Keep every bracketed token exactly as written."></div>
+      <div class="llm-out" id="llmOut"><span class="empty">The local AI's answer appears here, then is restored automatically above.</span></div>
     </div>
   </section>
 
-  <!-- COMPLIANCE -->
+  <!-- ================= POLICY ================= -->
+  <section class="page" id="p-policy">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Set once by compliance</div>
+        <h1>What your bank <span class="grad">never lets out</span></h1>
+        <p>List your clients, deals, people and internal systems, and choose what happens to each kind of data. Shield follows this policy for everyone using it, and it's stored only on this device.</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <div class="ch"><h2>Bank</h2><div class="right"><button class="btn" id="pImport">Import policy</button><button class="btn" id="pExport">Export policy</button></div></div>
+        <div class="pad"><div class="bankrow"><input id="pBank" placeholder="Bank name"></div><div class="hint" id="pUpdated" style="margin-top:10px"></div></div>
+        <input type="file" id="pFile" accept=".json,.csv,.txt" style="display:none">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card listcard"><div class="ch"><h2>Clients and counterparties</h2><span class="count" id="n-CLIENT">0</span><div class="right"><button class="btn small" data-csv="CLIENT">Upload CSV</button></div>
+        <div class="sub">Client names, borrowers, companies you lend to. One per line.</div></div>
+        <div class="pad"><textarea class="field" data-list="CLIENT" spellcheck="false"></textarea></div></div>
+      <div class="card listcard"><div class="ch"><h2>Deals and code names</h2><span class="count" id="n-DEAL">0</span><div class="right"><button class="btn small" data-csv="DEAL">Upload CSV</button></div>
+        <div class="sub">Live deals, project code names, acquisition targets.</div></div>
+        <div class="pad"><textarea class="field" data-list="DEAL" spellcheck="false"></textarea></div></div>
+      <div class="card listcard"><div class="ch"><h2>Employees and executives</h2><span class="count" id="n-STAFF">0</span><div class="right"><button class="btn small" data-csv="STAFF">Upload CSV</button></div>
+        <div class="sub">Names that shouldn't appear in an outside AI tool.</div></div>
+        <div class="pad"><textarea class="field" data-list="STAFF" spellcheck="false"></textarea></div></div>
+      <div class="card listcard"><div class="ch"><h2>Internal systems and terms</h2><span class="count" id="n-INTERNAL">0</span><div class="right"><button class="btn small" data-csv="INTERNAL">Upload CSV</button></div>
+        <div class="sub">Internal tools, servers, product names, report titles.</div></div>
+        <div class="pad"><textarea class="field" data-list="INTERNAL" spellcheck="false"></textarea></div></div>
+    </div>
+
+    <div class="grid2 mt">
+      <div class="card">
+        <div class="ch"><h2>Your own number formats</h2><div class="right"><button class="btn small" id="addPat">Add format</button></div>
+          <div class="sub">For IDs only your bank uses. <code>#</code> any digit, <code>@</code> any letter, <code>*</code> any letters or digits.</div></div>
+        <div class="pad" id="pats"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h2>Compliance warnings</h2><div class="sub">Encryption can't hide these, because the meaning itself is the secret. Shield warns the employee and logs it.</div></div>
+        <div class="pad" id="warnToggles"></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="ch"><h2>What happens to each kind of data</h2><div class="sub"><b style="color:var(--accent2)">Encrypt</b> swaps it for a token you can restore. <b style="color:var(--bad)">Remove</b> deletes it for good. <b>Off</b> lets it through.</div></div>
+      <div class="rules" id="rules"></div>
+    </div>
+
+    <div class="card mt">
+      <div class="ch"><h2>Test your policy</h2><span class="tag">Live</span><div class="sub">Type anything, like a client name you just added, and see what Shield would do.</div></div>
+      <div class="pad"><textarea class="field" id="ptest" rows="3" spellcheck="false" placeholder="e.g. Call Daniel Okafor about the Project Falcon term sheet. RiskView 360 password Harbor2026!"></textarea></div>
+      <div class="restore-out" id="ptestOut" style="border-style:solid"><span class="empty">Results appear here.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= COMPLIANCE ================= -->
   <section class="page" id="p-compliance">
     <div class="hero">
       <div>
-        <h1>Compliance <span>view</span></h1>
-        <p>Every protection and every policy breach, as it happens. The log records what <i>kind</i> of data was involved, never the data itself.</p>
+        <div class="eyebrow">For the compliance team</div>
+        <h1>Every protection, <span class="grad">on the record</span></h1>
+        <p>What was protected, by whom, and every attempt to share unprotected data. The log records the kind of data involved, never the data itself.</p>
       </div>
     </div>
-    <div class="kv">
+    <div class="stats">
       <div class="stat good"><div class="n" id="k-prot">0</div><div class="l">Items encrypted</div></div>
       <div class="stat good"><div class="n" id="k-safe">0</div><div class="l">Safe copies to AI</div></div>
-      <div class="stat bad"><div class="n" id="k-viol">0</div><div class="l">Unprotected copies blocked</div></div>
-      <div class="stat"><div class="n" id="k-mnpi" style="color:var(--warn)">0</div><div class="l">Inside-information warnings</div></div>
+      <div class="stat bad"><div class="n" id="k-viol">0</div><div class="l">Leaks blocked</div></div>
+      <div class="stat warn"><div class="n" id="k-warn">0</div><div class="l">Compliance warnings</div></div>
     </div>
     <div class="grid2">
       <div class="card"><div class="ch"><h2>What was protected</h2></div><div class="bars" id="bars"></div></div>
-      <div class="card"><div class="ch"><h2>By employee</h2></div><div class="bars" id="people"></div></div>
+      <div class="card"><div class="ch"><h2>By employee</h2><div class="sub">Bar shows activity. ⚠ marks blocked leaks.</div></div><div class="bars" id="people"></div></div>
     </div>
     <div class="card mt">
       <div class="ch"><h2>Activity log</h2><div class="right"><button class="btn" id="export">Export report</button><button class="btn" id="reset">Reset demo</button></div></div>
-      <div class="notice">Employees are told this tool is monitored, as banks already do for email and chat. Logs never contain client data: only the type of data, the employee and the time.</div>
-      <div class="log"><table><thead><tr><th>Time</th><th>Employee</th><th>Event</th><th>Details</th><th>Level</th></tr></thead><tbody id="log"></tbody></table></div>
+      <div class="notice">Employees are told this tool is monitored, as banks already do for work email and chat. Logs never contain client data: only the type of data, the employee and the time.</div>
+      <div class="scroll" style="max-height:480px"><table><thead><tr><th>Time</th><th>Employee</th><th>Event</th><th>Details</th><th>Level</th></tr></thead><tbody id="log"></tbody></table></div>
     </div>
   </section>
 </div>
@@ -248,96 +350,118 @@ tr.new td { animation: flash 1.2s ease-out; }
 <script type="module">
 import { pipeline, env } from './lib/transformers.min.js';
 
-// ---------- Categories & policy ----------
-const CATS = {
-  PERSON:   { label: 'Person',        c: '--c-person',   on: true },
-  COMPANY:  { label: 'Company',       c: '--c-company',  on: true },
-  LOCATION: { label: 'Location',      c: '--c-location', on: true },
-  SSN:      { label: 'SSN / Tax ID',  c: '--c-ssn',      on: true },
-  ACCOUNT:  { label: 'Account no.',   c: '--c-account',  on: true },
-  ROUTING:  { label: 'Routing no.',   c: '--c-account',  on: true },
-  CARD:     { label: 'Card number',   c: '--c-card',     on: true },
-  EMAIL:    { label: 'Email',         c: '--c-contact',  on: true },
-  PHONE:    { label: 'Phone',         c: '--c-contact',  on: true },
-  ADDRESS:  { label: 'Street address',c: '--c-location', on: true },
-  DOB:      { label: 'Date of birth', c: '--c-date',     on: true },
-  AMOUNT:   { label: 'Dollar amount', c: '--c-amount',   on: true },
-  SECRET:   { label: 'Client / deal', c: '--c-codename', on: true },
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
-const DEFAULT_TERMS = ['Project Falcon', 'Acme Holdings', 'Meridian Capital'];
-const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
-let terms = store.get('ls_terms', DEFAULT_TERMS);
-const catOn = store.get('ls_cats', Object.fromEntries(Object.keys(CATS).map(k => [k, true])));
-const cv = k => `var(${CATS[k].c})`;
+const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+
+// ---------- Theme ----------
+const setTheme = t => { document.documentElement.dataset.theme = t; store.set('ls_theme', t); };
+setTheme(store.get('ls_theme', 'dark'));
+$('theme').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+// ---------- Categories ----------
+const CATS = {
+  CREDENTIAL: { label: 'Password / API key', group: 'Secrets', c: '--c-cred', act: 'block' },
+  CARDSEC:    { label: 'CVV / expiry / PIN', group: 'Secrets', c: '--c-cred', act: 'block' },
+  SSN:        { label: 'Social Security no.', group: 'Government IDs', c: '--c-gov', act: 'encrypt' },
+  TAXID:      { label: 'Tax ID / EIN', group: 'Government IDs', c: '--c-gov', act: 'encrypt' },
+  GOVID:      { label: 'Passport / license', group: 'Government IDs', c: '--c-gov', act: 'encrypt' },
+  DOB:        { label: 'Date of birth', group: 'Government IDs', c: '--c-date', act: 'encrypt' },
+  ACCOUNT:    { label: 'Account number', group: 'Banking', c: '--c-bank', act: 'encrypt' },
+  ROUTING:    { label: 'Routing number', group: 'Banking', c: '--c-bank', act: 'encrypt' },
+  IBAN:       { label: 'IBAN / SWIFT', group: 'Banking', c: '--c-bank', act: 'encrypt' },
+  LOANID:     { label: 'Loan / customer ID', group: 'Banking', c: '--c-bank', act: 'encrypt' },
+  CARD:       { label: 'Card number', group: 'Banking', c: '--c-card', act: 'encrypt' },
+  CREDIT:     { label: 'Credit score', group: 'Banking', c: '--c-card', act: 'encrypt' },
+  AMOUNT:     { label: 'Dollar amount', group: 'Banking', c: '--c-amount', act: 'encrypt' },
+  PERSON:     { label: 'Person (AI)', group: 'People and places', c: '--c-person', act: 'encrypt' },
+  COMPANY:    { label: 'Company (AI)', group: 'People and places', c: '--c-company', act: 'encrypt' },
+  LOCATION:   { label: 'Place (AI)', group: 'People and places', c: '--c-location', act: 'encrypt' },
+  ADDRESS:    { label: 'Street address / ZIP', group: 'People and places', c: '--c-location', act: 'encrypt' },
+  EMAIL:      { label: 'Email', group: 'People and places', c: '--c-contact', act: 'encrypt' },
+  PHONE:      { label: 'Phone', group: 'People and places', c: '--c-contact', act: 'encrypt' },
+  HANDLE:     { label: 'Payment app handle', group: 'People and places', c: '--c-contact', act: 'encrypt' },
+  CLIENT:     { label: 'Client (bank list)', group: 'Bank lists', c: '--c-policy', act: 'encrypt' },
+  DEAL:       { label: 'Deal / code name', group: 'Bank lists', c: '--c-policy', act: 'encrypt' },
+  STAFF:      { label: 'Employee', group: 'Bank lists', c: '--c-policy', act: 'encrypt' },
+  INTERNAL:   { label: 'Internal term', group: 'Bank lists', c: '--c-policy', act: 'encrypt' },
+  CUSTOM:     { label: 'Bank number format', group: 'Bank lists', c: '--c-policy', act: 'encrypt' },
+};
+const cv = k => `var(${(CATS[k] || CATS.CLIENT).c})`;
+const WARNS = {
+  MNPI: { label: 'Possible inside information', why: 'Unreleased earnings, upcoming rating changes or deal timing. Sharing this can be insider trading.',
+    rx: /\b(merger|acquisition|takeover|tender offer|buyout|not yet (?:public|announced|released)|before (?:the )?(?:announcement|release|call|note|close)|unannounced|ahead of (?:earnings|the call|the announcement)|(?:upgrade|downgrade)s?\s+(?:on\s+)?[A-Z]{1,5}\b|EPS (?:will|is going to|comes in)|(?:raise|cut|lower)s? (?:its |our |the )?guidance|material non-?public|MNPI|insider)\b/gi },
+  CREDITOP: { label: 'Confidential credit opinion', why: "The bank's own view of a borrower: ratings, watchlists, covenant problems.",
+    rx: /\b(internal (?:risk )?rating|risk rating|watch ?list|criticized|classified (?:asset|loan)|special mention|substandard|non-?accrual|covenant (?:breach|violation|default|waiver)|workout|charge-?off|probability of default|risk grade)\b/gi },
+  SUPERVISORY: { label: 'Confidential supervisory information', why: "Regulators' exam findings. Banks can't legally share these.",
+    rx: /\b(MRAs?|MRIAs?|matters requiring (?:immediate )?attention|consent order|CAMELS|exam(?:ination)? findings?|supervisory (?:letter|finding|rating)|(?:OCC|FDIC|Fed(?:eral Reserve)?) exam)\b/gi },
+};
+
+// ---------- Policy ----------
+const DEFAULT_POLICY = {
+  bank: 'Harbor Point Bank', updated: Date.now(),
+  lists: {
+    CLIENT: ['Meridian Capital', 'Daniel Okafor', 'Harborview LLC'],
+    DEAL: ['Project Falcon', 'Acme Holdings'],
+    STAFF: ['Sarah Chen'],
+    INTERNAL: ['RiskView 360', 'HPB Credit Committee'],
+  },
+  patterns: [{ name: 'Harbor Point account', pattern: 'HPB-########', action: 'encrypt' }],
+  actions: {},
+  warns: { MNPI: true, CREDITOP: true, SUPERVISORY: true },
+};
+let policy = Object.assign(structuredClone(DEFAULT_POLICY), store.get('ls_policy2', {}));
+const actionOf = k => policy.actions[k] || CATS[k].act;
+let policyLogTimer;
+function savePolicy(why) {
+  policy.updated = Date.now(); store.set('ls_policy2', policy); renderPolicyMeta(); scheduleScan();
+  clearTimeout(policyLogTimer); policyLogTimer = setTimeout(() => logEvent('Policy updated', why, 'warn', null, 'policy'), 900);
+}
 
 // ---------- Rules ----------
-const luhn = s => { const d = s.replace(/\D/g, '').split('').reverse().map(Number); return d.length >= 13 && d.reduce((a, x, i) => a + (i % 2 ? (x * 2 > 9 ? x * 2 - 9 : x * 2) : x), 0) % 10 === 0; };
+const luhn = s => { const d = s.replace(/\D/g, '').split('').reverse().map(Number); return d.length >= 13 && d.length <= 19 && d.reduce((a, x, i) => a + (i % 2 ? (x * 2 > 9 ? x * 2 - 9 : x * 2) : x), 0) % 10 === 0; };
 const aba = s => { const d = s.split('').map(Number); return d.length === 9 && (3 * (d[0] + d[3] + d[6]) + 7 * (d[1] + d[4] + d[7]) + (d[2] + d[5] + d[8])) % 10 === 0; };
+const iban = s => { const v = s.replace(/\s/g, ''); if (v.length < 15 || v.length > 34) return false; const r = (v.slice(4) + v.slice(0, 4)).replace(/[A-Z]/g, c => c.charCodeAt(0) - 55); let m = 0; for (const ch of r) m = (m * 10 + +ch) % 97; return m === 1; };
+const MONTH = '(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\\.?';
 const RULES = [
-  ['SSN', /\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/g],
-  ['SSN', /\b(?:EIN|TIN|tax id)[:#\s]*(\d{2}-\d{7})\b/gi, 1],
-  ['CARD', /\b(?:\d[ -]?){13,19}\b/g, 0, m => luhn(m)],
-  ['ROUTING', /\b\d{9}\b/g, 0, m => aba(m)],
-  ['ACCOUNT', /\b(?:acct|account|a\/c|loan)\s*(?:no\.?|number|#|num)?\s*[:#]?\s*(\d{6,17})\b/gi, 1],
-  ['ACCOUNT', /\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){3,7}\b/g],
+  ['CREDENTIAL', /\b(?:password|passcode|passwd|pwd|passphrase|api[ _-]?key|secret key|access key|auth token|token)\s*(?:is|=|:)?\s*["']?([^\s"',;]{4,})/gi, 1],
+  ['CREDENTIAL', /\b(?:sk|pk|rk)[-_](?:live|test|ant|proj)[-_][A-Za-z0-9_-]{8,}/g],
+  ['CREDENTIAL', /\bAKIA[0-9A-Z]{16}\b/g],
+  ['CREDENTIAL', /\bgh[pousr]_[A-Za-z0-9]{30,}\b/g],
+  ['CREDENTIAL', /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g],
+  ['CARDSEC', /\b(?:CVV2?|CVC2?|CID|security code)\s*[:#]?\s*(\d{3,4})\b/gi, 1],
+  ['CARDSEC', /\b(?:exp(?:iry|iration)?(?:\s*date)?|valid thru)\s*[:#]?\s*((?:0[1-9]|1[0-2])\s?\/\s?\d{2,4})\b/gi, 1],
+  ['CARDSEC', /\bPIN\s*[:#]?\s*(\d{4,6})\b/g, 1],
+  ['SSN', /\b(?!000|666|9\d\d)\d{3}([- ])(?!00)\d{2}\1(?!0000)\d{4}\b/g],
+  ['SSN', /\b(?:SSN|social security(?: number| no\.?)?)\s*[:#]?\s*(\d{9})\b/gi, 1],
+  ['TAXID', /\b(?:EIN|TIN|tax id|taxpayer id)\s*[:#]?\s*(\d{2}-?\d{7})\b/gi, 1],
+  ['GOVID', /\b(?:passport|driver'?s? licen[cs]e|license no\.?|state id)(?:\s*(?:no\.?|number|#))?\s*[:#]?\s*([A-Z0-9]{6,12})\b/gi, 1],
+  ['CARD', /\b(?:\d[ -]?){13,19}\b/g, 0, luhn],
+  ['IBAN', /\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,3})?\b/g, 0, iban],
+  ['IBAN', /\b(?:SWIFT|BIC)(?:\s*code)?\s*[:#]?\s*([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?)\b/g, 1],
+  ['ROUTING', /\b\d{9}\b/g, 0, aba],
+  ['ACCOUNT', /\b(?:acct|account|a\/c)\s*(?:no\.?|number|#|num|ending(?:\s+in)?)?\s*[:#]?\s*(\d{4,17})\b/gi, 1],
+  ['LOANID', /\b(?:loan|borrower|customer|member|client|application|case)\s*(?:id|no\.?|number|#)\s*[:#]?\s*([A-Z0-9][A-Z0-9-]{3,20})\b/gi, 1],
+  ['LOANID', /\b(?:loan|LN)\s*#\s*([A-Z0-9][A-Z0-9-]{3,20})\b/gi, 1],
+  ['CREDIT', /\b(?:credit score|FICO(?:\s*score)?|vantage\s?score)\s*(?:of|is|:)?\s*(\d{3})\b/gi, 1],
   ['EMAIL', /\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g],
   ['PHONE', /(?<!\d)(?:\+?1[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}(?!\d)/g],
-  ['ADDRESS', /\b\d{2,6}\s+(?:[A-Z][a-z]+\s){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Way|Court|Ct|Place|Pl)\b\.?/g],
-  ['DOB', /\b(?:DOB|date of birth|born)[:\s]*((?:\d{1,2}[\/.-]){2}\d{2,4})\b/gi, 1],
-  ['AMOUNT', /\$\s?\d[\d,]*(?:\.\d+)?\s?(?:[MBK]|million|billion|thousand)?\b/gi],
+  ['ADDRESS', /\b\d{1,6}[A-Z]?\s+(?:[A-Z][a-z]+\s){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Way|Court|Ct|Place|Pl|Terrace|Parkway|Pkwy)\b\.?(?:,?\s*(?:Apt|Apartment|Suite|Ste|Unit|#)\s*[A-Z0-9-]+)?/g],
+  ['ADDRESS', /\b(?:[A-Z]{2})\s(\d{5}(?:-\d{4})?)\b/g, 1],
+  ['DOB', new RegExp(`\\b(?:DOB|date of birth|born(?: on)?|birthday)\\s*[:#]?\\s*((?:\\d{1,2}[\\/.-]){2}\\d{2,4}|${MONTH} \\d{1,2},? \\d{4}|\\d{1,2} ${MONTH},? \\d{4})`, 'gi'), 1],
+  ['HANDLE', /\b(?:venmo|cash ?app|zelle|paypal)\s*[:#]?\s*(@?\$?[A-Za-z0-9][\w.-]{2,})/gi, 1],
+  ['AMOUNT', /\$\s?\d[\d,]*(?:\.\d+)?(?:\s?(?:mm|[MBK]|million|billion|thousand)\b)?/gi],
 ];
-const MNPI = /\b(merger|acquisition|takeover|tender offer|not yet (?:public|announced)|before (?:the )?announcement|earnings (?:before|ahead of)|unannounced|insider|material non-public|MNPI|layoffs|restructuring plan)\b/gi;
-
-// ---------- Local AI model ----------
-// On a laptop install, the model and runtime are served from this machine. On the shared web demo,
-// they download once from Hugging Face / jsDelivr; after that, detection still runs entirely in the browser.
-const ON_DEVICE_INSTALL = ['localhost', '127.0.0.1'].includes(location.hostname);
-env.allowRemoteModels = !ON_DEVICE_INSTALL;
-env.allowLocalModels = ON_DEVICE_INSTALL;
-if (ON_DEVICE_INSTALL) {
-  env.localModelPath = new URL('./models/', location.href).href;
-  env.backends.onnx.wasm.wasmPaths = new URL('./lib/', location.href).href;
-}
-env.backends.onnx.wasm.numThreads = 1;
-if (!ON_DEVICE_INSTALL) document.querySelector('.nav a[href="/analyst"]')?.remove();
-let ner = null;
-const mstatus = document.getElementById('mstatus'), mbar = document.getElementById('mbar'), mdot = document.getElementById('mdot');
-pipeline('token-classification', 'Xenova/bert-base-NER', {
-  dtype: 'q8',
-  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) { mbar.style.width = (p.progress || 0) + '%'; mstatus.textContent = `Downloading local AI model… ${Math.round(p.progress || 0)}%`; } },
-}).then(p => {
-  ner = p; mbar.parentElement.style.display = 'none'; mdot.classList.add('ok');
-  mstatus.textContent = 'Local AI model ready · runs in this browser';
-  startEgressWatch(); scheduleScan();
-}).catch(e => { mstatus.textContent = 'Local model failed: rules only'; console.error(e); startEgressWatch(); });
-
-async function runNER(text) {
-  if (!ner || !text.trim()) return [];
-  const out = await ner(text);
-  const spans = []; let cur = null;
-  for (const t of out) {
-    const [bio, type] = t.entity.split('-');
-    if (t.score < 0.55 || !['PER', 'ORG', 'LOC'].includes(type)) { cur = null; continue; }
-    const piece = t.word.startsWith('##') ? t.word.slice(2) : t.word;
-    if (cur && cur.type === type && (bio === 'I' || t.word.startsWith('##'))) { cur.text += t.word.startsWith('##') ? piece : ' ' + piece; }
-    else { cur = { type, text: piece }; spans.push(cur); }
-  }
-  const res = []; let from = 0;
-  for (const s of spans) {
-    const words = s.text.replace(/\s+([.,'&-])\s*/g, '$1').trim();
-    if (words.length < 2) continue;
-    let i = text.indexOf(words, from); if (i < 0) i = text.indexOf(s.text, from);
-    if (i < 0) continue;
-    let a = i, b = i + words.length;
-    while (a > 0 && /\w/.test(text[a - 1])) a--;
-    while (b < text.length && /\w/.test(text[b])) b++;
-    from = b;
-    if (/^(SSN|DOB|EIN|TIN|ACH|IBAN|SWIFT|BIC|CEO|CFO|COO|LLC|Inc|Note|Hi|Thanks)$/i.test(text.slice(a, b))) continue;
-    res.push({ start: a, end: b, cat: { PER: 'PERSON', ORG: 'COMPANY', LOC: 'LOCATION' }[s.type], src: 'ai' });
-  }
-  return res;
-}
+const patternToRegex = p => {
+  if (!p) return null;
+  if (p.startsWith('regex:')) { try { return new RegExp(p.slice(6), 'g'); } catch { return null; } }
+  const body = p.trim().split('').map(ch => ch === '#' ? '\\d' : ch === '@' ? '[A-Za-z]' : ch === '*' ? '[A-Za-z0-9]+' : ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('');
+  return body ? new RegExp('(?<![\\w])' + body + '(?![\\w])', 'g') : null;
+};
 
 function runRules(text) {
   const res = [];
@@ -346,235 +470,413 @@ function runRules(text) {
     while ((m = rx.exec(text))) {
       const v = grp ? m[grp] : m[0];
       if (!v || (check && !check(v))) continue;
-      const start = m.index + (grp ? m[0].indexOf(v) : 0);
-      res.push({ start, end: start + v.length, cat, src: 'rule' });
+      const start = m.index + (grp ? m[0].lastIndexOf(v) : 0);
+      res.push({ start, end: start + v.length, cat, src: cat === 'CREDENTIAL' ? 'secret' : 'rule' });
     }
   }
-  for (const t of terms) {
-    if (!t.trim()) continue;
-    const rx = new RegExp('\\b' + t.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi'); let m;
-    while ((m = rx.exec(text))) res.push({ start: m.index, end: m.index + m[0].length, cat: 'SECRET', src: 'policy' });
+  for (const [cat, items] of Object.entries(policy.lists)) for (const t of items) {
+    const s = t.trim(); if (s.length < 2) continue;
+    const rx = new RegExp('(?<![\\w])' + s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\w])', 'gi'); let m;
+    while ((m = rx.exec(text))) res.push({ start: m.index, end: m.index + m[0].length, cat, src: 'policy' });
+  }
+  for (const p of policy.patterns) {
+    const rx = patternToRegex(p.pattern || ''); if (!rx) continue; let m;
+    while ((m = rx.exec(text))) { if (!m[0]) { rx.lastIndex++; continue; } res.push({ start: m.index, end: m.index + m[0].length, cat: 'CUSTOM', src: 'policy', action: p.action }); }
   }
   return res;
 }
-
+function runWarns(text) {
+  const out = [];
+  for (const [k, w] of Object.entries(WARNS)) {
+    if (!policy.warns[k]) continue;
+    w.rx.lastIndex = 0; let m;
+    while ((m = w.rx.exec(text))) out.push({ start: m.index, end: m.index + m[0].length, warn: k, text: m[0] });
+  }
+  return out;
+}
+const PRIO = { secret: 5, policy: 4, rule: 3, ai: 1 };
 function merge(spans) {
-  const prio = { policy: 3, rule: 2, ai: 1 };
-  spans = spans.filter(s => catOn[s.cat]).sort((a, b) => a.start - b.start || (prio[b.src] - prio[a.src]) || (b.end - a.end));
+  spans = spans.map(s => ({ ...s, act: s.action || actionOf(s.cat) })).filter(s => s.act !== 'off')
+    .sort((a, b) => a.start - b.start || PRIO[b.src] - PRIO[a.src] || (b.end - b.start) - (a.end - a.start));
   const out = [];
   for (const s of spans) {
     const last = out[out.length - 1];
-    if (last && s.start < last.end) { if (prio[s.src] > prio[last.src] || (prio[s.src] === prio[last.src] && s.end - s.start > last.end - last.start)) out[out.length - 1] = s; continue; }
+    if (last && s.start < last.end) {
+      if (PRIO[s.src] > PRIO[last.src] || (PRIO[s.src] === PRIO[last.src] && s.end - s.start > last.end - last.start)) out[out.length - 1] = s;
+      continue;
+    }
     out.push(s);
   }
   return out;
 }
 
-// ---------- Encryption (WebCrypto AES-256-GCM, non-extractable key) ----------
+// ---------- On-device AI model (finds names, companies, places) ----------
+env.allowRemoteModels = !IS_LOCAL;
+env.allowLocalModels = IS_LOCAL;
+if (IS_LOCAL) { env.localModelPath = new URL('./models/', location.href).href; env.backends.onnx.wasm.wasmPaths = new URL('./lib/', location.href).href; }
+env.backends.onnx.wasm.numThreads = 1;
+let ner = null;
+pipeline('token-classification', 'Xenova/bert-base-NER', {
+  dtype: 'q8',
+  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) { $('mbar').style.width = (p.progress || 0) + '%'; $('mstatus').textContent = `Loading local AI model… ${Math.round(p.progress || 0)}%`; } },
+}).then(p => {
+  ner = p; $('mprog').style.display = 'none'; $('mdot').classList.add('ok');
+  $('mstatus').textContent = IS_LOCAL ? 'AI model running on this computer' : 'AI model running in this browser';
+  startEgressWatch(); scheduleScan(); scanPolicyTest();
+}).catch(e => { console.error(e); $('mstatus').textContent = 'AI model unavailable · rules only'; $('mprog').style.display = 'none'; startEgressWatch(); });
+
+async function runNER(text) {
+  if (!ner || !text.trim()) return [];
+  const out = await ner(text);
+  const groups = []; let cur = null;
+  for (const t of out) {
+    const [bio, type] = t.entity.split('-');
+    if (t.score < 0.55 || !['PER', 'ORG', 'LOC'].includes(type)) { cur = null; continue; }
+    const sub = t.word.startsWith('##'), piece = sub ? t.word.slice(2) : t.word;
+    if (cur && cur.type === type && (bio === 'I' || sub)) cur.text += sub ? piece : ' ' + piece;
+    else { cur = { type, text: piece }; groups.push(cur); }
+  }
+  const res = []; let from = 0;
+  for (const g of groups) {
+    const words = g.text.replace(/\s+([.,'&-])\s*/g, '$1').trim();
+    if (words.length < 2) continue;
+    let i = text.indexOf(words, from); if (i < 0) i = text.indexOf(g.text, from); if (i < 0) continue;
+    let a = i, b = i + words.length;
+    while (a > 0 && /\w/.test(text[a - 1])) a--;
+    while (b < text.length && /\w/.test(text[b])) b++;
+    from = b;
+    if (/^(SSN|DOB|EIN|TIN|ACH|IBAN|SWIFT|BIC|CVV|PIN|FICO|EPS|CEO|CFO|COO|LLC|Inc|Note|Hi|Thanks|Login|Wire)$/i.test(text.slice(a, b))) continue;
+    res.push({ start: a, end: b, cat: { PER: 'PERSON', ORG: 'COMPANY', LOC: 'LOCATION' }[g.type], src: 'ai' });
+  }
+  return res;
+}
+
+// ---------- Encryption: AES-256-GCM with a non-extractable key ----------
 const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
 const vault = new Map(), byToken = new Map(), counters = {};
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const norm = v => v.trim().toLowerCase().replace(/\s+/g, ' ');
 async function protect(value, cat) {
-  const norm = value.trim().toLowerCase().replace(/\s+/g, ' ');
-  const k = cat + '|' + norm;
+  const k = cat + '|' + norm(value);
   if (vault.has(k)) return vault.get(k);
   counters[cat] = (counters[cat] || 0) + 1;
   const token = `[${cat}_${counters[cat]}]`;
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(value));
-  const entry = { token, cat, iv, ct, cipher: b64(iv) + ':' + b64(ct), fresh: true };
-  vault.set(k, entry); byToken.set(token, entry);
-  return entry;
+  const e = { token, cat, iv, ct, cipher: b64(iv) + ':' + b64(ct), fresh: true };
+  vault.set(k, e); byToken.set(token, e); return e;
 }
 async function reveal(token) {
   const e = byToken.get(token); if (!e) return null;
   return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: e.iv }, key, e.ct));
 }
 
-// ---------- Scan + render ----------
-const $ = id => document.getElementById(id);
+// ---------- Main scan ----------
 const input = $('input'), hl = $('hl'), safe = $('safe');
-const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let current = { text: '', spans: [], safeText: '', entries: [] }, timer = null, logTimer = null, scanId = 0, animated = new Set(), mnpiSeen = new Set();
-function scheduleScan() { clearTimeout(timer); timer = setTimeout(scan, 220); renderHL(merge(runRules(input.value))); }
+let current = { text: '', spans: [], safeText: '', entries: [] }, timer, scanId = 0, logTimer;
+const animated = new Set(), seen = new Set();
+function scheduleScan() { clearTimeout(timer); timer = setTimeout(scan, 220); renderHL(merge(runRules(input.value)), runWarns(input.value)); }
 input.addEventListener('input', scheduleScan);
 input.addEventListener('scroll', () => { hl.scrollTop = input.scrollTop; });
 
-function renderHL(spans) {
-  const t = input.value; let h = '', p = 0;
-  for (const s of spans) { h += esc(t.slice(p, s.start)) + `<mark style="--c:${cv(s.cat)}">${esc(t.slice(s.start, s.end))}</mark>`; p = s.end; }
-  hl.innerHTML = h + esc(t.slice(p)) + '\n';
+function highlight(text, spans, warns, cls = '') {
+  const marks = [...spans.map(s => ({ ...s, kind: 'p' })), ...warns.filter(w => !spans.some(s => w.start < s.end && w.end > s.start)).map(w => ({ ...w, kind: 'w' }))].sort((a, b) => a.start - b.start);
+  let h = '', p = 0;
+  for (const s of marks) {
+    if (s.start < p) continue;
+    const open = s.kind === 'p' ? `<mark class="${cls}" style="--c:${s.act === 'block' ? 'var(--c-cred)' : cv(s.cat)}">` : `<mark class="w ${cls}">`;
+    h += esc(text.slice(p, s.start)) + open + esc(text.slice(s.start, s.end)) + '</mark>'; p = s.end;
+  }
+  return h + esc(text.slice(p));
+}
+function renderHL(spans, warns) { hl.innerHTML = highlight(input.value, spans, warns) + '\n'; }
+
+async function buildSafe(text, spans) {
+  const entries = []; let html = '', plain = '', p = 0;
+  for (const s of spans) {
+    const seg = text.slice(p, s.start); html += esc(seg); plain += seg;
+    if (s.act === 'block') {
+      const lbl = `[REMOVED: ${CATS[s.cat].label}]`;
+      html += `<span class="tok removed" data-t="rm${s.start}" data-len="${s.end - s.start}">${esc(lbl)}</span>`; plain += lbl; entries.push(null);
+    } else {
+      const e = await protect(text.slice(s.start, s.end), s.cat); entries.push(e);
+      html += `<span class="tok" data-t="${e.token}" data-len="${s.end - s.start}" style="--c:${cv(s.cat)}">${e.token}</span>`; plain += e.token;
+    }
+    p = s.end;
+  }
+  html += esc(text.slice(p)); plain += text.slice(p);
+  return { html, plain, entries };
 }
 
 async function scan() {
   const id = ++scanId, text = input.value, t0 = performance.now();
   const spans = merge([...runRules(text), ...(await runNER(text))]);
+  const warns = runWarns(text);
   if (id !== scanId) return;
-  $('s-ms').textContent = Math.round(performance.now() - t0) + ' ms';
-  renderHL(spans);
-  const entries = [];
-  for (const s of spans) entries.push(await protect(text.slice(s.start, s.end), s.cat));
+  $('s-ms').textContent = text.trim() ? Math.round(performance.now() - t0) + ' ms' : '–';
+  renderHL(spans, warns);
+  const { html, plain, entries } = await buildSafe(text, spans);
   if (id !== scanId) return;
-  let html = '', plain = '', p = 0;
-  spans.forEach((s, i) => {
-    const e = entries[i], seg = text.slice(p, s.start);
-    html += esc(seg) + `<span class="tok" data-t="${e.token}" data-len="${s.end - s.start}" style="--c:${cv(s.cat)}">${e.token}</span>`;
-    plain += seg + e.token; p = s.end;
-  });
-  html += esc(text.slice(p)); plain += text.slice(p);
-  current = { text, spans, safeText: plain, entries };
-  clearTimeout(logTimer);
-  logTimer = setTimeout(() => entries.forEach(e => { if (!e.logged) { e.logged = true; logEvent('Encrypted', CATS[e.cat].label, 'info', e.cat); } }), 1500);
-  safe.innerHTML = text.trim() ? html : '<span class="empty">The protected version appears here as you type.</span>';
+  current = { text, spans, safeText: plain, entries, warns };
+  safe.innerHTML = text.trim() ? html : '<span class="empty">The protected version appears here, live, as you type.</span>';
   $('copy').disabled = !text.trim();
-  animate();
-  renderChips(spans); renderVault(); checkMNPI(text); updateStats();
+  animate(); renderChips(spans); renderVault(); renderAlerts(spans, warns);
+  $('s-items').textContent = entries.filter(Boolean).length;
+  $('s-removed').textContent = spans.filter(s => s.act === 'block').length;
+  $('s-warn').textContent = new Set(warns.map(w => w.warn)).size;
+  clearTimeout(logTimer);
+  logTimer = setTimeout(() => {
+    entries.forEach(e => { if (e && !e.logged) { e.logged = true; logEvent('Encrypted', CATS[e.cat].label, 'info', e.cat, 'enc'); } });
+    spans.filter(s => s.act === 'block').forEach(s => { const k = 'rm|' + s.cat + '|' + norm(text.slice(s.start, s.end)); if (!seen.has(k)) { seen.add(k); logEvent('Secret removed', CATS[s.cat].label, 'high', s.cat, 'removed'); } });
+    for (const k of new Set(warns.map(w => w.warn))) { const k2 = 'w|' + k + '|' + norm(text).slice(0, 80); if (!seen.has(k2)) { seen.add(k2); logEvent('Compliance warning', WARNS[k].label, 'warn', null, 'warn'); } }
+  }, 1500);
 }
 
 const GLYPHS = '▓▒░█▚▞◆◇⌁⌬⟁⧉#%&@$¥§01';
 function animate() {
+  let n = 0;
   safe.querySelectorAll('.tok').forEach(el => {
-    const t = el.dataset.t; if (animated.has(t)) return; animated.add(t);
-    const n = Math.max(6, Math.min(+el.dataset.len, 22)); let i = 0;
+    const t = el.dataset.t, final = el.textContent; if (animated.has(t)) return; animated.add(t);
+    const len = Math.max(6, Math.min(+el.dataset.len, 22)), delay = (n++) * 70; let i = 0;
+    el.textContent = Array.from({ length: len }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join('');
     el.classList.add('scramble');
-    const iv = setInterval(() => {
-      i++; el.textContent = Array.from({ length: n }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join('');
-      if (i > 12) { clearInterval(iv); el.textContent = t; el.classList.remove('scramble'); }
-    }, 45);
+    setTimeout(() => {
+      const iv = setInterval(() => {
+        i++; el.textContent = Array.from({ length: len }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join('');
+        if (i > 12) { clearInterval(iv); el.textContent = final; el.classList.remove('scramble'); }
+      }, 42);
+    }, delay);
   });
+  const fresh = current.entries.filter(e => e && e.fresh);
+  if (fresh.length) {
+    let j = 0; const tick = () => { const e = fresh[j]; if (!e) return; $('feed').innerHTML = `<span>ENCRYPTING</span> ${esc(e.token)} → ${esc(e.cipher.slice(0, 52))}…`; j++; setTimeout(tick, 110); }; tick();
+  } else if (!current.text.trim()) $('feed').textContent = 'Waiting for text…';
 }
 
 function renderChips(spans) {
-  const counts = {};
-  spans.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
-  $('chips').innerHTML = Object.entries(counts).map(([c, n]) => `<span class="chip" style="--c:${cv(c)}">${n} × ${CATS[c].label}</span>`).join('') || '<span style="color:var(--faint);font-size:12.5px">Nothing sensitive found yet.</span>';
-  $('legend').innerHTML = spans.length ? `<span class="chip" style="--c:var(--good)">${spans.length} items encrypted · ${spans.filter(s => s.src === 'ai').length} found by the local AI model</span>` : '';
+  const counts = {}; spans.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
+  $('chips').innerHTML = Object.entries(counts).map(([c, n]) => `<span class="chip" style="--c:${cv(c)}">${n} × ${CATS[c].label}</span>`).join('') || '<span class="empty" style="font-size:13px">Nothing sensitive found yet.</span>';
+  const enc = spans.filter(s => s.act !== 'block').length, ai = spans.filter(s => s.src === 'ai').length;
+  $('legend').innerHTML = spans.length ? `<span class="chip" style="--c:var(--good)">${enc} encrypted</span>` + (ai ? `<span class="chip" style="--c:var(--accent)">${ai} found by the on-device AI</span>` : '') + (spans.length - enc ? `<span class="chip" style="--c:var(--bad)">${spans.length - enc} removed for good</span>` : '') : '';
 }
-
 function renderVault() {
-  const rows = [...new Set(current.entries)].reverse();
-  $('vault').innerHTML = rows.length ? rows.map(e => `<tr class="${e.fresh ? 'new' : ''}"><td><span class="tok" style="--c:${cv(e.cat)}">${e.token}</span></td><td>${CATS[e.cat].label}</td><td class="cipher">${e.cipher.slice(0, 34)}…</td></tr>`).join('') : '<tr><td colspan="3" style="color:var(--faint)">Nothing encrypted yet.</td></tr>';
+  const rows = [...new Set(current.entries.filter(Boolean))].reverse();
+  $('vault').innerHTML = rows.length ? rows.map(e => `<tr class="${e.fresh ? 'new' : ''}"><td><span class="tok" style="--c:${cv(e.cat)}">${e.token}</span></td><td>${CATS[e.cat].label}</td><td class="cipher">${e.cipher.slice(0, 40)}…</td></tr>`).join('') : '<tr><td colspan="3" class="empty">Nothing encrypted yet.</td></tr>';
   rows.forEach(e => e.fresh = false);
 }
-
-function checkMNPI(text) {
-  const hits = [...new Set((text.match(MNPI) || []).map(s => s.toLowerCase()))];
-  const b = $('mnpi');
-  if (hits.length) {
-    b.style.display = 'block';
-    b.innerHTML = `<b>Possible inside information.</b> This text mentions “${esc(hits.join('”, “'))}”. Encryption hides names, not meaning. Check with compliance before sharing it with any AI.`;
-    const k = hits.join('|'); if (!mnpiSeen.has(k)) { mnpiSeen.add(k); logEvent('Inside-information warning', hits.join(', '), 'warn', null, 'mnpi'); }
-  } else b.style.display = 'none';
+function renderAlerts(spans, warns) {
+  const a = [];
+  const removed = [...new Set(spans.filter(s => s.act === 'block').map(s => CATS[s.cat].label))];
+  if (removed.length) a.push(`<div class="alert bad"><b>Removed for good: ${esc(removed.join(', '))}</b>These are never sent anywhere, not even encrypted. Nobody should paste them into an AI.</div>`);
+  const byW = {}; warns.forEach(w => (byW[w.warn] ||= new Set()).add(w.text.toLowerCase()));
+  for (const [k, set] of Object.entries(byW)) a.push(`<div class="alert warn"><b>${WARNS[k].label}</b>Mentions “${esc([...set].slice(0, 4).join('”, “'))}”. ${WARNS[k].why} Encryption hides names, not meaning, so check before sharing.</div>`);
+  $('alerts').innerHTML = a.join('');
 }
 
-// ---------- Copy guard (monitoring) ----------
+// ---------- Copy guard ----------
+async function writeClip(text) { try { await navigator.clipboard.writeText(text); } catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } }
 $('copy').onclick = async () => {
-  try { await navigator.clipboard.writeText(current.safeText); } catch { const ta = document.createElement('textarea'); ta.value = current.safeText; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-  logEvent('Safe copy to AI', `${current.spans.length} items encrypted`, 'info', null, 'safe');
-  toast('Copied the safe version', 'Paste it into any AI. Real values stay encrypted on this Mac.', true);
+  await writeClip(current.safeText);
+  logEvent('Safe copy to AI', `${current.entries.filter(Boolean).length} items encrypted`, 'info', null, 'safe');
+  toast('Copied the safe version', 'Paste it into any AI. The real values stay encrypted on this device.', true);
 };
-function guardCopy(e) {
-  const sel = input.value.slice(input.selectionStart, input.selectionEnd);
-  if (!sel) return;
-  const hits = current.spans.filter(s => s.start < input.selectionEnd && s.end > input.selectionStart).length || merge(runRules(sel)).length;
-  if (!hits) return;
-  e.preventDefault();
-  e.clipboardData?.setData('text/plain', current.safeText ? safeSlice(input.selectionStart, input.selectionEnd) : '');
-  logEvent('Unprotected copy blocked', `${hits} sensitive item(s) in selection`, 'high', null, 'viol');
-  toast('Blocked: unprotected client data', 'You copied text with sensitive data. The encrypted version was copied instead, and compliance was notified.');
-}
 function safeSlice(a, b) {
   let out = '', p = a;
-  for (const s of current.spans) {
-    if (s.end <= a || s.start >= b) continue;
+  current.spans.forEach((s, i) => {
+    if (s.end <= a || s.start >= b) return;
     out += current.text.slice(p, Math.max(p, s.start));
-    const e = vault.get(s.cat + '|' + current.text.slice(s.start, s.end).trim().toLowerCase().replace(/\s+/g, ' '));
-    out += e ? e.token : '[REDACTED]'; p = s.end;
-  }
+    const e = current.entries[i]; out += e ? e.token : `[REMOVED: ${CATS[s.cat].label}]`; p = s.end;
+  });
   return out + current.text.slice(p, b);
+}
+function guardCopy(e) {
+  const a = input.selectionStart, b = input.selectionEnd; if (a === b) return;
+  const hits = current.spans.filter(s => s.start < b && s.end > a).length || merge(runRules(input.value.slice(a, b))).length;
+  if (!hits) return;
+  e.preventDefault();
+  e.clipboardData?.setData('text/plain', safeSlice(a, b));
+  logEvent('Unprotected copy blocked', `${hits} sensitive item(s) in the selection`, 'high', null, 'viol');
+  toast('Blocked: unprotected client data', 'You copied text containing sensitive data. The encrypted version was copied instead, and compliance was notified.');
 }
 input.addEventListener('copy', guardCopy);
 input.addEventListener('cut', guardCopy);
 
 // ---------- Restore ----------
-let restoreTimer = null;
-$('rin').addEventListener('input', async () => {
-  const t = $('rin').value; let h = '', p = 0; const rx = /\[([A-Z]+)_(\d+)\]/g; let m, n = 0;
-  while ((m = rx.exec(t))) {
+let restoreTimer;
+async function restore(text) {
+  let h = '', p = 0, n = 0; const rx = /\[([A-Z]+)_(\d+)\]/g; let m;
+  while ((m = rx.exec(text))) {
     const v = await reveal(m[0]);
-    h += esc(t.slice(p, m.index)) + (v != null ? `<span class="tok restored" style="--c:${cv(m[1] in CATS ? m[1] : 'SECRET')}">${esc(v)}</span>` : esc(m[0]));
+    h += esc(text.slice(p, m.index)) + (v != null ? `<span class="tok plain" style="--c:${cv(m[1])}">${esc(v)}</span>` : esc(m[0]));
     p = m.index + m[0].length; if (v != null) n++;
   }
-  $('rout').innerHTML = t ? h + esc(t.slice(p)) : '<span style="color:var(--faint)">Real names and numbers come back here, only on this screen.</span>';
+  $('rout').innerHTML = text ? h + esc(text.slice(p)) : '<span class="empty">Real names and numbers come back here, only on this screen.</span>';
   clearTimeout(restoreTimer);
-  if (n) restoreTimer = setTimeout(() => logEvent('Answer restored', `${n} values decrypted on device`, 'info', null, 'restore'), 1500);
-});
+  if (n) restoreTimer = setTimeout(() => logEvent('Answer restored', `${n} values decrypted on this device`, 'info', null, 'restore'), 1500);
+}
+$('rin').addEventListener('input', () => restore($('rin').value));
 
-// ---------- Policy ----------
-$('toggles').innerHTML = Object.entries(CATS).map(([k, c]) => `<label class="tg" style="--c:var(${c.c})"><input type="checkbox" data-k="${k}" ${catOn[k] ? 'checked' : ''}><span class="sw"></span>${c.label}</label>`).join('');
-$('toggles').addEventListener('change', e => { catOn[e.target.dataset.k] = e.target.checked; store.set('ls_cats', catOn); logEvent('Policy changed', `${CATS[e.target.dataset.k].label} ${e.target.checked ? 'on' : 'off'}`, 'warn'); scheduleScan(); });
-$('terms').value = terms.join('\n');
-$('terms').addEventListener('input', () => { terms = $('terms').value.split('\n').map(s => s.trim()).filter(Boolean); store.set('ls_terms', terms); scheduleScan(); });
+// ---------- Local AI chat (Ollama on this computer) ----------
+const OLLAMA = 'http://127.0.0.1:11434';
+async function initLLM() {
+  if (!IS_LOCAL) { $('llmSub').textContent = 'Available in the installed app: connect an AI model running on your own computer (Ollama), so nothing goes to the internet at all.'; return; }
+  try {
+    const r = await fetch(OLLAMA + '/api/tags', { signal: AbortSignal.timeout(1500) });
+    const models = (await r.json()).models || [];
+    if (!models.length) throw new Error('none');
+    $('llmModel').innerHTML = models.map(m => `<option>${esc(m.name)}</option>`).join(''); $('llmModel').style.display = '';
+    $('llmSub').textContent = `${models.length} local model${models.length > 1 ? 's' : ''} found. Only the safe version is sent to it.`;
+    $('llmGo').disabled = false;
+  } catch { $('llmSub').innerHTML = 'No local AI found yet. Install <b>Ollama</b> from ollama.com, run <code>ollama pull llama3.2</code>, then reopen Ledger Shield.'; }
+}
+$('llmGo').onclick = async () => {
+  if (!current.safeText.trim()) return toast('Nothing to send', 'Paste some text first.');
+  $('llmGo').disabled = true; $('llmOut').textContent = 'Thinking on this computer…';
+  logEvent('Sent to local AI', `${current.entries.filter(Boolean).length} items encrypted`, 'info', null, 'safe');
+  try {
+    const r = await fetch(OLLAMA + '/api/chat', { method: 'POST', body: JSON.stringify({ model: $('llmModel').value, stream: false,
+      messages: [{ role: 'system', content: 'You help bank employees. The text contains placeholder tokens like [PERSON_1]. Keep every token exactly as written.' },
+                 { role: 'user', content: $('llmPrompt').value + '\n\n---\n' + current.safeText }] }) });
+    const ans = (await r.json()).message?.content || '';
+    $('llmOut').textContent = ans; $('rin').value = ans; restore(ans);
+  } catch (e) { $('llmOut').textContent = 'The local AI did not respond: ' + e.message; }
+  $('llmGo').disabled = false;
+};
+initLLM();
+
+// ---------- Policy page ----------
+function renderPolicyMeta() {
+  $('bankName').textContent = policy.bank || 'Your bank';
+  $('pUpdated').textContent = 'Saved on this device · updated ' + new Date(policy.updated).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+  for (const k of Object.keys(policy.lists)) $('n-' + k).textContent = policy.lists[k].length;
+}
+$('pBank').value = policy.bank;
+$('pBank').addEventListener('input', () => { policy.bank = $('pBank').value; savePolicy('Bank name'); });
+document.querySelectorAll('[data-list]').forEach(ta => {
+  const k = ta.dataset.list; ta.value = policy.lists[k].join('\n');
+  ta.addEventListener('input', () => { policy.lists[k] = ta.value.split('\n').map(s => s.trim()).filter(Boolean); savePolicy(`${CATS[k].label} list (${policy.lists[k].length})`); schedulePolicyTest(); });
+});
+let csvTarget = null;
+document.querySelectorAll('[data-csv]').forEach(b => b.onclick = () => { csvTarget = b.dataset.csv; $('pFile').accept = '.csv,.txt'; $('pFile').click(); });
+$('pImport').onclick = () => { csvTarget = null; $('pFile').accept = '.json'; $('pFile').click(); };
+$('pFile').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return; const text = await f.text(); e.target.value = '';
+  if (csvTarget) {
+    const names = text.split(/\r?\n/).map(l => l.split(',')[0].replace(/^"|"$/g, '').trim()).filter(Boolean);
+    const merged = [...new Set([...policy.lists[csvTarget], ...names])];
+    policy.lists[csvTarget] = merged; document.querySelector(`[data-list="${csvTarget}"]`).value = merged.join('\n');
+    savePolicy(`Imported ${names.length} entries into ${CATS[csvTarget].label}`); toast('List imported', `${names.length} entries added from ${f.name}.`, true);
+  } else {
+    try { policy = Object.assign(structuredClone(DEFAULT_POLICY), JSON.parse(text)); store.set('ls_policy2', policy); location.reload(); }
+    catch { toast('Could not read that policy file', 'Choose a policy exported from Ledger Shield.'); }
+  }
+};
+$('pExport').onclick = () => download(JSON.stringify(policy, null, 2), `${(policy.bank || 'bank').replace(/\W+/g, '-').toLowerCase()}-shield-policy.json`, 'application/json');
+
+function renderPatterns() {
+  $('pats').innerHTML = policy.patterns.map((p, i) => `<div class="pat"><input value="${esc(p.name)}" data-i="${i}" data-f="name" placeholder="Name"><input class="mono" value="${esc(p.pattern)}" data-i="${i}" data-f="pattern" placeholder="e.g. HPB-########"><select data-i="${i}" data-f="action"><option value="encrypt" ${p.action === 'encrypt' ? 'selected' : ''}>Encrypt</option><option value="block" ${p.action === 'block' ? 'selected' : ''}>Remove</option></select><button class="btn small" data-del="${i}" title="Delete">✕</button></div>`).join('') || '<div class="empty" style="font-size:13.5px">No custom formats yet.</div>';
+}
+$('pats').addEventListener('input', e => { const i = e.target.dataset.i; if (i == null) return; policy.patterns[i][e.target.dataset.f] = e.target.value; savePolicy('Custom number formats'); schedulePolicyTest(); });
+$('pats').addEventListener('change', e => { const i = e.target.dataset.i; if (i == null) return; policy.patterns[i][e.target.dataset.f] = e.target.value; savePolicy('Custom number formats'); schedulePolicyTest(); });
+$('pats').addEventListener('click', e => { if (e.target.dataset.del == null) return; policy.patterns.splice(+e.target.dataset.del, 1); renderPatterns(); savePolicy('Custom number formats'); schedulePolicyTest(); });
+$('addPat').onclick = () => { policy.patterns.push({ name: 'New format', pattern: '', action: 'encrypt' }); renderPatterns(); };
+
+$('warnToggles').innerHTML = Object.entries(WARNS).map(([k, w]) => `<label class="toggle"><input type="checkbox" data-w="${k}" ${policy.warns[k] ? 'checked' : ''}><span class="knob"></span><div><b>${w.label}</b><span>${w.why}</span></div></label>`).join('');
+$('warnToggles').addEventListener('change', e => { policy.warns[e.target.dataset.w] = e.target.checked; savePolicy(`${WARNS[e.target.dataset.w].label} ${e.target.checked ? 'on' : 'off'}`); schedulePolicyTest(); });
+
+function renderRules() {
+  let h = '', g = '';
+  for (const [k, c] of Object.entries(CATS)) {
+    if (c.group !== g) { g = c.group; h += `<div class="group">${g}</div>`; }
+    const a = actionOf(k);
+    h += `<div class="rule"><span class="nm"><span class="sw" style="--c:var(${c.c})"></span>${c.label}</span><span class="seg" data-k="${k}">${['encrypt', 'block', 'off'].map(x => `<button data-a="${x}" class="${a === x ? 'on' : ''}">${{ encrypt: 'Encrypt', block: 'Remove', off: 'Off' }[x]}</button>`).join('')}</span></div>`;
+  }
+  $('rules').innerHTML = h;
+}
+$('rules').addEventListener('click', e => { const a = e.target.dataset.a, k = e.target.parentElement?.dataset.k; if (!a || !k) return; policy.actions[k] = a; renderRules(); savePolicy(`${CATS[k].label}: ${{ encrypt: 'encrypt', block: 'remove', off: 'off' }[a]}`); schedulePolicyTest(); });
+
+let ptTimer;
+const schedulePolicyTest = () => { clearTimeout(ptTimer); ptTimer = setTimeout(scanPolicyTest, 200); };
+async function scanPolicyTest() {
+  const t = $('ptest').value;
+  if (!t.trim()) { $('ptestOut').innerHTML = '<span class="empty">Results appear here.</span>'; return; }
+  const spans = merge([...runRules(t), ...(await runNER(t))]), warns = runWarns(t);
+  const parts = spans.map(s => `<span class="chip" style="--c:${s.act === 'block' ? 'var(--bad)' : cv(s.cat)}">${esc(t.slice(s.start, s.end))} → ${s.act === 'block' ? 'removed' : 'encrypted as ' + CATS[s.cat].label}</span>`);
+  const w = [...new Set(warns.map(x => WARNS[x.warn].label))].map(l => `<span class="chip" style="--c:var(--warn)">⚠ ${l}</span>`);
+  const marked = highlight(t, spans, warns).replace(/<mark class="w ">/g, '<mark class="ptw">').replace(/<mark class="" style="--c:([^"]+)">/g, '<mark style="color:inherit;background:color-mix(in srgb, $1 22%, transparent);border-radius:5px;padding:1px 2px">');
+  $('ptestOut').innerHTML = `<div style="margin-bottom:12px">${marked}</div><div style="display:flex;flex-wrap:wrap;gap:7px">${parts.join('') + w.join('') || '<span class="empty">Nothing would be protected.</span>'}</div>`;
+}
+$('ptest').addEventListener('input', schedulePolicyTest);
+renderPatterns(); renderRules(); renderPolicyMeta();
 
 // ---------- Compliance log ----------
-let events = store.get('ls_events', []);
-const user = () => $('user').value.split(' · ')[0];
+let events = store.get('ls_events2', []);
+const who = () => $('user').value.split(' · ')[0];
 function logEvent(event, details, level, cat = null, kind = null) {
-  events.unshift({ t: Date.now(), user: user(), event, details, level, cat, kind });
-  events = events.slice(0, 500); store.set('ls_events', events); renderCompliance();
+  events.unshift({ t: Date.now(), user: who(), event, details, level, cat, kind });
+  events = events.slice(0, 600); store.set('ls_events2', events); renderCompliance();
 }
 function renderCompliance() {
   const count = k => events.filter(e => e.kind === k).length;
-  const prot = events.filter(e => e.event === 'Encrypted');
-  $('k-prot').textContent = prot.length; $('k-safe').textContent = count('safe'); $('k-viol').textContent = count('viol'); $('k-mnpi').textContent = count('mnpi');
-  const vb = $('vbadge'); vb.textContent = count('viol'); vb.style.display = count('viol') ? 'inline-block' : 'none';
-  const byCat = {}; prot.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + 1);
+  $('k-prot').textContent = count('enc'); $('k-safe').textContent = count('safe'); $('k-viol').textContent = count('viol') + count('removed'); $('k-warn').textContent = count('warn');
+  const vb = $('vbadge'), v = count('viol') + count('removed'); vb.textContent = v; vb.style.display = v ? 'inline-block' : 'none';
+  const byCat = {}; events.filter(e => e.cat).forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + 1);
   const max = Math.max(1, ...Object.values(byCat));
-  $('bars').innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([c, n]) => `<div class="bar" style="--c:${cv(c)}"><span>${CATS[c].label}</span><div class="track"><div class="fill" style="width:${n / max * 100}%"></div></div><span class="num">${n}</span></div>`).join('') || '<div style="color:var(--faint);font-size:13px">No activity yet.</div>';
-  const people = {}; events.forEach(e => { const p = people[e.user] ||= { safe: 0, viol: 0, enc: 0 }; if (e.kind === 'safe') p.safe++; if (e.kind === 'viol') p.viol++; if (e.event === 'Encrypted') p.enc++; });
-  $('people').innerHTML = Object.entries(people).map(([u, p]) => `<div class="bar" style="--c:${p.viol ? 'var(--bad)' : 'var(--good)'}"><span>${esc(u)}</span><div class="track"><div class="fill" style="width:${Math.min(100, (p.enc + p.safe) * 4)}%"></div></div><span class="num" title="breaches">${p.viol ? '⚠ ' + p.viol : '✓'}</span></div>`).join('') || '<div style="color:var(--faint);font-size:13px">No activity yet.</div>';
-  $('log').innerHTML = events.slice(0, 120).map(e => `<tr><td style="color:var(--quiet);white-space:nowrap">${new Date(e.t).toLocaleTimeString()}</td><td>${esc(e.user)}</td><td>${esc(e.event)}</td><td style="color:var(--quiet)">${esc(e.details)}</td><td><span class="sev ${e.level}">${{ info: 'OK', warn: 'Review', high: 'Breach' }[e.level]}</span></td></tr>`).join('') || '<tr><td colspan="5" style="color:var(--faint)">No activity yet.</td></tr>';
+  $('bars').innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([c, n]) => `<div class="bar" style="--c:${cv(c)}"><span>${CATS[c].label}</span><div class="track"><div class="fill" style="width:${n / max * 100}%"></div></div><span class="num">${n}</span></div>`).join('') || '<div class="empty" style="font-size:14px">No activity yet.</div>';
+  const people = {}; events.forEach(e => { const p = people[e.user] ||= { act: 0, bad: 0 }; p.act++; if (e.level === 'high') p.bad++; });
+  const pmax = Math.max(1, ...Object.values(people).map(p => p.act));
+  $('people').innerHTML = Object.entries(people).map(([u, p]) => `<div class="bar" style="--c:${p.bad ? 'var(--bad)' : 'var(--good)'}"><span>${esc(u)}</span><div class="track"><div class="fill" style="width:${p.act / pmax * 100}%"></div></div><span class="num">${p.bad ? '⚠ ' + p.bad : '✓'}</span></div>`).join('') || '<div class="empty" style="font-size:14px">No activity yet.</div>';
+  $('log').innerHTML = events.slice(0, 150).map(e => `<tr><td style="color:var(--quiet);white-space:nowrap">${new Date(e.t).toLocaleTimeString()}</td><td>${esc(e.user)}</td><td>${esc(e.event)}</td><td style="color:var(--quiet)">${esc(e.details)}</td><td><span class="lvl ${e.level}">${{ info: 'OK', warn: 'Review', high: 'Blocked' }[e.level]}</span></td></tr>`).join('') || '<tr><td colspan="5" class="empty">No activity yet.</td></tr>';
 }
-$('reset').onclick = () => { events = []; store.set('ls_events', events); renderCompliance(); };
+$('reset').onclick = () => { events = []; store.set('ls_events2', events); renderCompliance(); };
 $('export').onclick = () => {
   const rows = [['time', 'employee', 'event', 'details', 'level'], ...events.map(e => [new Date(e.t).toISOString(), e.user, e.event, e.details, e.level])];
-  const blob = new Blob([rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n')], { type: 'text/csv' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'ledger-shield-compliance-log.csv'; a.click();
+  download(rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n'), 'ledger-shield-compliance-log.csv', 'text/csv');
 };
 renderCompliance();
 
-// ---------- Egress watch: count any request to another server after load ----------
+// ---------- Egress watch: counts requests to any outside server after load ----------
 function startEgressWatch() {
   const ready = performance.now(); let n = 0;
   new PerformanceObserver(list => {
-    for (const e of list.getEntries()) if (e.startTime > ready && new URL(e.name).origin !== location.origin) { n++; $('egress').textContent = n; $('egress').style.color = 'var(--bad)'; }
+    for (const e of list.getEntries()) {
+      const u = new URL(e.name);
+      if (e.startTime > ready && u.origin !== location.origin && !['localhost', '127.0.0.1'].includes(u.hostname)) { n++; $('egress').textContent = n; $('egress').style.color = 'var(--bad)'; }
+    }
   }).observe({ type: 'resource', buffered: false });
 }
 
 // ---------- Misc ----------
-function updateStats() {
-  $('s-items').textContent = current.spans.length;
-  $('s-cats').textContent = new Set(current.spans.map(s => s.cat)).size;
-}
-let tt; function toast(title, body, ok) { const t = $('toast'); t.className = 'toast show' + (ok ? ' ok' : ''); t.innerHTML = `<b>${esc(title)}</b>${esc(body)}`; clearTimeout(tt); tt = setTimeout(() => t.className = 'toast' + (ok ? ' ok' : ''), 3800); }
+function download(text, name, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+let tt; function toast(title, body, ok) { const t = $('toast'); t.className = 'toast show' + (ok ? ' ok' : ''); t.innerHTML = `<b>${esc(title)}</b>${esc(body)}`; clearTimeout(tt); tt = setTimeout(() => t.className = 'toast' + (ok ? ' ok' : ''), 4000); }
 document.querySelectorAll('.nav a[data-page]').forEach(a => a.onclick = () => {
   document.querySelectorAll('.nav a').forEach(x => x.classList.toggle('on', x === a));
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'p-' + a.dataset.page));
+  window.scrollTo({ top: 0 });
 });
 const SAMPLE = `Hi team,
 
-Following up on the Meridian Capital credit line for our client Daniel Okafor (SSN 512-48-3391, DOB 04/12/1968). Please wire the $4.2M draw to account #004417829931, routing 021000021. Card on file: 4111 1111 1111 1111.
+Following up on the Meridian Capital credit line for our client Daniel Okafor (SSN 512-48-3391, DOB 04/12/1968). Please wire the $4.2M draw to account #004417829931, routing 021000021. Card on file: 4111 1111 1111 1111, exp 09/28, CVV 331.
 
-He can be reached at d.okafor@meridiancap.com or (415) 555-0187, 1450 Market Street, San Francisco.
+He can be reached at d.okafor@meridiancap.com or (415) 555-0187, 1450 Market Street, San Francisco, CA 94103.
 
-Note: Project Falcon (the Acme Holdings acquisition) is not yet public, so keep this internal until the announcement.
+Note: Project Falcon (the Acme Holdings acquisition) is not yet public, so keep this internal until the announcement. Harborview LLC is on our watchlist after a covenant breach last quarter.
+
+RiskView 360 login if you need it: password Harbor2026!
 
 Thanks,
 Sarah Chen
 Commercial Lending, Harbor Point Bank`;
-$('sample').onclick = () => { input.value = ''; scheduleScan(); typeIn(SAMPLE); };
-$('clear').onclick = () => { input.value = ''; scheduleScan(); };
-function typeIn(text) { let i = 0; const step = () => { i = Math.min(text.length, i + 6); input.value = text.slice(0, i); scheduleScan(); if (i < text.length) requestAnimationFrame(step); }; step(); }
+let typing = 0;
+function freshSession() { typing++; vault.clear(); byToken.clear(); for (const k in counters) delete counters[k]; animated.clear(); input.value = ''; $('rin').value = ''; restore(''); scheduleScan(); }
+$('sample').onclick = () => { freshSession(); typeIn(SAMPLE); };
+$('clear').onclick = freshSession;
+input.addEventListener('input', () => { typing++; });
+function typeIn(text) {
+  const me = ++typing; let i = 0;
+  const step = () => { if (me !== typing) return; i = Math.min(text.length, i + 9); input.value = text.slice(0, i); input.scrollTop = input.scrollHeight; hl.scrollTop = input.scrollTop; scheduleScan(); if (i < text.length) setTimeout(step, 16); };
+  step();
+}
 </script>
 </body>
 </html>
