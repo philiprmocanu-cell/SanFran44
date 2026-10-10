@@ -1,6 +1,6 @@
 # Ledger Shield: use any AI, share nothing private
 
-<img src="docs/logo.png" width="160" alt="Ledger Shield logo: the Wall Street bull knocking the crowns off OpenAI, Anthropic, Gemini and Grok">
+<img src="docs/logo.png" width="160" alt="Ledger Shield logo: the black bull knocking OpenAI, Anthropic, Gemini and Grok off its horns">
 
 ![Ledger Shield](docs/shield.jpg)
 
