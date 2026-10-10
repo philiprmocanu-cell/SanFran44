@@ -2,3 +2,5 @@
 __pycache__/
 dist/
 .DS_Store
+gateway/static/shield/models/
+gateway/static/shield/lib/*.wasm

@@ -1,3 +1,25 @@
+# Ledger Shield: use any AI, leak nothing
+
+![Ledger Shield](docs/shield.jpg)
+
+Banks ban AI tools because staff paste client data into them, and staff use AI anyway on their phones. **Ledger Shield** sits in between:
+
+1. **Paste anything.** A local AI model running on your own computer (bert-base-NER, run in the browser with no internet) plus bank rules find names, companies, SSNs, account, routing and card numbers, emails, phones, addresses, amounts and deal code names.
+2. **Each one is encrypted live** with AES-256-GCM, using a key that never leaves the device, and replaced by a token like `[PERSON_1]`.
+3. **Copy the safe version into any AI** (ChatGPT, Claude, a local model).
+4. **Paste the AI's answer back.** Tokens are decrypted on your device, so the real names and numbers come back only on your screen.
+5. **Compliance view:** every encryption, safe copy, blocked raw copy and inside-information warning is logged by employee. The log records the type of data, never the data itself.
+
+The "Sent off device" counter proves nothing leaves: it counts every request to another server after the page loads.
+
+Open it at **http://localhost:8080** (redirects to `/shield/`). Before the first build, download the local model (about 130 MB, kept out of git):
+
+```bash
+./gateway/static/shield/download_model.sh
+```
+
+---
+
 # Ledger Check: a sealed AI analyst for banks
 
 Banks ban AI tools because staff can paste customer data into them. Ledger Check is an AI credit analyst that physically can't touch bank data:

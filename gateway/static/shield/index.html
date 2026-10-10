@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledger Shield</title>
+<style>
+:root {
+  --bg: #070a12; --bg2: #0b1020; --panel: rgba(255,255,255,.035); --panel2: rgba(255,255,255,.06);
+  --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.14);
+  --ink: #e9edf5; --quiet: #8f99ad; --faint: #5b6478;
+  --accent: #7c8cff; --accent2: #3ee0c5; --good: #3ddc97; --bad: #ff6b6b; --warn: #ffc65c;
+  --c-person: #b197fc; --c-company: #74c0fc; --c-location: #63e6be; --c-ssn: #ff8787; --c-account: #ffd43b;
+  --c-card: #ffa94d; --c-contact: #66d9e8; --c-amount: #f783ac; --c-codename: #e599f7; --c-date: #a5b4c8;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 14.5px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(900px 500px at 12% -10%, rgba(124,140,255,.18), transparent 60%),
+              radial-gradient(800px 500px at 100% 0%, rgba(62,224,197,.10), transparent 60%),
+              radial-gradient(700px 600px at 50% 120%, rgba(177,151,252,.08), transparent 60%); }
+.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; padding: 0 24px 40px; }
+
+/* Top bar */
+.top { display: flex; align-items: center; gap: 16px; padding: 18px 0; position: sticky; top: 0; z-index: 5;
+  background: linear-gradient(var(--bg) 70%, transparent); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
+.brand svg { filter: drop-shadow(0 0 12px rgba(124,140,255,.5)); }
+.nav { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-left: 18px; }
+.nav a { color: var(--quiet); text-decoration: none; padding: 7px 14px; border-radius: 9px; font-size: 13.5px; font-weight: 550; cursor: pointer; }
+.nav a.on { color: var(--ink); background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line2); }
+.nav a .badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 6px; border-radius: 99px; background: var(--bad); color: #fff; font-size: 11px; text-align: center; }
+.spacer { flex: 1; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--panel); font-size: 12.5px; color: var(--quiet); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 10px currentColor; color: var(--warn); }
+.dot.ok { background: var(--good); color: var(--good); }
+select.user { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; font: inherit; font-size: 13px; }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: end; margin: 12px 0 22px; }
+.hero h1 { font-size: 34px; line-height: 1.12; letter-spacing: -.025em; margin: 0 0 10px; font-weight: 750; }
+.hero h1 span { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { color: var(--quiet); margin: 0; max-width: 620px; font-size: 15px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.step { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 12px 14px; }
+.step b { display: block; font-size: 13px; margin-bottom: 2px; }
+.step span { color: var(--quiet); font-size: 12.5px; }
+.step i { font-style: normal; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; margin-right: 6px; background: rgba(124,140,255,.18); color: var(--accent); font-size: 11.5px; font-weight: 700; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 14px 16px; }
+.stat .n { font-size: 26px; font-weight: 750; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat .l { color: var(--quiet); font-size: 12.5px; }
+.stat.good .n { color: var(--good); } .stat.bad .n { color: var(--bad); }
+
+/* Cards */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(8px); }
+.card.glow { box-shadow: 0 0 0 1px rgba(62,224,197,.18), 0 20px 60px -30px rgba(62,224,197,.35); }
+.ch { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; }
+.ch h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--quiet); }
+.ch .tag { font-size: 11.5px; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--line); color: var(--quiet); }
+.ch .tag.green { color: var(--good); border-color: rgba(61,220,151,.35); background: rgba(61,220,151,.08); }
+.ch .tag.red { color: var(--bad); border-color: rgba(255,107,107,.35); background: rgba(255,107,107,.08); }
+.ch .right { margin-left: auto; display: flex; gap: 8px; }
+.btn { border: 1px solid var(--line2); background: var(--panel2); color: var(--ink); border-radius: 10px; padding: 7px 12px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { border: 0; color: #061018; background: linear-gradient(90deg, var(--accent2), #7cf0da); box-shadow: 0 8px 24px -10px rgba(62,224,197,.7); }
+.btn.primary:disabled { opacity: .45; cursor: default; }
+
+/* Editor with highlight backdrop */
+.editor { position: relative; margin: 0 16px 16px; height: 300px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); }
+.editor .hl, .editor textarea { position: absolute; inset: 0; margin: 0; padding: 14px; font: 14px/1.65 var(--sans); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; border: 0; }
+.editor .hl { color: transparent; pointer-events: none; }
+.editor textarea { resize: none; background: transparent; color: var(--ink); outline: none; caret-color: var(--accent2); }
+.editor textarea::placeholder { color: var(--faint); }
+.hl mark { color: transparent; border-radius: 4px; padding: 1px 0; background: color-mix(in srgb, var(--c) 26%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent); }
+.safe { margin: 0 16px 16px; height: 300px; overflow-y: auto; border-radius: 12px; border: 1px solid rgba(62,224,197,.22); background: rgba(0,0,0,.25); padding: 14px; white-space: pre-wrap; overflow-wrap: break-word; font: 14px/1.65 var(--sans); }
+.safe .empty { color: var(--faint); }
+.tok { font: 12.5px/1 var(--mono); padding: 3px 6px; border-radius: 6px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); white-space: nowrap; display: inline-block; transition: all .25s; }
+.tok.scramble { color: var(--ink); background: color-mix(in srgb, var(--c) 30%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 60%, transparent), inset 0 0 0 1px var(--c); }
+.tok.restored { font-family: var(--sans); font-size: 13.5px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 14px; min-height: 30px; }
+.chip { font-size: 12px; padding: 3px 9px; border-radius: 99px; color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); }
+.banner { margin: 0 16px 14px; padding: 10px 12px; border-radius: 10px; font-size: 13px; border: 1px solid rgba(255,198,92,.35); background: rgba(255,198,92,.08); color: #ffe2a8; display: none; }
+.banner b { color: var(--warn); }
+
+/* Vault */
+.vault { margin: 0 16px 16px; max-height: 300px; overflow-y: auto; border-radius: 12px; border: 1px solid var(--line); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 600; color: var(--quiet); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg2); }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+td.cipher { font: 12px var(--mono); color: var(--quiet); }
+tr.new td { animation: flash 1.2s ease-out; }
+@keyframes flash { from { background: rgba(62,224,197,.16); } to { background: transparent; } }
+.restore-in { margin: 0 16px 10px; height: 110px; width: calc(100% - 32px); resize: none; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 12px; font: 13.5px/1.55 var(--sans); outline: none; }
+.restore-out { margin: 0 16px 16px; min-height: 110px; max-height: 190px; overflow-y: auto; border-radius: 12px; border: 1px dashed var(--line2); padding: 12px; white-space: pre-wrap; font: 13.5px/1.6 var(--sans); }
+
+/* Policy */
+.policy { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; padding: 0 16px 16px; }
+.toggles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.tg { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; font-size: 13px; user-select: none; }
+.tg input { display: none; }
+.tg .sw { width: 30px; height: 18px; border-radius: 99px; background: var(--line2); position: relative; transition: .2s; flex: none; }
+.tg .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: .2s; }
+.tg input:checked + .sw { background: var(--c); }
+.tg input:checked + .sw::after { left: 14px; }
+.terms { width: 100%; height: 118px; resize: none; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 10px 12px; font: 13px/1.55 var(--mono); outline: none; }
+.hint { color: var(--faint); font-size: 12px; margin-top: 6px; }
+
+/* Compliance */
+.kv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.bars { padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 9px; }
+.bar { display: grid; grid-template-columns: 120px 1fr 36px; gap: 10px; align-items: center; font-size: 13px; }
+.bar .track { height: 10px; border-radius: 99px; background: var(--panel2); overflow: hidden; }
+.bar .fill { height: 100%; border-radius: 99px; background: var(--c); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 60%, transparent); transition: width .5s; }
+.bar .num { text-align: right; color: var(--quiet); font-variant-numeric: tabular-nums; }
+.log { max-height: 460px; overflow-y: auto; margin: 0 16px 16px; border-radius: 12px; border: 1px solid var(--line); }
+.sev { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.sev.info { color: var(--good); background: rgba(61,220,151,.1); } .sev.warn { color: var(--warn); background: rgba(255,198,92,.1); } .sev.high { color: var(--bad); background: rgba(255,107,107,.12); }
+.notice { margin: 0 16px 16px; font-size: 12.5px; color: var(--quiet); padding: 10px 12px; border-radius: 10px; background: var(--panel2); }
+
+.toast { position: fixed; right: 24px; bottom: 24px; z-index: 20; max-width: 380px; padding: 14px 16px; border-radius: 14px; background: #1b1220; border: 1px solid rgba(255,107,107,.5); box-shadow: 0 20px 50px -20px rgba(255,107,107,.6); transform: translateY(20px); opacity: 0; transition: .25s; font-size: 13.5px; }
+.toast.ok { background: #0f1d19; border-color: rgba(61,220,151,.5); box-shadow: 0 20px 50px -20px rgba(61,220,151,.5); }
+.toast.show { transform: none; opacity: 1; }
+.toast b { display: block; margin-bottom: 2px; }
+.progress { height: 3px; background: var(--panel2); border-radius: 99px; overflow: hidden; width: 90px; }
+.progress div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .2s; }
+.page { display: none; } .page.on { display: block; }
+.mt { margin-top: 16px; }
+@media (max-width: 980px) { .hero, .grid2, .policy { grid-template-columns: 1fr; } .stats, .kv { grid-template-columns: repeat(2, 1fr); } .nav { margin-left: 0; } .top { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" fill="url(#g)"/><path d="M8.5 12l2.3 2.3 4.7-4.8" stroke="#071018" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#7c8cff"/><stop offset="1" stop-color="#3ee0c5"/></linearGradient></defs></svg>
+      Ledger Shield
+    </div>
+    <nav class="nav">
+      <a data-page="shield" class="on">Shield</a>
+      <a data-page="compliance">Compliance <span class="badge" id="vbadge" style="display:none">0</span></a>
+      <a href="/analyst">Sealed analyst</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="pill"><span class="dot" id="mdot"></span><span id="mstatus">Loading local AI model…</span><span class="progress"><div id="mbar"></div></span></span>
+    <span class="pill" title="Requests to any other server since the app loaded">Sent off device: <b id="egress" style="color:var(--good)">0</b></span>
+    <select class="user" id="user">
+      <option>Jordan Lee · Credit Analyst</option>
+      <option>Priya Shah · Relationship Manager</option>
+      <option>Marcus Webb · Underwriter</option>
+    </select>
+  </div>
+
+  <!-- SHIELD -->
+  <section class="page on" id="p-shield">
+    <div class="hero">
+      <div>
+        <h1>Use any AI. <span>Leak nothing.</span></h1>
+        <p>Paste anything. A local AI model on this computer finds the client data, account numbers and deal secrets your bank can't let out, and encrypts each one with AES-256 before it ever leaves your screen.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><b><i>1</i>Paste</b><span>Sensitive data is found and encrypted live</span></div>
+        <div class="step"><b><i>2</i>Copy to any AI</b><span>ChatGPT, Claude, or a local model</span></div>
+        <div class="step"><b><i>3</i>Restore</b><span>Paste the answer back; values decrypt here</span></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat good"><div class="n" id="s-items">0</div><div class="l">Items encrypted</div></div>
+      <div class="stat"><div class="n" id="s-cats">0</div><div class="l">Kinds of sensitive data</div></div>
+      <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Detection time (on device)</div></div>
+      <div class="stat good"><div class="n" id="s-leak">0</div><div class="l">Bytes of bank data sent out</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="ch"><h2>Original</h2><span class="tag red">Never leaves this device</span>
+          <div class="right"><button class="btn" id="sample">Load sample email</button><button class="btn" id="clear">Clear</button></div></div>
+        <div class="editor"><div class="hl" id="hl"></div><textarea id="input" spellcheck="false" placeholder="Paste a client email, loan memo, spreadsheet rows…"></textarea></div>
+        <div class="banner" id="mnpi"></div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="card glow">
+        <div class="ch"><h2>Safe to share</h2><span class="tag green">Encrypted</span>
+          <div class="right"><button class="btn primary" id="copy" disabled>Copy safe version</button></div></div>
+        <div class="safe" id="safe"><span class="empty">The protected version appears here as you type.</span></div>
+        <div class="chips" id="legend"></div>
+      </div>
+    </div>
+
+    <div class="grid2 mt">
+      <div class="card">
+        <div class="ch"><h2>Encrypted vault</h2><span class="tag">AES-256-GCM · key never leaves this device</span></div>
+        <div class="vault"><table><thead><tr><th>Token</th><th>Type</th><th>Ciphertext</th></tr></thead><tbody id="vault"><tr><td colspan="3" style="color:var(--faint)">Nothing encrypted yet.</td></tr></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h2>Restore the AI's answer</h2><span class="tag">Decrypted locally</span></div>
+        <textarea class="restore-in" id="rin" placeholder="Paste the AI's reply here, tokens and all…"></textarea>
+        <div class="restore-out" id="rout"><span style="color:var(--faint)">Real names and numbers come back here, only on this screen.</span></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="ch"><h2>Bank policy</h2><span class="tag">What this bank never lets out</span></div>
+      <div class="policy">
+        <div class="toggles" id="toggles"></div>
+        <div>
+          <textarea class="terms" id="terms" spellcheck="false"></textarea>
+          <div class="hint">Client names, deal code names and anything else to always encrypt. One per line.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE -->
+  <section class="page" id="p-compliance">
+    <div class="hero">
+      <div>
+        <h1>Compliance <span>view</span></h1>
+        <p>Every protection and every policy breach, as it happens. The log records what <i>kind</i> of data was involved, never the data itself.</p>
+      </div>
+    </div>
+    <div class="kv">
+      <div class="stat good"><div class="n" id="k-prot">0</div><div class="l">Items encrypted</div></div>
+      <div class="stat good"><div class="n" id="k-safe">0</div><div class="l">Safe copies to AI</div></div>
+      <div class="stat bad"><div class="n" id="k-viol">0</div><div class="l">Unprotected copies blocked</div></div>
+      <div class="stat"><div class="n" id="k-mnpi" style="color:var(--warn)">0</div><div class="l">Inside-information warnings</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="ch"><h2>What was protected</h2></div><div class="bars" id="bars"></div></div>
+      <div class="card"><div class="ch"><h2>By employee</h2></div><div class="bars" id="people"></div></div>
+    </div>
+    <div class="card mt">
+      <div class="ch"><h2>Activity log</h2><div class="right"><button class="btn" id="export">Export report</button><button class="btn" id="reset">Reset demo</button></div></div>
+      <div class="notice">Employees are told this tool is monitored, as banks already do for email and chat. Logs never contain client data: only the type of data, the employee and the time.</div>
+      <div class="log"><table><thead><tr><th>Time</th><th>Employee</th><th>Event</th><th>Details</th><th>Level</th></tr></thead><tbody id="log"></tbody></table></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { pipeline, env } from './lib/transformers.min.js';
+
+// ---------- Categories & policy ----------
+const CATS = {
+  PERSON:   { label: 'Person',        c: '--c-person',   on: true },
+  COMPANY:  { label: 'Company',       c: '--c-company',  on: true },
+  LOCATION: { label: 'Location',      c: '--c-location', on: true },
+  SSN:      { label: 'SSN / Tax ID',  c: '--c-ssn',      on: true },
+  ACCOUNT:  { label: 'Account no.',   c: '--c-account',  on: true },
+  ROUTING:  { label: 'Routing no.',   c: '--c-account',  on: true },
+  CARD:     { label: 'Card number',   c: '--c-card',     on: true },
+  EMAIL:    { label: 'Email',         c: '--c-contact',  on: true },
+  PHONE:    { label: 'Phone',         c: '--c-contact',  on: true },
+  ADDRESS:  { label: 'Street address',c: '--c-location', on: true },
+  DOB:      { label: 'Date of birth', c: '--c-date',     on: true },
+  AMOUNT:   { label: 'Dollar amount', c: '--c-amount',   on: true },
+  SECRET:   { label: 'Client / deal', c: '--c-codename', on: true },
+};
+const DEFAULT_TERMS = ['Project Falcon', 'Acme Holdings', 'Meridian Capital'];
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+let terms = store.get('ls_terms', DEFAULT_TERMS);
+const catOn = store.get('ls_cats', Object.fromEntries(Object.keys(CATS).map(k => [k, true])));
+const cv = k => `var(${CATS[k].c})`;
+
+// ---------- Rules ----------
+const luhn = s => { const d = s.replace(/\D/g, '').split('').reverse().map(Number); return d.length >= 13 && d.reduce((a, x, i) => a + (i % 2 ? (x * 2 > 9 ? x * 2 - 9 : x * 2) : x), 0) % 10 === 0; };
+const aba = s => { const d = s.split('').map(Number); return d.length === 9 && (3 * (d[0] + d[3] + d[6]) + 7 * (d[1] + d[4] + d[7]) + (d[2] + d[5] + d[8])) % 10 === 0; };
+const RULES = [
+  ['SSN', /\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/g],
+  ['SSN', /\b(?:EIN|TIN|tax id)[:#\s]*(\d{2}-\d{7})\b/gi, 1],
+  ['CARD', /\b(?:\d[ -]?){13,19}\b/g, 0, m => luhn(m)],
+  ['ROUTING', /\b\d{9}\b/g, 0, m => aba(m)],
+  ['ACCOUNT', /\b(?:acct|account|a\/c|loan)\s*(?:no\.?|number|#|num)?\s*[:#]?\s*(\d{6,17})\b/gi, 1],
+  ['ACCOUNT', /\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){3,7}\b/g],
+  ['EMAIL', /\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g],
+  ['PHONE', /(?<!\d)(?:\+?1[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}(?!\d)/g],
+  ['ADDRESS', /\b\d{2,6}\s+(?:[A-Z][a-z]+\s){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Way|Court|Ct|Place|Pl)\b\.?/g],
+  ['DOB', /\b(?:DOB|date of birth|born)[:\s]*((?:\d{1,2}[\/.-]){2}\d{2,4})\b/gi, 1],
+  ['AMOUNT', /\$\s?\d[\d,]*(?:\.\d+)?\s?(?:[MBK]|million|billion|thousand)?\b/gi],
+];
+const MNPI = /\b(merger|acquisition|takeover|tender offer|not yet (?:public|announced)|before (?:the )?announcement|earnings (?:before|ahead of)|unannounced|insider|material non-public|MNPI|layoffs|restructuring plan)\b/gi;
+
+// ---------- Local AI model ----------
+env.allowRemoteModels = false;
+env.allowLocalModels = true;
+env.localModelPath = new URL('./models/', location.href).href;
+env.backends.onnx.wasm.wasmPaths = new URL('./lib/', location.href).href;
+env.backends.onnx.wasm.numThreads = 1;
+let ner = null;
+const mstatus = document.getElementById('mstatus'), mbar = document.getElementById('mbar'), mdot = document.getElementById('mdot');
+pipeline('token-classification', 'Xenova/bert-base-NER', {
+  dtype: 'q8',
+  progress_callback: p => { if (p.status === 'progress' && p.file?.endsWith('.onnx')) mbar.style.width = (p.progress || 0) + '%'; },
+}).then(p => {
+  ner = p; mbar.parentElement.style.display = 'none'; mdot.classList.add('ok');
+  mstatus.textContent = 'Local AI model ready · runs on this Mac';
+  startEgressWatch(); scheduleScan();
+}).catch(e => { mstatus.textContent = 'Local model failed: rules only'; console.error(e); startEgressWatch(); });
+
+async function runNER(text) {
+  if (!ner || !text.trim()) return [];
+  const out = await ner(text);
+  const spans = []; let cur = null;
+  for (const t of out) {
+    const [bio, type] = t.entity.split('-');
+    if (t.score < 0.55 || !['PER', 'ORG', 'LOC'].includes(type)) { cur = null; continue; }
+    const piece = t.word.startsWith('##') ? t.word.slice(2) : t.word;
+    if (cur && cur.type === type && (bio === 'I' || t.word.startsWith('##'))) { cur.text += t.word.startsWith('##') ? piece : ' ' + piece; }
+    else { cur = { type, text: piece }; spans.push(cur); }
+  }
+  const res = []; let from = 0;
+  for (const s of spans) {
+    const words = s.text.replace(/\s+([.,'&-])\s*/g, '$1').trim();
+    if (words.length < 2) continue;
+    let i = text.indexOf(words, from); if (i < 0) i = text.indexOf(s.text, from);
+    if (i < 0) continue;
+    let a = i, b = i + words.length;
+    while (a > 0 && /\w/.test(text[a - 1])) a--;
+    while (b < text.length && /\w/.test(text[b])) b++;
+    from = b;
+    if (/^(SSN|DOB|EIN|TIN|ACH|IBAN|SWIFT|BIC|CEO|CFO|COO|LLC|Inc|Note|Hi|Thanks)$/i.test(text.slice(a, b))) continue;
+    res.push({ start: a, end: b, cat: { PER: 'PERSON', ORG: 'COMPANY', LOC: 'LOCATION' }[s.type], src: 'ai' });
+  }
+  return res;
+}
+
+function runRules(text) {
+  const res = [];
+  for (const [cat, rx, grp, check] of RULES) {
+    rx.lastIndex = 0; let m;
+    while ((m = rx.exec(text))) {
+      const v = grp ? m[grp] : m[0];
+      if (!v || (check && !check(v))) continue;
+      const start = m.index + (grp ? m[0].indexOf(v) : 0);
+      res.push({ start, end: start + v.length, cat, src: 'rule' });
+    }
+  }
+  for (const t of terms) {
+    if (!t.trim()) continue;
+    const rx = new RegExp('\\b' + t.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi'); let m;
+    while ((m = rx.exec(text))) res.push({ start: m.index, end: m.index + m[0].length, cat: 'SECRET', src: 'policy' });
+  }
+  return res;
+}
+
+function merge(spans) {
+  const prio = { policy: 3, rule: 2, ai: 1 };
+  spans = spans.filter(s => catOn[s.cat]).sort((a, b) => a.start - b.start || (prio[b.src] - prio[a.src]) || (b.end - a.end));
+  const out = [];
+  for (const s of spans) {
+    const last = out[out.length - 1];
+    if (last && s.start < last.end) { if (prio[s.src] > prio[last.src] || (prio[s.src] === prio[last.src] && s.end - s.start > last.end - last.start)) out[out.length - 1] = s; continue; }
+    out.push(s);
+  }
+  return out;
+}
+
+// ---------- Encryption (WebCrypto AES-256-GCM, non-extractable key) ----------
+const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+const vault = new Map(), byToken = new Map(), counters = {};
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function protect(value, cat) {
+  const norm = value.trim().toLowerCase().replace(/\s+/g, ' ');
+  const k = cat + '|' + norm;
+  if (vault.has(k)) return vault.get(k);
+  counters[cat] = (counters[cat] || 0) + 1;
+  const token = `[${cat}_${counters[cat]}]`;
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(value));
+  const entry = { token, cat, iv, ct, cipher: b64(iv) + ':' + b64(ct), fresh: true };
+  vault.set(k, entry); byToken.set(token, entry);
+  return entry;
+}
+async function reveal(token) {
+  const e = byToken.get(token); if (!e) return null;
+  return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: e.iv }, key, e.ct));
+}
+
+// ---------- Scan + render ----------
+const $ = id => document.getElementById(id);
+const input = $('input'), hl = $('hl'), safe = $('safe');
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let current = { text: '', spans: [], safeText: '', entries: [] }, timer = null, logTimer = null, scanId = 0, animated = new Set(), mnpiSeen = new Set();
+function scheduleScan() { clearTimeout(timer); timer = setTimeout(scan, 220); renderHL(merge(runRules(input.value))); }
+input.addEventListener('input', scheduleScan);
+input.addEventListener('scroll', () => { hl.scrollTop = input.scrollTop; });
+
+function renderHL(spans) {
+  const t = input.value; let h = '', p = 0;
+  for (const s of spans) { h += esc(t.slice(p, s.start)) + `<mark style="--c:${cv(s.cat)}">${esc(t.slice(s.start, s.end))}</mark>`; p = s.end; }
+  hl.innerHTML = h + esc(t.slice(p)) + '\n';
+}
+
+async function scan() {
+  const id = ++scanId, text = input.value, t0 = performance.now();
+  const spans = merge([...runRules(text), ...(await runNER(text))]);
+  if (id !== scanId) return;
+  $('s-ms').textContent = Math.round(performance.now() - t0) + ' ms';
+  renderHL(spans);
+  const entries = [];
+  for (const s of spans) entries.push(await protect(text.slice(s.start, s.end), s.cat));
+  if (id !== scanId) return;
+  let html = '', plain = '', p = 0;
+  spans.forEach((s, i) => {
+    const e = entries[i], seg = text.slice(p, s.start);
+    html += esc(seg) + `<span class="tok" data-t="${e.token}" data-len="${s.end - s.start}" style="--c:${cv(s.cat)}">${e.token}</span>`;
+    plain += seg + e.token; p = s.end;
+  });
+  html += esc(text.slice(p)); plain += text.slice(p);
+  current = { text, spans, safeText: plain, entries };
+  clearTimeout(logTimer);
+  logTimer = setTimeout(() => entries.forEach(e => { if (!e.logged) { e.logged = true; logEvent('Encrypted', CATS[e.cat].label, 'info', e.cat); } }), 1500);
+  safe.innerHTML = text.trim() ? html : '<span class="empty">The protected version appears here as you type.</span>';
+  $('copy').disabled = !text.trim();
+  animate();
+  renderChips(spans); renderVault(); checkMNPI(text); updateStats();
+}
+
+const GLYPHS = '▓▒░█▚▞◆◇⌁⌬⟁⧉#%&@$¥§01';
+function animate() {
+  safe.querySelectorAll('.tok').forEach(el => {
+    const t = el.dataset.t; if (animated.has(t)) return; animated.add(t);
+    const n = Math.max(6, Math.min(+el.dataset.len, 22)); let i = 0;
+    el.classList.add('scramble');
+    const iv = setInterval(() => {
+      i++; el.textContent = Array.from({ length: n }, () => GLYPHS[Math.random() * GLYPHS.length | 0]).join('');
+      if (i > 12) { clearInterval(iv); el.textContent = t; el.classList.remove('scramble'); }
+    }, 45);
+  });
+}
+
+function renderChips(spans) {
+  const counts = {};
+  spans.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
+  $('chips').innerHTML = Object.entries(counts).map(([c, n]) => `<span class="chip" style="--c:${cv(c)}">${n} × ${CATS[c].label}</span>`).join('') || '<span style="color:var(--faint);font-size:12.5px">Nothing sensitive found yet.</span>';
+  $('legend').innerHTML = spans.length ? `<span class="chip" style="--c:var(--good)">${spans.length} items encrypted · ${spans.filter(s => s.src === 'ai').length} found by the local AI model</span>` : '';
+}
+
+function renderVault() {
+  const rows = [...new Set(current.entries)].reverse();
+  $('vault').innerHTML = rows.length ? rows.map(e => `<tr class="${e.fresh ? 'new' : ''}"><td><span class="tok" style="--c:${cv(e.cat)}">${e.token}</span></td><td>${CATS[e.cat].label}</td><td class="cipher">${e.cipher.slice(0, 34)}…</td></tr>`).join('') : '<tr><td colspan="3" style="color:var(--faint)">Nothing encrypted yet.</td></tr>';
+  rows.forEach(e => e.fresh = false);
+}
+
+function checkMNPI(text) {
+  const hits = [...new Set((text.match(MNPI) || []).map(s => s.toLowerCase()))];
+  const b = $('mnpi');
+  if (hits.length) {
+    b.style.display = 'block';
+    b.innerHTML = `<b>Possible inside information.</b> This text mentions “${esc(hits.join('”, “'))}”. Encryption hides names, not meaning. Check with compliance before sharing it with any AI.`;
+    const k = hits.join('|'); if (!mnpiSeen.has(k)) { mnpiSeen.add(k); logEvent('Inside-information warning', hits.join(', '), 'warn', null, 'mnpi'); }
+  } else b.style.display = 'none';
+}
+
+// ---------- Copy guard (monitoring) ----------
+$('copy').onclick = async () => {
+  try { await navigator.clipboard.writeText(current.safeText); } catch { const ta = document.createElement('textarea'); ta.value = current.safeText; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  logEvent('Safe copy to AI', `${current.spans.length} items encrypted`, 'info', null, 'safe');
+  toast('Copied the safe version', 'Paste it into any AI. Real values stay encrypted on this Mac.', true);
+};
+function guardCopy(e) {
+  const sel = input.value.slice(input.selectionStart, input.selectionEnd);
+  if (!sel) return;
+  const hits = current.spans.filter(s => s.start < input.selectionEnd && s.end > input.selectionStart).length || merge(runRules(sel)).length;
+  if (!hits) return;
+  e.preventDefault();
+  e.clipboardData?.setData('text/plain', current.safeText ? safeSlice(input.selectionStart, input.selectionEnd) : '');
+  logEvent('Unprotected copy blocked', `${hits} sensitive item(s) in selection`, 'high', null, 'viol');
+  toast('Blocked: unprotected client data', 'You copied text with sensitive data. The encrypted version was copied instead, and compliance was notified.');
+}
+function safeSlice(a, b) {
+  let out = '', p = a;
+  for (const s of current.spans) {
+    if (s.end <= a || s.start >= b) continue;
+    out += current.text.slice(p, Math.max(p, s.start));
+    const e = vault.get(s.cat + '|' + current.text.slice(s.start, s.end).trim().toLowerCase().replace(/\s+/g, ' '));
+    out += e ? e.token : '[REDACTED]'; p = s.end;
+  }
+  return out + current.text.slice(p, b);
+}
+input.addEventListener('copy', guardCopy);
+input.addEventListener('cut', guardCopy);
+
+// ---------- Restore ----------
+let restoreTimer = null;
+$('rin').addEventListener('input', async () => {
+  const t = $('rin').value; let h = '', p = 0; const rx = /\[([A-Z]+)_(\d+)\]/g; let m, n = 0;
+  while ((m = rx.exec(t))) {
+    const v = await reveal(m[0]);
+    h += esc(t.slice(p, m.index)) + (v != null ? `<span class="tok restored" style="--c:${cv(m[1] in CATS ? m[1] : 'SECRET')}">${esc(v)}</span>` : esc(m[0]));
+    p = m.index + m[0].length; if (v != null) n++;
+  }
+  $('rout').innerHTML = t ? h + esc(t.slice(p)) : '<span style="color:var(--faint)">Real names and numbers come back here, only on this screen.</span>';
+  clearTimeout(restoreTimer);
+  if (n) restoreTimer = setTimeout(() => logEvent('Answer restored', `${n} values decrypted on device`, 'info', null, 'restore'), 1500);
+});
+
+// ---------- Policy ----------
+$('toggles').innerHTML = Object.entries(CATS).map(([k, c]) => `<label class="tg" style="--c:var(${c.c})"><input type="checkbox" data-k="${k}" ${catOn[k] ? 'checked' : ''}><span class="sw"></span>${c.label}</label>`).join('');
+$('toggles').addEventListener('change', e => { catOn[e.target.dataset.k] = e.target.checked; store.set('ls_cats', catOn); logEvent('Policy changed', `${CATS[e.target.dataset.k].label} ${e.target.checked ? 'on' : 'off'}`, 'warn'); scheduleScan(); });
+$('terms').value = terms.join('\n');
+$('terms').addEventListener('input', () => { terms = $('terms').value.split('\n').map(s => s.trim()).filter(Boolean); store.set('ls_terms', terms); scheduleScan(); });
+
+// ---------- Compliance log ----------
+let events = store.get('ls_events', []);
+const user = () => $('user').value.split(' · ')[0];
+function logEvent(event, details, level, cat = null, kind = null) {
+  events.unshift({ t: Date.now(), user: user(), event, details, level, cat, kind });
+  events = events.slice(0, 500); store.set('ls_events', events); renderCompliance();
+}
+function renderCompliance() {
+  const count = k => events.filter(e => e.kind === k).length;
+  const prot = events.filter(e => e.event === 'Encrypted');
+  $('k-prot').textContent = prot.length; $('k-safe').textContent = count('safe'); $('k-viol').textContent = count('viol'); $('k-mnpi').textContent = count('mnpi');
+  const vb = $('vbadge'); vb.textContent = count('viol'); vb.style.display = count('viol') ? 'inline-block' : 'none';
+  const byCat = {}; prot.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + 1);
+  const max = Math.max(1, ...Object.values(byCat));
+  $('bars').innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([c, n]) => `<div class="bar" style="--c:${cv(c)}"><span>${CATS[c].label}</span><div class="track"><div class="fill" style="width:${n / max * 100}%"></div></div><span class="num">${n}</span></div>`).join('') || '<div style="color:var(--faint);font-size:13px">No activity yet.</div>';
+  const people = {}; events.forEach(e => { const p = people[e.user] ||= { safe: 0, viol: 0, enc: 0 }; if (e.kind === 'safe') p.safe++; if (e.kind === 'viol') p.viol++; if (e.event === 'Encrypted') p.enc++; });
+  $('people').innerHTML = Object.entries(people).map(([u, p]) => `<div class="bar" style="--c:${p.viol ? 'var(--bad)' : 'var(--good)'}"><span>${esc(u)}</span><div class="track"><div class="fill" style="width:${Math.min(100, (p.enc + p.safe) * 4)}%"></div></div><span class="num" title="breaches">${p.viol ? '⚠ ' + p.viol : '✓'}</span></div>`).join('') || '<div style="color:var(--faint);font-size:13px">No activity yet.</div>';
+  $('log').innerHTML = events.slice(0, 120).map(e => `<tr><td style="color:var(--quiet);white-space:nowrap">${new Date(e.t).toLocaleTimeString()}</td><td>${esc(e.user)}</td><td>${esc(e.event)}</td><td style="color:var(--quiet)">${esc(e.details)}</td><td><span class="sev ${e.level}">${{ info: 'OK', warn: 'Review', high: 'Breach' }[e.level]}</span></td></tr>`).join('') || '<tr><td colspan="5" style="color:var(--faint)">No activity yet.</td></tr>';
+}
+$('reset').onclick = () => { events = []; store.set('ls_events', events); renderCompliance(); };
+$('export').onclick = () => {
+  const rows = [['time', 'employee', 'event', 'details', 'level'], ...events.map(e => [new Date(e.t).toISOString(), e.user, e.event, e.details, e.level])];
+  const blob = new Blob([rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'ledger-shield-compliance-log.csv'; a.click();
+};
+renderCompliance();
+
+// ---------- Egress watch: count any request to another server after load ----------
+function startEgressWatch() {
+  const ready = performance.now(); let n = 0;
+  new PerformanceObserver(list => {
+    for (const e of list.getEntries()) if (e.startTime > ready && new URL(e.name).origin !== location.origin) { n++; $('egress').textContent = n; $('egress').style.color = 'var(--bad)'; }
+  }).observe({ type: 'resource', buffered: false });
+}
+
+// ---------- Misc ----------
+function updateStats() {
+  $('s-items').textContent = current.spans.length;
+  $('s-cats').textContent = new Set(current.spans.map(s => s.cat)).size;
+}
+let tt; function toast(title, body, ok) { const t = $('toast'); t.className = 'toast show' + (ok ? ' ok' : ''); t.innerHTML = `<b>${esc(title)}</b>${esc(body)}`; clearTimeout(tt); tt = setTimeout(() => t.className = 'toast' + (ok ? ' ok' : ''), 3800); }
+document.querySelectorAll('.nav a[data-page]').forEach(a => a.onclick = () => {
+  document.querySelectorAll('.nav a').forEach(x => x.classList.toggle('on', x === a));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'p-' + a.dataset.page));
+});
+const SAMPLE = `Hi team,
+
+Following up on the Meridian Capital credit line for our client Daniel Okafor (SSN 512-48-3391, DOB 04/12/1968). Please wire the $4.2M draw to account #004417829931, routing 021000021. Card on file: 4111 1111 1111 1111.
+
+He can be reached at d.okafor@meridiancap.com or (415) 555-0187, 1450 Market Street, San Francisco.
+
+Note: Project Falcon (the Acme Holdings acquisition) is not yet public, so keep this internal until the announcement.
+
+Thanks,
+Sarah Chen
+Commercial Lending, Harbor Point Bank`;
+$('sample').onclick = () => { input.value = ''; scheduleScan(); typeIn(SAMPLE); };
+$('clear').onclick = () => { input.value = ''; scheduleScan(); };
+function typeIn(text) { let i = 0; const step = () => { i = Math.min(text.length, i + 6); input.value = text.slice(0, i); scheduleScan(); if (i < text.length) requestAnimationFrame(step); }; step(); }
+</script>
+</body>
+</html>

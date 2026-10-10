@@ -1,12 +1,13 @@
 """Gateway: the only door into the sealed analyst. Serves the app, runs the data guard,
 keeps the audit log."""
+import mimetypes
 import os
 import time
 from collections import deque
 
 import httpx
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -15,8 +16,11 @@ from guard import redact, scan
 SANDBOX = os.environ.get("SANDBOX_URL", "http://sandbox:9000")
 EGRESS_LOG = os.environ.get("EGRESS_LOG", "http://egress:8889/log")
 AUDIT = deque(maxlen=300)
+mimetypes.add_type("application/wasm", ".wasm")
+mimetypes.add_type("text/javascript", ".mjs")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/shield", StaticFiles(directory="static/shield", html=True), name="shield")
 
 
 def audit(kind, summary, **extra):
@@ -29,6 +33,11 @@ class Ask(BaseModel):
 
 @app.get("/")
 def index():
+    return RedirectResponse("/shield/")
+
+
+@app.get("/analyst")
+def analyst():
     return FileResponse("static/index.html")
 
 
