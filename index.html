@@ -177,6 +177,57 @@ code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; b
 .page { display: none; } .page.on { display: block; animation: fade .25s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .llm-out { margin: 0 18px 18px; min-height: 90px; max-height: 260px; overflow-y: auto; border-radius: 14px; border: 1px solid var(--line); padding: 14px 16px; white-space: pre-wrap; font-size: 14.5px; line-height: 1.65; background: var(--field); }
+/* ---------- Destinations ---------- */
+.destbar { display: flex; align-items: center; gap: 14px; margin: 0 0 18px; padding: 12px 14px; border: 1px solid var(--line); background: var(--panel); border-radius: 16px; flex-wrap: wrap; }
+.destbar .lbl { font-size: 13px; font-weight: 700; color: var(--quiet); letter-spacing: .04em; text-transform: uppercase; }
+.dests { display: flex; gap: 6px; flex-wrap: wrap; }
+.dest { border: 1px solid var(--line); background: var(--panel2); border-radius: 12px; padding: 8px 14px; cursor: pointer; text-align: left; }
+.dest b { display: block; font-size: 14px; }
+.dest span { font-size: 12px; color: var(--quiet); }
+.dest.on { border-color: var(--accent2); background: color-mix(in srgb, var(--accent2) 12%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent2) 14%, transparent); }
+.destsum { margin-left: auto; font-size: 13px; color: var(--quiet); }
+.destsum b { color: var(--ink); }
+/* ---------- Matrix ---------- */
+.matrix { margin: 0 18px 18px; border: 1px solid var(--line); border-radius: 14px; overflow: auto; }
+.matrix th { position: static; text-transform: none; letter-spacing: 0; font-size: 13.5px; color: var(--ink); vertical-align: bottom; }
+.matrix th small { display: block; font-weight: 500; color: var(--quiet); font-size: 12px; }
+.matrix td { padding: 7px 14px; }
+.matrix tr.grp td { font-size: 11.5px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); background: var(--panel2); padding: 7px 14px; }
+.presets { display: flex; gap: 4px; margin-top: 8px; }
+.presets button { border: 1px solid var(--line); background: var(--panel2); border-radius: 8px; padding: 3px 8px; font-size: 11.5px; font-weight: 650; color: var(--quiet); cursor: pointer; }
+.presets button.on { color: var(--accent2); border-color: var(--accent2); }
+select.act { border-radius: 9px; border: 1px solid var(--line); padding: 5px 8px; font-size: 13px; font-weight: 650; background: var(--field); outline: none; cursor: pointer; }
+select.act.encrypt { color: var(--accent2); border-color: color-mix(in srgb, var(--accent2) 45%, transparent); }
+select.act.share { color: var(--quiet); }
+select.act.block { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+/* ---------- Lock ---------- */
+.lockbar { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--panel2); font-size: 13.5px; flex-wrap: wrap; }
+.lockbar .st { display: flex; align-items: center; gap: 8px; font-weight: 650; }
+.lockbar .right { margin-left: auto; display: flex; gap: 8px; }
+[inert] { opacity: .55; filter: saturate(.6); }
+/* ---------- Modal / wizard ---------- */
+.modal { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; background: rgba(3,6,14,.62); backdrop-filter: blur(8px); padding: 24px; }
+.modal.on { display: grid; animation: fade .2s ease; }
+.mbox { width: min(720px, 100%); max-height: 92vh; overflow-y: auto; border-radius: 22px; background: var(--panel-solid); border: 1px solid var(--line2); box-shadow: 0 40px 120px -40px rgba(0,0,0,.8); }
+.mhead { padding: 22px 26px 6px; }
+.mhead .stepline { display: flex; gap: 6px; margin-bottom: 16px; }
+.mhead .stepline i { height: 4px; flex: 1; border-radius: 99px; background: var(--line2); }
+.mhead .stepline i.on { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.mhead h3 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.02em; }
+.mhead p { margin: 0; color: var(--quiet); font-size: 15px; }
+.mbody { padding: 16px 26px 6px; }
+.mfoot { display: flex; gap: 10px; padding: 16px 26px 22px; align-items: center; }
+.mfoot .right { margin-left: auto; display: flex; gap: 10px; }
+.choice { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.opt { border: 1px solid var(--line); border-radius: 14px; padding: 14px; cursor: pointer; background: var(--panel2); }
+.opt b { display: block; font-size: 15px; margin-bottom: 4px; }
+.opt span { font-size: 13px; color: var(--quiet); line-height: 1.45; display: block; }
+.opt em { font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--accent2); }
+.opt.on { border-color: var(--accent2); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent2) 16%, transparent); background: color-mix(in srgb, var(--accent2) 8%, transparent); }
+.flabel { display: block; font-size: 13px; font-weight: 650; color: var(--quiet); margin: 12px 0 6px; }
+.summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; font-size: 14px; }
+.summary div { padding: 10px 12px; border-radius: 12px; background: var(--panel2); }
+.summary b { display: block; font-size: 12px; color: var(--quiet); font-weight: 650; }
 @media (max-width: 1100px) { .hero, .grid2 { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } .rules { grid-template-columns: 1fr; } .top { flex-wrap: wrap; } .nav { margin-left: 0; } }
 </style>
 </head>
@@ -227,6 +278,12 @@ code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; b
       <div class="stat"><div class="n" id="s-ms">–</div><div class="l">Scan time, on this device</div></div>
     </div>
 
+    <div class="destbar">
+      <span class="lbl">Sending to</span>
+      <div class="dests" id="dests"></div>
+      <span class="destsum" id="destsum"></span>
+    </div>
+
     <div class="grid2">
       <div class="card">
         <div class="ch"><h2>Original</h2><span class="tag red">Never leaves this device</span>
@@ -274,13 +331,21 @@ code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; b
         <p>List your clients, deals, people and internal systems, and choose what happens to each kind of data. Shield follows this policy for everyone using it, and it's stored only on this device.</p>
       </div>
       <div class="card" style="box-shadow:none">
-        <div class="ch"><h2>Bank</h2><div class="right"><button class="btn" id="pImport">Import policy</button><button class="btn" id="pExport">Export policy</button></div></div>
-        <div class="pad"><div class="bankrow"><input id="pBank" placeholder="Bank name"></div><div class="hint" id="pUpdated" style="margin-top:10px"></div></div>
+        <div class="ch"><h2>Bank</h2><div class="right"><button class="btn" id="pSetup">Run setup</button><button class="btn" id="pImport">Import policy</button><button class="btn" id="pExport">Export policy</button></div></div>
+        <div class="pad"><div class="bankrow"><input id="pBank" placeholder="Bank name"></div><div class="hint" id="pUpdated" style="margin-top:10px"></div>
+          <div class="lockbar"><span class="st" id="lockState"></span><div class="right" id="lockBtns"></div></div></div>
         <input type="file" id="pFile" accept=".json,.csv,.txt" style="display:none">
       </div>
     </div>
 
-    <div class="grid2">
+    <div id="policyBody">
+    <div class="card">
+      <div class="ch"><h2>What each AI is allowed to see</h2>
+        <div class="sub"><b style="color:var(--accent2)">Hide</b> encrypts it behind a token you can restore. <b>Show</b> lets that AI see it. <b style="color:var(--bad)">Remove</b> deletes it for good. Employees pick the AI they're sending to; Shield applies that column.</div></div>
+      <div class="matrix"><table id="matrix"></table></div>
+    </div>
+
+    <div class="grid2 mt">
       <div class="card listcard"><div class="ch"><h2>Clients and counterparties</h2><span class="count" id="n-CLIENT">0</span><div class="right"><button class="btn small" data-csv="CLIENT">Upload CSV</button></div>
         <div class="sub">Client names, borrowers, companies you lend to. One per line.</div></div>
         <div class="pad"><textarea class="field" data-list="CLIENT" spellcheck="false"></textarea></div></div>
@@ -307,9 +372,6 @@ code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; b
       </div>
     </div>
 
-    <div class="card mt">
-      <div class="ch"><h2>What happens to each kind of data</h2><div class="sub"><b style="color:var(--accent2)">Encrypt</b> swaps it for a token you can restore. <b style="color:var(--bad)">Remove</b> deletes it for good. <b>Off</b> lets it through.</div></div>
-      <div class="rules" id="rules"></div>
     </div>
 
     <div class="card mt">
@@ -345,6 +407,7 @@ code { font: 12px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 6px; b
     </div>
   </section>
 </div>
+<div class="modal" id="modal"><div class="mbox"><div class="mhead"><div class="stepline" id="mSteps"></div><h3 id="mTitle"></h3><p id="mText"></p></div><div class="mbody" id="mBody"></div><div class="mfoot"><button class="btn" id="mBack">Back</button><div class="right"><button class="btn" id="mSkip">Skip</button><button class="btn primary" id="mNext">Continue</button></div></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -414,8 +477,22 @@ const DEFAULT_POLICY = {
   actions: {},
   warns: { MNPI: true, CREDITOP: true, SUPERVISORY: true },
 };
+const DESTS = {
+  outside:  { label: 'Outside AI', sub: 'ChatGPT, Claude, Gemini' },
+  approved: { label: 'Bank-approved AI', sub: "Your bank's enterprise AI" },
+  local:    { label: 'AI on this computer', sub: 'Local models, no internet' },
+};
+const PRESETS = {
+  strict:   { label: 'Strict',   blurb: 'Hide everything identifying. Remove passwords and card codes.', share: [] },
+  balanced: { label: 'Balanced', blurb: 'Show amounts, places and public companies. Hide people, IDs and clients.', share: ['AMOUNT', 'LOCATION', 'COMPANY'] },
+  light:    { label: 'Light',    blurb: 'Show most context. Still hide IDs, accounts and cards.', share: ['AMOUNT', 'LOCATION', 'COMPANY', 'PERSON', 'ADDRESS', 'EMAIL', 'PHONE', 'HANDLE', 'CREDIT', 'LOANID', 'STAFF', 'INTERNAL', 'DOB'] },
+};
+const presetAct = (preset, k) => CATS[k].act === 'block' ? 'block' : (PRESETS[preset].share.includes(k) ? 'share' : 'encrypt');
+DEFAULT_POLICY.dests = { outside: { preset: 'strict', actions: {} }, approved: { preset: 'balanced', actions: {} }, local: { preset: 'light', actions: {} } };
 let policy = Object.assign(structuredClone(DEFAULT_POLICY), store.get('ls_policy2', {}));
-const actionOf = k => policy.actions[k] || CATS[k].act;
+if (policy.actions && Object.keys(policy.actions).length && !policy.migrated) { Object.assign(policy.dests.outside.actions, policy.actions); policy.migrated = true; }
+let dest = store.get('ls_dest', 'outside'); if (!DESTS[dest]) dest = 'outside';
+const actionOf = (k, d = dest) => { const a = policy.dests[d].actions[k] || presetAct(policy.dests[d].preset, k); return a === 'off' ? 'share' : a; };
 let policyLogTimer;
 function savePolicy(why) {
   policy.updated = Date.now(); store.set('ls_policy2', policy); renderPolicyMeta(); scheduleScan();
@@ -496,7 +573,7 @@ function runWarns(text) {
 }
 const PRIO = { secret: 5, policy: 4, rule: 3, ai: 1 };
 function merge(spans) {
-  spans = spans.map(s => ({ ...s, act: s.action || actionOf(s.cat) })).filter(s => s.act !== 'off')
+  spans = spans.map(s => ({ ...s, act: s.action || actionOf(s.cat) })).filter(s => s.act !== 'share')
     .sort((a, b) => a.start - b.start || PRIO[b.src] - PRIO[a.src] || (b.end - b.start) - (a.end - a.start));
   const out = [];
   for (const s of spans) {
@@ -758,7 +835,7 @@ document.querySelectorAll('[data-list]').forEach(ta => {
 });
 let csvTarget = null;
 document.querySelectorAll('[data-csv]').forEach(b => b.onclick = () => { csvTarget = b.dataset.csv; $('pFile').accept = '.csv,.txt'; $('pFile').click(); });
-$('pImport').onclick = () => { csvTarget = null; $('pFile').accept = '.json'; $('pFile').click(); };
+$('pImport').onclick = () => { csvTarget = null; $('pFile').accept = '.shieldpolicy,.json'; $('pFile').click(); };
 $('pFile').onchange = async e => {
   const f = e.target.files[0]; if (!f) return; const text = await f.text(); e.target.value = '';
   if (csvTarget) {
@@ -767,11 +844,48 @@ $('pFile').onchange = async e => {
     policy.lists[csvTarget] = merged; document.querySelector(`[data-list="${csvTarget}"]`).value = merged.join('\n');
     savePolicy(`Imported ${names.length} entries into ${CATS[csvTarget].label}`); toast('List imported', `${names.length} entries added from ${f.name}.`, true);
   } else {
-    try { policy = Object.assign(structuredClone(DEFAULT_POLICY), JSON.parse(text)); store.set('ls_policy2', policy); location.reload(); }
-    catch { toast('Could not read that policy file', 'Choose a policy exported from Ledger Shield.'); }
+    try {
+      let obj = JSON.parse(text);
+      if (obj.format === 'ledger-shield-policy') {
+        const p = await ask('Open encrypted policy', `This policy for ${obj.bank || 'your bank'} is encrypted. Enter the passcode compliance gave you.`, 'Passcode', true);
+        if (p == null) return;
+        obj = JSON.parse(dec.decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(obj.iv) }, await passKey(p, unb64(obj.salt)), unb64(obj.data))));
+      }
+      policy = Object.assign(structuredClone(DEFAULT_POLICY), obj, { setupDone: true }); store.set('ls_policy2', policy); location.reload();
+    } catch { toast('Could not open that policy', 'Check the passcode, and choose a file exported from Ledger Shield.'); }
   }
 };
-$('pExport').onclick = () => download(JSON.stringify(policy, null, 2), `${(policy.bank || 'bank').replace(/\W+/g, '-').toLowerCase()}-shield-policy.json`, 'application/json');
+const enc = new TextEncoder(), dec = new TextDecoder();
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function passKey(pass, salt) {
+  const base = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey', 'deriveBits']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 210000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function passHash(pass, salt) {
+  const base = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveBits']);
+  return b64(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new Uint8Array([...salt, 1]), iterations: 210000, hash: 'SHA-256' }, base, 256));
+}
+let unlocked = false;
+async function checkPass(pass) { return !!policy.lock && (await passHash(pass, unb64(policy.lock.salt))) === policy.lock.hash; }
+async function setPass(pass) { const salt = crypto.getRandomValues(new Uint8Array(16)); policy.lock = { salt: b64(salt), hash: await passHash(pass, salt) }; }
+function renderLock() {
+  const locked = !!policy.lock && !unlocked;
+  $('policyBody').inert = locked; $('pBank').disabled = locked; $('pImport').disabled = locked; $('pSetup').disabled = locked;
+  $('lockState').innerHTML = !policy.lock ? '🔓 Anyone on this device can edit the policy' : locked ? '🔒 Locked by compliance' : '🔓 Unlocked for editing';
+  $('lockBtns').innerHTML = !policy.lock ? '<button class="btn small" id="lkSet">Set compliance passcode</button>' : locked ? '<button class="btn small" id="lkOpen">Unlock to edit</button>' : '<button class="btn small" id="lkClose">Lock policy</button>';
+  $('lkSet') && ($('lkSet').onclick = async () => { const p = await ask('Set a compliance passcode', 'Only people with this passcode can change the policy. It is also used to encrypt the policy file you send to employees.', 'New passcode', true); if (!p) return; await setPass(p); unlocked = false; savePolicy('Compliance passcode set'); renderLock(); toast('Policy locked', 'Employees can use Shield, but only compliance can change what it protects.', true); });
+  $('lkOpen') && ($('lkOpen').onclick = async () => { const p = await ask('Unlock the policy', 'Enter the compliance passcode.', 'Passcode', true); if (p == null) return; if (await checkPass(p)) { unlocked = true; renderLock(); logEvent('Policy unlocked', 'Compliance passcode accepted', 'warn', null, 'policy'); } else { logEvent('Policy unlock failed', 'Wrong passcode', 'high', null, 'viol'); toast('Wrong passcode', 'The policy stays locked. This attempt was logged.'); } });
+  $('lkClose') && ($('lkClose').onclick = () => { unlocked = false; renderLock(); });
+}
+$('pExport').onclick = async () => {
+  const name = `${(policy.bank || 'bank').replace(/\W+/g, '-').toLowerCase()}-shield-policy`;
+  const p = await ask('Encrypt the policy file', 'The file you send to employees is encrypted, so a leaked email or laptop never reveals your client list. Enter the compliance passcode (or a new one to share with employees for importing).', 'Passcode', true);
+  if (!p) return;
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await passKey(p, salt), enc.encode(JSON.stringify(policy)));
+  download(JSON.stringify({ format: 'ledger-shield-policy', version: 1, bank: policy.bank, cipher: 'AES-256-GCM / PBKDF2-SHA256', salt: b64(salt), iv: b64(iv), data: b64(data) }, null, 2), name + '.shieldpolicy', 'application/json');
+  logEvent('Policy exported', 'Encrypted policy file', 'warn', null, 'policy');
+};
 
 function renderPatterns() {
   $('pats').innerHTML = policy.patterns.map((p, i) => `<div class="pat"><input value="${esc(p.name)}" data-i="${i}" data-f="name" placeholder="Name"><input class="mono" value="${esc(p.pattern)}" data-i="${i}" data-f="pattern" placeholder="e.g. HPB-########"><select data-i="${i}" data-f="action"><option value="encrypt" ${p.action === 'encrypt' ? 'selected' : ''}>Encrypt</option><option value="block" ${p.action === 'block' ? 'selected' : ''}>Remove</option></select><button class="btn small" data-del="${i}" title="Delete">✕</button></div>`).join('') || '<div class="empty" style="font-size:13.5px">No custom formats yet.</div>';
@@ -784,16 +898,26 @@ $('addPat').onclick = () => { policy.patterns.push({ name: 'New format', pattern
 $('warnToggles').innerHTML = Object.entries(WARNS).map(([k, w]) => `<label class="toggle"><input type="checkbox" data-w="${k}" ${policy.warns[k] ? 'checked' : ''}><span class="knob"></span><div><b>${w.label}</b><span>${w.why}</span></div></label>`).join('');
 $('warnToggles').addEventListener('change', e => { policy.warns[e.target.dataset.w] = e.target.checked; savePolicy(`${WARNS[e.target.dataset.w].label} ${e.target.checked ? 'on' : 'off'}`); schedulePolicyTest(); });
 
-function renderRules() {
-  let h = '', g = '';
+const ACT_LABEL = { encrypt: 'Hide', share: 'Show', block: 'Remove' };
+function renderMatrix() {
+  let h = '<thead><tr><th>Kind of data</th>' + Object.entries(DESTS).map(([d, x]) => `<th>${x.label}<small>${x.sub}</small><div class="presets" data-d="${d}">${Object.entries(PRESETS).map(([p, v]) => `<button data-p="${p}" class="${policy.dests[d].preset === p && !Object.keys(policy.dests[d].actions).length ? 'on' : ''}">${v.label}</button>`).join('')}</div></th>`).join('') + '</tr></thead><tbody>';
+  let g = '';
   for (const [k, c] of Object.entries(CATS)) {
-    if (c.group !== g) { g = c.group; h += `<div class="group">${g}</div>`; }
-    const a = actionOf(k);
-    h += `<div class="rule"><span class="nm"><span class="sw" style="--c:var(${c.c})"></span>${c.label}</span><span class="seg" data-k="${k}">${['encrypt', 'block', 'off'].map(x => `<button data-a="${x}" class="${a === x ? 'on' : ''}">${{ encrypt: 'Encrypt', block: 'Remove', off: 'Off' }[x]}</button>`).join('')}</span></div>`;
+    if (c.group !== g) { g = c.group; h += `<tr class="grp"><td colspan="4">${g}</td></tr>`; }
+    h += `<tr><td><span class="nm" style="display:flex;align-items:center;gap:9px"><span class="sw" style="--c:var(${c.c})"></span>${c.label}</span></td>` +
+      Object.keys(DESTS).map(d => { const a = actionOf(k, d); return `<td><select class="act ${a}" data-k="${k}" data-d="${d}">${['encrypt', 'share', 'block'].map(x => `<option value="${x}" ${a === x ? 'selected' : ''}>${ACT_LABEL[x]}</option>`).join('')}</select></td>`; }).join('') + '</tr>';
   }
-  $('rules').innerHTML = h;
+  $('matrix').innerHTML = h + '</tbody>';
 }
-$('rules').addEventListener('click', e => { const a = e.target.dataset.a, k = e.target.parentElement?.dataset.k; if (!a || !k) return; policy.actions[k] = a; renderRules(); savePolicy(`${CATS[k].label}: ${{ encrypt: 'encrypt', block: 'remove', off: 'off' }[a]}`); schedulePolicyTest(); });
+$('matrix').addEventListener('change', e => { const { k, d } = e.target.dataset; if (!k) return; policy.dests[d].actions[k] = e.target.value; renderMatrix(); renderDests(); savePolicy(`${DESTS[d].label} · ${CATS[k].label}: ${ACT_LABEL[e.target.value]}`); schedulePolicyTest(); });
+$('matrix').addEventListener('click', e => { const p = e.target.dataset.p, d = e.target.parentElement?.dataset.d; if (!p || !d) return; policy.dests[d] = { preset: p, actions: {} }; renderMatrix(); renderDests(); savePolicy(`${DESTS[d].label}: ${PRESETS[p].label} preset`); schedulePolicyTest(); });
+
+function renderDests() {
+  $('dests').innerHTML = Object.entries(DESTS).map(([d, x]) => `<button class="dest ${d === dest ? 'on' : ''}" data-d="${d}"><b>${x.label}</b><span>${x.sub}</span></button>`).join('');
+  const acts = Object.keys(CATS).map(k => actionOf(k));
+  $('destsum').innerHTML = `This AI sees: <b>${acts.filter(a => a === 'share').length}</b> kinds shown · <b>${acts.filter(a => a === 'encrypt').length}</b> hidden · <b>${acts.filter(a => a === 'block').length}</b> removed`;
+}
+$('dests').addEventListener('click', e => { const b = e.target.closest('.dest'); if (!b) return; dest = b.dataset.d; store.set('ls_dest', dest); renderDests(); scheduleScan(); logEvent('AI destination chosen', DESTS[dest].label, 'info', null, 'dest'); });
 
 let ptTimer;
 const schedulePolicyTest = () => { clearTimeout(ptTimer); ptTimer = setTimeout(scanPolicyTest, 200); };
@@ -807,7 +931,70 @@ async function scanPolicyTest() {
   $('ptestOut').innerHTML = `<div style="margin-bottom:12px">${marked}</div><div style="display:flex;flex-wrap:wrap;gap:7px">${parts.join('') + w.join('') || '<span class="empty">Nothing would be protected.</span>'}</div>`;
 }
 $('ptest').addEventListener('input', schedulePolicyTest);
-renderPatterns(); renderRules(); renderPolicyMeta();
+renderPatterns(); renderMatrix(); renderDests(); renderPolicyMeta();
+
+// ---------- Modal: ask() and the setup wizard ----------
+const modal = $('modal');
+function openModal({ steps = 0, step = 0, title, text, body, next = 'Continue', back = false, skip = false }) {
+  $('mSteps').innerHTML = steps ? Array.from({ length: steps }, (_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('') : '';
+  $('mTitle').textContent = title; $('mText').textContent = text; $('mBody').innerHTML = body || '';
+  $('mNext').textContent = next; $('mBack').style.visibility = back ? 'visible' : 'hidden'; $('mSkip').style.display = skip ? '' : 'none';
+  modal.classList.add('on');
+  setTimeout(() => modal.querySelector('input, textarea')?.focus(), 50);
+}
+const closeModal = () => modal.classList.remove('on');
+function ask(title, text, placeholder, secret) {
+  return new Promise(res => {
+    openModal({ title, text, body: `<input class="field" id="askIn" type="${secret ? 'password' : 'text'}" placeholder="${esc(placeholder)}" autocomplete="off">`, next: 'OK', skip: true });
+    $('mSkip').textContent = 'Cancel';
+    const done = v => { closeModal(); $('mSkip').textContent = 'Skip'; $('mNext').onclick = $('mSkip').onclick = null; res(v); };
+    $('mNext').onclick = () => done($('askIn').value); $('mSkip').onclick = () => done(null);
+    $('askIn').onkeydown = e => { if (e.key === 'Enter') done($('askIn').value); if (e.key === 'Escape') done(null); };
+  });
+}
+function runSetup() {
+  const draft = { bank: policy.bank, role: 'Compliance officer', outside: policy.dests.outside.preset, clients: policy.lists.CLIENT.join('\n'), deals: policy.lists.DEAL.join('\n'), pass: '' };
+  const S = [
+    { title: 'Welcome to Ledger Shield', text: 'Two minutes to protect your bank. Everything you enter stays on this device: nothing is uploaded, ever.',
+      body: () => `<label class="flabel">Bank or credit union name</label><input class="field" id="wBank" value="${esc(draft.bank)}"><label class="flabel">Your role</label><select class="field" id="wRole">${['Compliance officer', 'Chief information security officer', 'IT administrator', 'Analyst (trying it out)'].map(r => `<option ${r === draft.role ? 'selected' : ''}>${r}</option>`).join('')}</select>`,
+      save: () => { draft.bank = $('wBank').value.trim() || 'Your bank'; draft.role = $('wRole').value; } },
+    { title: 'How careful with outside AI?', text: 'This is what tools like ChatGPT and Claude may see. You can fine-tune every kind of data later, and set different rules for your bank-approved AI and for AI running on the computer.',
+      body: () => `<div class="choice">${Object.entries(PRESETS).map(([p, v]) => `<div class="opt ${draft.outside === p ? 'on' : ''}" data-p="${p}"><b>${v.label}</b><span>${v.blurb}</span>${p === 'strict' ? '<em>Recommended</em>' : ''}</div>`).join('')}</div><p class="hint" style="margin-top:12px">Passwords, API keys, CVVs and PINs are always removed, whatever you pick.</p>`,
+      wire: () => $('mBody').querySelectorAll('.opt').forEach(o => o.onclick = () => { draft.outside = o.dataset.p; $('mBody').querySelectorAll('.opt').forEach(x => x.classList.toggle('on', x === o)); }) },
+    { title: 'What must never leak?', text: 'Paste client names and deal code names, one per line, or skip and upload spreadsheets later on the Bank policy page.',
+      body: () => `<label class="flabel">Clients and counterparties</label><textarea class="field" id="wClients" rows="5" spellcheck="false">${esc(draft.clients)}</textarea><label class="flabel">Deals and code names</label><textarea class="field" id="wDeals" rows="3" spellcheck="false">${esc(draft.deals)}</textarea>`,
+      save: () => { draft.clients = $('wClients').value; draft.deals = $('wDeals').value; } },
+    { title: 'Lock it with a passcode', text: 'Employees can use Shield, but only someone with this passcode can change what it protects. The policy file you send out is encrypted with it too.',
+      body: () => `<label class="flabel">Compliance passcode</label><input class="field" id="wPass" type="password" placeholder="At least 6 characters" autocomplete="new-password"><p class="hint" style="margin-top:10px">Optional for a demo. You can set it later.</p>`,
+      save: () => { draft.pass = $('wPass').value; } },
+    { title: 'Your bank is protected', text: 'Here is what Shield will do. Change anything on the Bank policy page.', next: 'Start using Shield',
+      body: () => { const lines = s => s.split('\n').map(x => x.trim()).filter(Boolean).length; return `<div class="summary"><div><b>Bank</b>${esc(draft.bank)}</div><div><b>Outside AI</b>${PRESETS[draft.outside].label} rules</div><div><b>Clients protected</b>${lines(draft.clients)}</div><div><b>Deals protected</b>${lines(draft.deals)}</div><div><b>Always removed</b>Passwords, API keys, CVVs, PINs</div><div><b>Policy</b>${draft.pass.length >= 6 ? '🔒 Locked by passcode' : '🔓 Not locked yet'}</div></div>`; } },
+  ];
+  let i = 0;
+  const show = () => {
+    const st = S[i];
+    openModal({ steps: S.length, step: i, title: st.title, text: st.text, body: st.body(), next: st.next || 'Continue', back: i > 0, skip: i === 2 || i === 3 });
+    st.wire?.();
+  };
+  $('mBack').onclick = () => { S[i].save?.(); i = Math.max(0, i - 1); show(); };
+  $('mSkip').onclick = () => { i++; show(); };
+  $('mNext').onclick = async () => {
+    S[i].save?.();
+    if (i === 3 && draft.pass && draft.pass.length < 6) return toast('Passcode too short', 'Use at least 6 characters, or leave it empty for now.');
+    if (i < S.length - 1) { i++; return show(); }
+    policy.bank = draft.bank;
+    policy.dests.outside = { preset: draft.outside, actions: {} };
+    policy.lists.CLIENT = draft.clients.split('\n').map(x => x.trim()).filter(Boolean);
+    policy.lists.DEAL = draft.deals.split('\n').map(x => x.trim()).filter(Boolean);
+    if (draft.pass.length >= 6) await setPass(draft.pass);
+    policy.setupDone = true; policy.updated = Date.now(); store.set('ls_policy2', policy);
+    logEvent('Setup completed', `${draft.bank} · ${PRESETS[draft.outside].label} rules for outside AI`, 'warn', null, 'policy');
+    closeModal(); $('mNext').onclick = $('mBack').onclick = $('mSkip').onclick = null;
+    location.reload();
+  };
+  show();
+}
+$('pSetup').onclick = runSetup;
 
 // ---------- Compliance log ----------
 let events = store.get('ls_events2', []);
@@ -834,6 +1021,8 @@ $('export').onclick = () => {
   download(rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n'), 'ledger-shield-compliance-log.csv', 'text/csv');
 };
 renderCompliance();
+renderLock();
+if (!policy.setupDone) setTimeout(runSetup, 400);
 
 // ---------- Egress watch: counts requests to any outside server after load ----------
 function startEgressWatch() {
