@@ -5,3 +5,4 @@ dist/
 gateway/static/shield/models/
 gateway/static/shield/lib/*.wasm
 .claude/
+node_modules/
