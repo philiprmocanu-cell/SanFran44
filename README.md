@@ -111,3 +111,5 @@ Open http://localhost:8080/desk/ after `docker compose up -d --build`.
 - Client names are swapped for the deal codename before a senior sees anything.
 - Senior replies come back as a short result (answer, quotes, why, watch-outs), written by Claude.
 - Code: `gateway/desk.py` (API + deal data) and `gateway/static/desk/index.html` (the page). Questions are kept in memory, so a restart clears them.
+
+Live version: https://deal-desk-production-7983.up.railway.app (Railway project `deal-desk`, built from `gateway/Dockerfile.desk` + `gateway/desk_main.py`; set `ANTHROPIC_API_KEY` in Railway variables).
