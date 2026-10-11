@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from guard import redact, scan
+from desk import router as desk_router
 
 SANDBOX = os.environ.get("SANDBOX_URL", "http://sandbox:9000")
 EGRESS_LOG = os.environ.get("EGRESS_LOG", "http://egress:8889/log")
@@ -20,6 +21,8 @@ mimetypes.add_type("application/wasm", ".wasm")
 mimetypes.add_type("text/javascript", ".mjs")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(desk_router)
+app.mount("/desk", StaticFiles(directory="static/desk", html=True), name="desk")
 app.mount("/shield", StaticFiles(directory="static/shield", html=True), name="shield")
 
 

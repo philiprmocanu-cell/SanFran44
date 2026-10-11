@@ -34,6 +34,7 @@ services:
     build: ./gateway
     networks: [sealed, outside]
     ports: ["8080:8080"]
+    env_file: .env
     environment:
       SANDBOX_URL: http://sandbox:9000
       EGRESS_LOG: http://egress:8889/log

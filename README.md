@@ -101,3 +101,13 @@ Needs Xcode command line tools (`xcode-select --install`).
 | `egress/` | The firewall, with the allowlist in `egress/allowlist.txt` |
 
 Add a bank's client names or project code names to `GUARD_TERMS` in `docker-compose.yml`.
+
+## Deal Desk (anonymous junior → senior advice on deals)
+
+Open http://localhost:8080/desk/ after `docker compose up -d --build`.
+
+- Log in as a junior or a senior. Everyone only sees an anonymous handle and level.
+- Deal database on the right: 10 fictional deals, filter by type, attach a deal and its files, or upload your own.
+- Client names are swapped for the deal codename before a senior sees anything.
+- Senior replies come back as a short result (answer, quotes, why, watch-outs), written by Claude.
+- Code: `gateway/desk.py` (API + deal data) and `gateway/static/desk/index.html` (the page). Questions are kept in memory, so a restart clears them.

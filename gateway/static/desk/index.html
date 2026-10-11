@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deal Desk</title>
+<style>
+:root {
+  --bg: #f1ebdf; --side: #ece4d4; --panel: #fff; --tint: #faf6ee; --ink: #26231f; --quiet: #5f5a52; --faint: #9a9387;
+  --accent: #ff7a2f; --accent-soft: #fff3ea; --ring: #ffd9c2; --good: #1d8a4f; --warn: #b8730a; --line: rgba(38,35,31,.08);
+  --soft: 0 1px 2px rgba(38,35,31,.05), 0 18px 40px -24px rgba(38,35,31,.22);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0; }
+.app { display: grid; grid-template-columns: 230px minmax(0, 1fr) 400px; min-height: 100vh; }
+/* left nav */
+.side { position: sticky; top: 0; height: 100vh; padding: 18px 16px; background: var(--side); border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand img { width: 46px; }
+.brand b { font-weight: 800; text-transform: uppercase; letter-spacing: -.01em; font-size: 19px; line-height: 1; }
+.brand small { display: block; color: var(--quiet); font-size: 12px; margin-top: 3px; }
+.me { background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: var(--soft); font-size: 13px; }
+.me b { display: block; font-size: 14px; }
+.me .lock { color: var(--good); font-size: 12px; margin-top: 4px; }
+.nav a { display: flex; justify-content: space-between; padding: 9px 12px; border-radius: 10px; cursor: pointer; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14px; }
+.nav a.on { background: var(--ink); color: #fff; }
+.nav a .n { background: var(--accent); color: #fff; border-radius: 99px; padding: 0 8px; font-size: 12px; }
+.side .foot { margin-top: auto; font-size: 12px; color: var(--quiet); }
+.linkbtn { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font-weight: 600; }
+/* center */
+main { padding: 28px 34px 80px; max-width: 980px; }
+.eyebrow { color: var(--accent); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.hero h1 { font-size: 34px; font-weight: 800; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; margin: 6px 0 8px; }
+.hero p { color: var(--quiet); margin: 0 0 22px; max-width: 640px; }
+.card { background: var(--panel); border-radius: 22px; box-shadow: var(--soft); padding: 20px 22px; margin-bottom: 18px; }
+.card.glow { box-shadow: 0 0 0 2px var(--ring), var(--soft); }
+textarea.q { width: 100%; min-height: 110px; border: 0; background: var(--tint); border-radius: 14px; padding: 14px; resize: vertical; outline: none; }
+textarea.q:focus { box-shadow: 0 0 0 2px var(--ring); }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn { border: 0; background: #fff; box-shadow: 0 0 0 1px rgba(38,35,31,.14); border-radius: 12px; padding: 9px 14px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn:hover { box-shadow: 0 0 0 1.5px var(--ink); }
+.btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 20px -10px var(--accent); }
+.btn.dark { background: var(--ink); color: #fff; box-shadow: none; }
+.btn:disabled { opacity: .5; cursor: default; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--tint); border-radius: 99px; padding: 4px 11px; font-size: 13px; }
+.chip.acc { background: var(--accent-soft); color: #b04a0c; font-weight: 600; }
+.chip.ok { background: #e8f5ee; color: var(--good); font-weight: 600; }
+.chip.wait { background: #fdf3e2; color: var(--warn); font-weight: 600; }
+.chip .x { cursor: pointer; opacity: .6; }
+.attach { margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.attached { background: var(--accent-soft); border-radius: 14px; padding: 12px 14px; }
+.attached .top { display: flex; justify-content: space-between; gap: 10px; }
+.files { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.file { background: #fff; border-radius: 10px; padding: 5px 10px; font-size: 13px; cursor: pointer; box-shadow: 0 0 0 1px rgba(38,35,31,.1); }
+.file:hover { box-shadow: 0 0 0 1.5px var(--accent); }
+.file.off { opacity: .45; text-decoration: line-through; }
+.seen { font-size: 13px; color: var(--quiet); background: var(--tint); border-radius: 12px; padding: 10px 12px; margin: 10px 0 14px; }
+.seen b { color: var(--ink); }
+.muted { color: var(--quiet); font-size: 13px; }
+.section-h { display: flex; justify-content: space-between; align-items: baseline; margin: 26px 0 12px; }
+.section-h h2 { font-size: 18px; font-weight: 800; text-transform: uppercase; }
+/* thread / Sense-style result */
+.thread .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+.thread .qtext { font-size: 16px; font-weight: 600; margin: 4px 0 10px; }
+.status { font-weight: 700; font-size: 13px; margin: 14px 0 8px; }
+.summary { background: var(--ink); color: #fff; border-radius: 16px; padding: 14px 16px; margin: 8px 0 12px; }
+.summary .eyebrow { color: var(--accent); }
+.res { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+.res .who { font-size: 13px; color: var(--quiet); margin-bottom: 4px; }
+.res .ans { font-weight: 700; font-size: 15.5px; margin-bottom: 10px; }
+.res h4 { margin: 10px 0 4px; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); }
+.res ul { margin: 0; padding-left: 18px; }
+.res li { margin: 2px 0; }
+.quote { border-left: 3px solid var(--accent); padding: 2px 0 2px 10px; margin: 4px 0; font-style: italic; }
+.watch li::marker { color: var(--warn); }
+details { margin-top: 8px; font-size: 13px; color: var(--quiet); }
+.replybox { margin-top: 12px; }
+.empty { text-align: center; color: var(--quiet); padding: 30px; }
+/* right deal database */
+.db { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: var(--side); border-left: 1px solid var(--line); padding: 20px 18px; }
+.db h2 { font-size: 17px; font-weight: 800; text-transform: uppercase; }
+.db input.search { width: 100%; margin: 10px 0; border: 0; border-radius: 12px; padding: 9px 12px; background: #fff; box-shadow: var(--soft); outline: none; }
+.types { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.types button { border: 0; background: #fff; border-radius: 99px; padding: 4px 11px; font-size: 12.5px; cursor: pointer; box-shadow: 0 0 0 1px rgba(38,35,31,.1); }
+.types button.on { background: var(--ink); color: #fff; box-shadow: none; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--soft); font-size: 13px; }
+th { text-align: left; background: var(--tint); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--quiet); padding: 8px 10px; }
+td { padding: 9px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+tr.d { cursor: pointer; }
+tr.d:hover td { background: #fffaf4; }
+tr.d.sel td { background: var(--accent-soft); }
+td .co { font-weight: 700; }
+td .sub { color: var(--quiet); font-size: 12px; }
+.tbadge { display: inline-block; border-radius: 6px; padding: 1px 7px; font-size: 11.5px; font-weight: 700; background: var(--tint); white-space: nowrap; }
+tr.detail td { background: #fffaf4; }
+.detail .facts { margin: 4px 0 8px; padding-left: 16px; color: var(--quiet); }
+/* login + modal */
+.overlay { position: fixed; inset: 0; background: rgba(38,35,31,.45); display: grid; place-items: center; z-index: 50; padding: 16px; }
+.mbox { background: var(--bg); border-radius: 22px; box-shadow: 0 40px 100px -30px rgba(38,35,31,.45); width: min(760px, 100%); max-height: 90vh; overflow: auto; padding: 26px; }
+.login-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+.opt { background: #fff; border-radius: 16px; padding: 14px; cursor: pointer; box-shadow: var(--soft); margin-bottom: 8px; }
+.opt:hover { box-shadow: 0 0 0 2px var(--accent); }
+.opt b { display: block; }
+.opt span { font-size: 13px; color: var(--quiet); }
+pre.doc { white-space: pre-wrap; background: #fff; border-radius: 14px; padding: 16px; font: 13.5px/1.6 ui-monospace, "SF Mono", Menlo, monospace; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 14px; z-index: 60; }
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .7s linear infinite; vertical-align: -1px; }
+@keyframes s { to { transform: rotate(360deg); } }
+@media (max-width: 1100px) { .app { grid-template-columns: 1fr; } .side, .db { position: static; height: auto; } main { padding: 20px 16px 60px; } .login-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <div class="brand"><img src="bull.png" alt=""><div><b>Deal Desk</b><small>Ask up. Stay anonymous.</small></div></div>
+    <div class="me" id="me"></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot">
+      Names never leave your screen. Client names are swapped for deal codenames before a senior reads anything. Compliance keeps a sealed record.
+      <p><button class="linkbtn" onclick="logout()">Switch user</button></p>
+    </div>
+  </aside>
+  <main id="main"></main>
+  <aside class="db">
+    <h2>Deal database</h2>
+    <div class="muted">Click a deal to attach it and its files to your question.</div>
+    <input class="search" id="search" placeholder="Search company, codename, sector…" oninput="renderDB()">
+    <div class="types" id="types"></div>
+    <table><thead><tr><th>Deal</th><th>Type</th><th>Size</th></tr></thead><tbody id="dbody"></tbody></table>
+  </aside>
+</div>
+
+<div class="overlay" id="login">
+  <div class="mbox">
+    <div class="brand"><img src="bull.png" alt=""><div><b>Deal Desk</b><small>Internal · Anonymous advice on live deals</small></div></div>
+    <h2 style="margin-top:16px;font-size:24px;font-weight:800;text-transform:uppercase">Log in</h2>
+    <p class="muted">Signed in with your bank login. Everyone else only ever sees an anonymous handle and your level, never your name.</p>
+    <div class="login-grid">
+      <div><div class="eyebrow">I have a question</div>
+        <div class="opt" onclick="login('asker','Analyst · M&A')"><b>Analyst · M&A</b><span>Jordan Lee (hidden from everyone)</span></div>
+        <div class="opt" onclick="login('asker','Associate · Leveraged Finance')"><b>Associate · Leveraged Finance</b><span>Sam Patel (hidden from everyone)</span></div>
+        <div class="opt" onclick="login('asker','VP · Corporate Banking')"><b>VP · Corporate Banking</b><span>Alex Chen (hidden from everyone)</span></div>
+      </div>
+      <div><div class="eyebrow">I'm a senior adviser</div><div id="seniorOpts"></div></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="modal" hidden onclick="if(event.target===this)this.hidden=true"><div class="mbox" id="mbody"></div></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const api = (p, body) => fetch("/api/desk" + p, body ? {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify(body)} : {}).then(r => { if (r.status === 401) { logout(); throw 0; } return r.json(); });
+let ME = null, DEALS = [], THREADS = [], TYPE = "All", OPEN = null, PICK = null, UPLOAD = null, VIEW = "ask", sending = false;
+const money = v => v ? (v >= 1 ? `$${v}B` : `$${Math.round(v*1000)}M`) : "—";
+const band = v => !v ? "n/a" : v < 1 ? "<$1B" : v < 5 ? "$1–5B" : "$5B+";
+function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2600); }
+
+async function boot() {
+  DEALS = await api("/deals");
+  const S = await api("/seniors");
+  $("#seniorOpts").innerHTML = S.map(s => `<div class="opt" onclick="login('senior','',${JSON.stringify(s.id).replace(/"/g,"'")})"><b>${esc(s.title)} · ${esc(s.desk)}</b><span>${s.years} yrs · advises on ${esc(s.tags.slice(0,3).join(", "))}</span></div>`).join("");
+  try { ME = JSON.parse(sessionStorage.getItem("desk_me")); } catch {}
+  if (ME) start();
+}
+async function login(role, level, senior_id = "") {
+  ME = await api("/login", {role, level, senior_id});
+  try { sessionStorage.setItem("desk_me", JSON.stringify(ME)); } catch {}
+  start();
+}
+function logout() { try { sessionStorage.removeItem("desk_me"); } catch {} location.reload(); }
+function start() {
+  $("#login").hidden = true; $("#app").hidden = false;
+  VIEW = ME.role === "senior" ? "inbox" : "ask";
+  $("#me").innerHTML = `<span class="muted">Signed in as</span><b>${esc(ME.handle)}</b><span class="muted">${esc(ME.level)}</span><div class="lock">● Your name is hidden</div>`;
+  renderDB(); refresh(); setInterval(refresh, 4000);
+}
+async function refresh() {
+  try { THREADS = await api("/threads?token=" + ME.token); } catch { return; }
+  renderNav(); renderMain();
+}
+function renderNav() {
+  const items = ME.role === "senior"
+    ? [["inbox", "Inbox", THREADS.filter(t => !t.replies.some(r => r.by.startsWith(ME.handle))).length]]
+    : [["ask", "Ask a senior", 0], ["mine", "My questions", THREADS.filter(t => t.replies.length).length]];
+  $("#nav").innerHTML = items.map(([k, l, n]) => `<a class="${VIEW===k?"on":""}" onclick="VIEW='${k}';renderNav();renderMain(true)">${l}${n?`<span class="n">${n}</span>`:""}</a>`).join("");
+}
+
+/* ---------- deal database ---------- */
+function renderDB() {
+  const types = ["All", ...new Set(DEALS.map(d => d.type))];
+  $("#types").innerHTML = types.map(t => `<button class="${TYPE===t?"on":""}" onclick="TYPE='${t}';renderDB()">${t}</button>`).join("");
+  const q = $("#search").value.toLowerCase();
+  const rows = DEALS.filter(d => (TYPE === "All" || d.type === TYPE) && (!q || JSON.stringify([d.code, d.parties, d.sector, d.headline]).toLowerCase().includes(q)));
+  $("#dbody").innerHTML = rows.map(d => `
+    <tr class="d ${PICK?.deal.id===d.id?"sel":""}" onclick="OPEN=OPEN==='${d.id}'?null:'${d.id}';renderDB()">
+      <td><div class="co">${esc(d.parties.join(" / "))}</div><div class="sub">${esc(d.code)} · ${esc(d.sector)}</div></td>
+      <td><span class="tbadge">${esc(d.type)}</span></td><td>${money(d.value)}</td></tr>
+    ${OPEN===d.id ? `<tr class="detail"><td colspan="3"><b>${esc(d.headline)}</b><div class="sub">Status: ${esc(d.status)}</div>
+      <ul class="facts">${d.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+      <div class="files">${d.files.map(f => `<span class="file" onclick="event.stopPropagation();showFile('${d.id}','${f.id}')">📄 ${esc(f.name.split(" – ")[1])}</span>`).join("")}</div>
+      ${ME?.role !== "senior" ? `<div style="margin-top:10px"><button class="btn primary" onclick="event.stopPropagation();attach('${d.id}')">${PICK?.deal.id===d.id?"Attached ✓":"Attach to my question"}</button></div>` : ""}
+    </td></tr>` : ""}`).join("") || `<tr><td colspan="3" class="muted">No deals match.</td></tr>`;
+}
+function attach(id) {
+  const d = DEALS.find(x => x.id === id);
+  PICK = {deal: d, files: new Set(d.files.map(f => f.id))};
+  VIEW = "ask"; renderNav(); renderDB(); renderMain(true); toast(`${d.code} attached`);
+}
+function showFile(did, fid, text, name) {
+  if (!text) { const f = DEALS.find(d => d.id === did).files.find(f => f.id === fid); text = f.text; name = f.name; }
+  $("#mbody").innerHTML = `<div class="row" style="justify-content:space-between"><h3>${esc(name)}</h3><button class="btn" onclick="$('#modal').hidden=true">Close</button></div><pre class="doc">${esc(text)}</pre>`;
+  $("#modal").hidden = false;
+}
+
+/* ---------- center ---------- */
+function renderMain(force) {
+  if (!force && document.activeElement && ["TEXTAREA", "INPUT", "SELECT"].includes(document.activeElement.tagName)) { renderThreadsOnly(); return; }
+  const m = $("#main");
+  if (ME.role === "senior") {
+    m.innerHTML = `<div class="hero"><div class="eyebrow">Inbox · ${esc(ME.level)}</div><h1>Questions routed to you</h1>
+      <p>Juniors asked these anonymously. You see their level, never their name. Client names are replaced with deal codenames. Your reply goes back anonymous too.</p></div><div id="threads"></div>`;
+  } else if (VIEW === "ask") {
+    m.innerHTML = `<div class="hero"><div class="eyebrow">Ask a senior · anonymous</div><h1>No question is too basic</h1>
+      <p>Pick a deal from the database, attach the files, and ask. We route it to two seniors who've done this kind of deal. They never see who you are.</p></div>
+      <div class="card glow">${composer()}</div>
+      <div class="section-h"><h2>Recent answers</h2><span class="muted">Live · refreshes every few seconds</span></div><div id="threads"></div>`;
+  } else {
+    m.innerHTML = `<div class="hero"><div class="eyebrow">My questions</div><h1>Answers from seniors</h1><p>Each reply comes back as a short result: the answer, their words, why, and what to watch.</p></div><div id="threads"></div>`;
+  }
+  renderThreadsOnly();
+}
+function composer() {
+  const d = PICK?.deal;
+  return `
+    <div class="attach">
+      ${d ? `<div class="attached"><div class="top"><div><b>${esc(d.code)}</b> · ${esc(d.type)} · ${esc(d.sector)} · ${money(d.value)}<div class="muted">${esc(d.headline)}</div></div>
+        <span class="chip x" onclick="PICK=null;renderDB();renderMain(true)">✕ Remove</span></div>
+        <div class="files">${d.files.map(f => `<span class="file ${PICK.files.has(f.id)?"":"off"}" title="Click to include or leave out" onclick="togFile('${f.id}')">📄 ${esc(f.name.split(" – ")[1])}</span>`).join("")}</div></div>`
+      : `<div class="muted">📎 No deal attached. Pick one from the <b>Deal database</b> on the right →</div>`}
+      <div class="row"><label class="btn">＋ Add your own file<input type="file" hidden onchange="addUpload(this)"></label>
+        ${UPLOAD ? `<span class="chip acc">📄 ${esc(UPLOAD.name)} <span class="x" onclick="UPLOAD=null;renderMain(true)">✕</span></span>` : ""}
+        <select id="topic" class="btn"><option value="">Route by deal (automatic)</option><option>Valuation</option><option>LBO</option><option>Merger</option><option>Company event</option><option>Regulatory</option></select></div>
+    </div>
+    <textarea class="q" id="q" placeholder="e.g. Why is the break fee higher after the go-shop ends? I didn't want to ask in front of the team.">${esc(window._draft || "")}</textarea>
+    <div class="seen">Seniors will see: <b>${esc(ME.handle)} · ${esc(ME.level)}</b>${d ? ` · client names → <b>${esc(d.code)}</b>` : ""}. Not your name, email or desk.</div>
+    <div class="row" style="justify-content:space-between"><span class="muted">Sealed copy kept for compliance only.</span>
+      <button class="btn primary" id="send" onclick="send()">${sending ? '<span class="spin"></span> Sending…' : "Ask anonymously"}</button></div>`;
+}
+function togFile(id) { PICK.files.has(id) ? PICK.files.delete(id) : PICK.files.add(id); window._draft = $("#q").value; renderMain(true); }
+function addUpload(inp) {
+  const f = inp.files[0]; if (!f) return; window._draft = $("#q").value;
+  const isText = /\.(txt|csv|md|json|tsv)$/i.test(f.name) || f.type.startsWith("text");
+  if (!isText) { UPLOAD = {name: f.name, text: `[${f.name} · ${Math.round(f.size/1024)} KB attached]`}; renderMain(true); return; }
+  f.text().then(t => { UPLOAD = {name: f.name, text: t.slice(0, 20000)}; renderMain(true); });
+}
+async function send() {
+  const q = $("#q").value.trim();
+  if (!q) { toast("Type your question first"); return; }
+  sending = true; $("#send").disabled = true;
+  await api("/ask", {token: ME.token, question: q, deal_id: PICK?.deal.id || "", file_ids: PICK ? [...PICK.files] : [],
+                     upload_name: UPLOAD?.name || "", upload_text: UPLOAD?.text || "", topic: $("#topic").value});
+  sending = false; PICK = null; UPLOAD = null; window._draft = ""; VIEW = "mine";
+  toast("Sent anonymously to 2 seniors"); renderDB(); await refresh(); renderMain(true);
+}
+
+function renderThreadsOnly() {
+  const box = $("#threads"); if (!box) return;
+  let list = THREADS;
+  if (ME.role !== "senior" && VIEW === "mine") list = THREADS.filter(t => t.mine);
+  if (ME.role !== "senior" && VIEW === "ask") list = THREADS.filter(t => t.replies.length).slice(0, 4);
+  const keep = {}; box.querySelectorAll("textarea[data-t]").forEach(a => keep[a.dataset.t] = a.value);
+  const focus = document.activeElement?.dataset?.t;
+  box.innerHTML = list.map(threadCard).join("") || `<div class="card empty">${ME.role === "senior" ? "Nothing waiting. New questions show up here live." : "No questions yet. Ask one above."}</div>`;
+  box.querySelectorAll("textarea[data-t]").forEach(a => { if (keep[a.dataset.t]) a.value = keep[a.dataset.t]; if (a.dataset.t === focus) { a.focus(); a.setSelectionRange(a.value.length, a.value.length); } });
+}
+window._files = {};
+function threadCard(t) {
+  const d = t.deal, total = t.routed.length, got = t.replies.length;
+  t.files.forEach(f => window._files[t.id + f.id] = f);
+  const mineReplied = ME.role === "senior" && t.replies.some(r => r.by.startsWith(ME.handle));
+  return `<div class="card thread">
+    <div class="meta"><span class="chip">${esc(t.asker)}</span>${d ? `<span class="chip acc">${esc(d.code)} · ${esc(d.type)} · ${ME.role==="senior"?band(d.value):money(d.value)}</span>` : ""}
+      <span class="chip ${got>=total?"ok":"wait"}">${got>=total?"Answered":got?"Partly answered":"Waiting for seniors"}</span>
+      <span class="muted">${new Date(t.t*1000).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})}</span></div>
+    ${d ? `<div class="muted">${esc(d.headline)}</div>` : ""}
+    <div class="qtext">${esc(t.question)}</div>
+    ${t.files.length ? `<div class="files">${t.files.map(f => `<span class="file" onclick="showFile(0,0,window._files['${t.id+f.id}'].text,window._files['${t.id+f.id}'].name)">📄 ${esc(f.name.split(" – ").pop())}</span>`).join("")}</div>` : ""}
+    <div class="status">${got} of ${total} seniors have responded.</div>
+    ${got === 0 && ME.role !== "senior" ? `<div class="muted">Routed to: ${t.routed.map(s => esc(`${s.title}, ${s.desk}`)).join(" · ")}</div>` : ""}
+    ${t.summary && got > 1 ? `<div class="summary"><div class="eyebrow">What they said</div>${esc(t.summary)}</div>` : ""}
+    ${t.replies.map((r, i) => resultCard(r, i)).join("")}
+    ${ME.role === "senior" ? `<div class="replybox"><textarea class="q" data-t="${t.id}" placeholder="${mineReplied ? "Update your reply…" : "Reply anonymously. Plain words are fine. We'll turn it into a short result for them."}"></textarea>
+      <div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn dark" id="rb-${t.id}" onclick="reply('${t.id}')">${mineReplied ? "Update reply" : "Send reply anonymously"}</button></div></div>` : ""}
+  </div>`;
+}
+function resultCard(r, i) {
+  const x = r.result;
+  return `<div class="res"><div class="who">Senior ${i+1} · ${esc(r.by)}</div>
+    <div class="ans">${esc(x.answer)}</div>
+    ${x.quotes?.length ? `<h4>In their words</h4>${x.quotes.map(q => `<div class="quote">“${esc(q)}”</div>`).join("")}` : ""}
+    ${x.reasons?.length ? `<h4>Why</h4><ul>${x.reasons.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : ""}
+    ${x.watchouts?.length ? `<h4>Watch out for</h4><ul class="watch">${x.watchouts.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : ""}
+    <details><summary>Full reply</summary>${esc(r.text)}</details></div>`;
+}
+async function reply(id) {
+  const a = document.querySelector(`textarea[data-t="${id}"]`), text = a.value.trim();
+  if (!text) { toast("Write a reply first"); return; }
+  const b = $("#rb-" + id); b.disabled = true; b.innerHTML = '<span class="spin"></span> Sending…';
+  await api(`/threads/${id}/reply`, {token: ME.token, text});
+  a.value = ""; a.blur(); toast("Reply sent anonymously"); await refresh(); renderMain(true);
+}
+boot();
+</script>
+</body>
+</html>
