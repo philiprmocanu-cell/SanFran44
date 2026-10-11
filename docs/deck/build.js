@@ -102,29 +102,29 @@ const URL = "https://deal-desk-production-7983.up.railway.app";
   s = pres.addSlide(); s.background = { color: BG };
   eyebrow(s, "The product");
   title(s, "A junior attaches the deal and asks in plain words");
-  const aw = 5.6, ah = aw * 1155 / 1635;
-  s.addImage({ path: img("crop-ask.jpg"), x: 0.5, y: 1.3, w: aw, h: ah, rounding: false, shadow: shadow() });
+  const aw = 5.1, ah = aw * 1155 / 1635;
+  s.addImage({ path: img("crop-ask.jpg"), x: 0.5, y: 1.55, w: aw, h: ah, rounding: false, shadow: shadow() });
   s.addText([
     { text: "Deal database", options: { bold: true, breakLine: true } }, { text: "10 deals: mergers, LBOs, spin-offs, hostile bids, earnings events", options: { color: QUIET, breakLine: true } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
     { text: "Files come along", options: { bold: true, breakLine: true } }, { text: "Term sheet, model notes, timeline, or the junior's own file", options: { color: QUIET, breakLine: true } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
     { text: "The junior sees what seniors will see", options: { bold: true, breakLine: true } }, { text: "An anonymous handle and level, never a name", options: { color: QUIET } },
-  ], { x: 6.45, y: 1.35, w: 3.05, h: 3.8, fontFace: F, fontSize: 13, color: INK, valign: "top", margin: 0, isTextBox: true });
+  ], { x: 6.0, y: 1.6, w: 3.5, h: 3.5, fontFace: F, fontSize: 13, color: INK, valign: "top", margin: 0, isTextBox: true });
 
   // 7. Screenshot: result
   s = pres.addSlide(); s.background = { color: BG };
   eyebrow(s, "The answer");
   title(s, "Seniors reply in plain words, and the junior gets a structured answer");
   const rh = 3.85, rw = rh * 1635 / 1395;
-  s.addImage({ path: img("crop-result.jpg"), x: 9.5 - rw, y: 1.3, w: rw, h: rh, shadow: shadow() });
+  s.addImage({ path: img("crop-result.jpg"), x: 9.5 - rw, y: 1.45, w: (rh - 0.1) * 1635 / 1395, h: rh - 0.1, shadow: shadow() });
   s.addText([
     { text: "Formatted like a Sense AI result", options: { bold: true, breakLine: true } }, { text: "Bottom line, quotes, why, watch-outs", options: { color: QUIET, breakLine: true } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
     { text: "Seniors write normally", options: { bold: true, breakLine: true } }, { text: "Claude turns a quick reply into a clear answer", options: { color: QUIET, breakLine: true } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
     { text: "Two views per question", options: { bold: true, breakLine: true } }, { text: "A summary shows where the seniors agree", options: { color: QUIET } },
-  ], { x: 0.5, y: 1.35, w: 3.6, h: 3.8, fontFace: F, fontSize: 13, color: INK, valign: "top", margin: 0, isTextBox: true });
+  ], { x: 0.5, y: 1.55, w: 3.6, h: 3.6, fontFace: F, fontSize: 13, color: INK, valign: "top", margin: 0, isTextBox: true });
 
   // 8. People already use anonymity
   s = pres.addSlide(); s.background = { color: BG };
